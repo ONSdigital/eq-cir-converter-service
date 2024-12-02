@@ -1,0 +1,14 @@
+# Changes here will be overwritten by Copier
+# Do not modify this file directly
+# To update the project using the original template, run make copier-update
+_src_path: /home/runner/work/eq-cir-converter-service/eq-cir-converter-service
+default_branch: main
+dependabot_open_pull_requests_limit: 10
+enable_dependabot_version_updates: true
+module_name: eq_cir_converter_service
+package_manager: poetry
+repository_description: This repository is for the Python FastAPI application for
+    the CIR Converter service
+repository_name: eq-cir-converter-service
+repository_owner: ONSdigital
+repository_visibility: public
