@@ -8,7 +8,7 @@ enable_dependabot_version_updates: true
 module_name: eq_cir_converter_service
 package_manager: poetry
 repository_description: This repository is for the Python FastAPI application for
-    the CIR Converter service
+  the CIR Converter service
 repository_name: eq-cir-converter-service
 repository_owner: ONSdigital
 repository_visibility: public
