@@ -10,7 +10,7 @@
 [![poetry-managed](https://img.shields.io/badge/poetry-managed-blue)](https://python-poetry.org/)
 [![License - MIT](https://img.shields.io/badge/licence%20-MIT-1ac403.svg)](https://github.com/ONSdigital/eq-cir-converter-service/blob/main/LICENSE)
 
-This repository is for the Python FastAPI application for the CIR Converter service
+This repository is for the CIR Converter service Python FastAPI application
 
 ---
 
