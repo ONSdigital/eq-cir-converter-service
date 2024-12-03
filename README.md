@@ -16,18 +16,16 @@ This repository is for the CIR Converter service Python FastAPI application
 
 ## Table of Contents
 
-[//]: # ":TODO: Enable link checking once https://github.com/tcort/markdown-link-check/issues/250 is resolved."
-
+[//]: # (:TODO: Enable link checking once https://github.com/tcort/markdown-link-check/issues/250 is resolved.)
 <!-- markdown-link-check-disable -->
-
--   [Getting Started](#getting-started)
-    -   [Pre-requisites](#pre-requisites)
-    -   [Installation](#installation)
--   [Development](#development)
-    -   [Run Tests with Coverage](#run-tests-with-coverage)
-    -   [Linting and Formatting](#linting-and-formatting)
--   [Contributing](#contributing)
--   [License](#license)
+- [Getting Started](#getting-started)
+    - [Pre-requisites](#pre-requisites)
+    - [Installation](#installation)
+- [Development](#development)
+    - [Run Tests with Coverage](#run-tests-with-coverage)
+    - [Linting and Formatting](#linting-and-formatting)
+- [Contributing](#contributing)
+- [License](#license)
 <!-- markdown-link-check-enable -->
 
 ## Getting Started
@@ -49,32 +47,32 @@ Ensure you have the following installed:
 
 1. Clone the repository and install the required dependencies.
 
-    ```bash
-    git clone https://github.com/ONSdigital/eq-cir-converter-service.git
-    ```
+   ```bash
+   git clone https://github.com/ONSdigital/eq-cir-converter-service.git
+   ```
 
 2. Install dependencies
 
-    [Poetry](https://python-poetry.org/) is used to manage dependencies in this project. For more information, read
-    the [Poetry documentation](https://python-poetry.org/).
+   [Poetry](https://python-poetry.org/) is used to manage dependencies in this project. For more information, read
+   the [Poetry documentation](https://python-poetry.org/).
 
-    To install all dependencies, including development dependencies, run:
+   To install all dependencies, including development dependencies, run:
 
-    ```bash
-    make install-dev
-    ```
+   ```bash
+   make install-dev
+   ```
 
-    To install only production dependencies, run:
+   To install only production dependencies, run:
 
-    ```bash
-    make install
-    ```
+   ```bash
+   make install
+   ```
 
 3. Run the application
 
-    ```bash
-    make run
-    ```
+   ```bash
+   make run
+   ```
 
 ## Development
 
