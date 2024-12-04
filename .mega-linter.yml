@@ -28,6 +28,12 @@ DISABLE_LINTERS:
   - REPOSITORY_TRUFFLEHOG
   - REPOSITORY_GIT_DIFF
 
+  # Ignore below infrastructure-specific linters not needed for this type of repo
+  - REPOSITORY_KICS
+  - REPOSITORY_TRIVY
+  - REPOSITORY_TRIVY_SBOM
+  - REPOSITORY_CHECKOV
+
 SHOW_ELAPSED_TIME: true
 
 FILEIO_REPORTER: false
