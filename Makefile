@@ -28,11 +28,11 @@ lint:  ## Run all linters (black/ruff/pylint/mypy).
 
 .PHONY: test
 test:  ## Run the tests and check coverage.
-	poetry run pytest -n auto --cov=eq_cir_converter_service --cov-report term-missing --cov-fail-under=100
+	poetry run pytest -n auto --cov=src --cov-report term-missing --cov-fail-under=100
 
 .PHONY: mypy
 mypy:  ## Run mypy.
-	poetry run mypy eq_cir_converter_service
+	poetry run mypy src
 
 .PHONY: install
 install:  ## Install the dependencies excluding dev.
