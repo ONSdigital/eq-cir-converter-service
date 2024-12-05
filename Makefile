@@ -28,11 +28,11 @@ lint:  ## Run all linters (black/ruff/pylint/mypy).
 
 .PHONY: test
 test:  ## Run the tests and check coverage.
-	poetry run pytest -n auto --cov=eq_cir_converter_service --cov-report term-missing --cov-fail-under=100
+	poetry run pytest -n auto --cov=src --cov-report term-missing --cov-fail-under=100
 
 .PHONY: mypy
 mypy:  ## Run mypy.
-	poetry run mypy eq_cir_converter_service
+	poetry run mypy src
 
 .PHONY: install
 install:  ## Install the dependencies excluding dev.
@@ -48,3 +48,23 @@ megalint:  ## Run the mega-linter.
 		-v /var/run/docker.sock:/var/run/docker.sock:rw \
 		-v $(shell pwd):/tmp/lint:rw \
 		oxsecurity/megalinter:v7
+
+.PHONY: run
+run:
+	poetry run uvicorn src.main:app --reload --port 5010
+
+.PHONY: docker-build
+docker-build:
+	docker build -t cir-converter-service .
+
+.PHONY: docker-run
+docker-run:
+	docker run -p 5010:5010 cir-converter-service
+
+.PHONY: docker-compose-up
+docker-compose-up:
+	docker-compose up -d
+
+.PHONY: docker-stop
+docker-stop:
+	docker stop $(shell docker ps -a -q --filter ancestor=eq-cir-converter-service-web && docker ps -a -q --filter ancestor=cir-converter-service)
