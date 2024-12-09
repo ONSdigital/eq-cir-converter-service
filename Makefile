@@ -63,7 +63,7 @@ docker-start:
 
 .PHONY: docker-stop
 docker-stop:
-	 docker stop cir-converter-service
+	docker stop cir-converter-service
 
 .PHONY: docker-compose-up
 docker-compose-up:
