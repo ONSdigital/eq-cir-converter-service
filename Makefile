@@ -57,14 +57,18 @@ run:
 docker-build:
 	docker build -t cir-converter-service .
 
-.PHONY: docker-run
-docker-run:
-	docker run -p 5010:5010 cir-converter-service
+.PHONY: docker-start
+docker-start:
+	docker start cir-converter-service
+
+.PHONY: docker-stop
+docker-stop:
+	 docker stop cir-converter-service
 
 .PHONY: docker-compose-up
 docker-compose-up:
 	docker-compose up -d
 
-.PHONY: docker-stop
-docker-stop:
-	docker stop $(shell docker ps -a -q --filter ancestor=eq-cir-converter-service-web && docker ps -a -q --filter ancestor=cir-converter-service)
+.PHONY: docker-compose-down
+docker-compose-down:
+	docker-compose down
