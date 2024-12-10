@@ -49,7 +49,7 @@ megalint:  ## Run the mega-linter.
 		-v $(shell pwd):/tmp/lint:rw \
 		oxsecurity/megalinter:v7
 
-# Start the local application
+## Start the local application
 .PHONY: run
 run:
 	poetry run uvicorn src.main:app --reload --port 5010
