@@ -155,6 +155,7 @@ make docker-compose-up
 
 ### View the local application
 
+<!-- markdown-link-check-disable-next-line -->
 - Navigate to [http://localhost:5010/docs](http://localhost:5010/docs) to view the FastAPI application
 - View the API endpoints available and test to see the response
 
