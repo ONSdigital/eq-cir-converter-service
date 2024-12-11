@@ -24,6 +24,7 @@ This repository is for the CIR Converter service Python FastAPI application
 - [Development](#development)
     - [Run Tests with Coverage](#run-tests-with-coverage)
     - [Linting and Formatting](#linting-and-formatting)
+    - [Build the docker image](#build-the-docker-image)
 - [Contributing](#contributing)
 - [License](#license)
 <!-- markdown-link-check-enable -->
@@ -135,6 +136,12 @@ To start the linter and automatically rectify fixable issues, run:
 
 ```bash
 make megalint
+```
+
+### Build the docker image
+
+```bash
+make docker-build
 ```
 
 ## Contributing
