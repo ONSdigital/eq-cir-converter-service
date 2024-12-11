@@ -49,19 +49,18 @@ megalint:  ## Run the mega-linter.
 		-v $(shell pwd):/tmp/lint:rw \
 		oxsecurity/megalinter:v7
 
-## Start the local application
 .PHONY: run
-run:
+run:  ## Start the local application.
 	poetry run uvicorn src.main:app --reload --port 5010
 
 .PHONY: docker-build
-docker-build:
+docker-build:  ## Build the docker image.
 	docker build -t cir-converter-service .
 
 .PHONY: docker-compose-up
-docker-compose-up:
+docker-compose-up:  ## Start the docker container using docker-compose.
 	docker-compose up -d
 
 .PHONY: docker-compose-down
-docker-compose-down:
+docker-compose-down:  ## Stop the docker container using docker-compose.
 	docker-compose down
