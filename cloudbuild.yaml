@@ -20,7 +20,6 @@ steps:
         "--allow-unauthenticated",
         "--ingress",
         "internal-and-cloud-load-balancing",
-        "--update-env-vars",
         "--cpu-boost",
         "--session-affinity",
         "--min-instances",
