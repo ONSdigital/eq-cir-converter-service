@@ -1,8 +1,35 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-f', 'Dockerfile', '-t', 'europe-west2-docker.pkg.dev/ons-cirmig-sandbox/cir-converter-service/cir-converter-service:latest', '.']
+
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'europe-west2-docker.pkg.dev/ons-cirmig-sandbox/cir-converter-service/cir-converter-service:latest']
+
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    id: "Run container"
+    entrypoint: gcloud
+    args:
+      [
+        "run",
+        "deploy",
+        "cir-converter-service",
+        "--image",
+        "europe-west2-docker.pkg.dev/ons-cirmig-sandbox/cir-converter-service/cir-converter-service:latest",
+        "--region",
+        "europe-west2",
+        "--allow-unauthenticated",
+        "--ingress",
+        "internal-and-cloud-load-balancing",
+        "--update-env-vars",
+        "--cpu-boost",
+        "--session-affinity",
+        "--min-instances",
+        "1",
+        "--max-instances",
+        "100",
+        "--concurrency",
+        "1",
+      ]
 
 options:
   logging: CLOUD_LOGGING_ONLY
