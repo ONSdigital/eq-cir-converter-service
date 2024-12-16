@@ -18,7 +18,6 @@ steps:
         "--region europe-west2",
         "--platform managed",
         "--allow-unauthenticated",
-        "--update-env-vars",
       ]
 
 options:
