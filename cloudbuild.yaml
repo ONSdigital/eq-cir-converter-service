@@ -3,3 +3,6 @@ steps:
     args: ['build', '-f', 'Dockerfile', '-t', 'europe-west2-docker.pkg.dev/ons-cirmig-sandbox/cir-converter-service/cir-converter-service:latest', '.']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'europe-west2-docker.pkg.dev/ons-cirmig-sandbox/cir-converter-service/cir-converter-service:latest']
+
+options:
+  logging: CLOUD_LOGGING_ONLY
