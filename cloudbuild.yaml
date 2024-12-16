@@ -1,9 +1,9 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-f", "Dockerfile", "-t", "europe-west2-docker.pkg.dev/ons-cirmig-sandbox/cir-converter-service/cir-converter-service:latest", "."]
+    args: ["build", "-f", "Dockerfile", "-t", "europe-west2-docker.pkg.dev/${PROJECT_ID}/cir-converter-service/cir-converter-service:$SHORT_SHA", "."]
 
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "europe-west2-docker.pkg.dev/ons-cirmig-sandbox/cir-converter-service/cir-converter-service:latest"]
+    args: ["push", "europe-west2-docker.pkg.dev/${PROJECT_ID}/cir-converter-service/cir-converter-service:$SHORT_SHA"]
 
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     id: "Run container"
@@ -14,10 +14,11 @@ steps:
         "deploy",
         "cir-converter-service",
         "--image",
-        "europe-west2-docker.pkg.dev/ons-cirmig-sandbox/cir-converter-service/cir-converter-service:latest",
-        "--region",
-        "europe-west2",
+        "europe-west2-docker.pkg.dev/${PROJECT_ID}/cir-converter-service/cir-converter-service:$SHORT_SHA",
+        "--region europe-west2",
+        "--platform managed"
         "--allow-unauthenticated",
+        "--update-env-vars",
       ]
 
 options:
