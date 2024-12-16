@@ -15,8 +15,10 @@ steps:
         "cir-converter-service",
         "--image",
         "europe-west2-docker.pkg.dev/${PROJECT_ID}/cir-converter-service/cir-converter-service:$SHORT_SHA",
-        "--region europe-west2",
-        "--platform managed",
+        "--region",
+        "europe-west2",
+        "--platform",
+        "managed",
         "--allow-unauthenticated",
       ]
 
