@@ -1,10 +1,13 @@
 steps:
+  # Build the container image
   - name: "gcr.io/cloud-builders/docker"
     args: ["build", "-f", "Dockerfile", "-t", "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:$SHORT_SHA", "."]
 
+  # Push the container image to Google Artifact Registry
   - name: "gcr.io/cloud-builders/docker"
     args: ["push", "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:$SHORT_SHA"]
 
+  # Deploy the container to Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     id: "Run container"
     entrypoint: gcloud
