@@ -1,9 +1,9 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-f", "Dockerfile", "-t", "europe-west2-docker.pkg.dev/${PROJECT_ID}/cir-converter-service/cir-converter-service:$SHORT_SHA", "."]
+    args: ["build", "-f", "Dockerfile", "-t", "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:$SHORT_SHA", "."]
 
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "europe-west2-docker.pkg.dev/${PROJECT_ID}/cir-converter-service/cir-converter-service:$SHORT_SHA"]
+    args: ["push", "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:$SHORT_SHA"]
 
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     id: "Run container"
@@ -14,7 +14,7 @@ steps:
         "deploy",
         "cir-converter-service",
         "--image",
-        "europe-west2-docker.pkg.dev/${PROJECT_ID}/cir-converter-service/cir-converter-service:$SHORT_SHA",
+        "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:$SHORT_SHA",
         "--region",
         "europe-west2",
         "--platform",
