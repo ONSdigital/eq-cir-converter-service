@@ -7,7 +7,7 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     args: ["push", "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:$SHORT_SHA"]
 
-  # Deploy the container to Cloud Run
+  # Deploy the container to Google Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     id: "Run container"
     entrypoint: gcloud
