@@ -10,19 +10,19 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.115.6"
-uvicorn = "^0.32.1"
+uvicorn = "^0.34.0"
 
 [tool.poetry.group.dev.dependencies]
 # :TODO: Remove pylint when ruff supports all pylint rules
 # :TODO: Remove black when ruff supports all black rules
-pylint = "^3.3.2"
+pylint = "^3.3.3"
 black = "^24.10.0"
 pytest = "^8.3.4"
 pytest-xdist = "^3.6.1"
-ruff = "^0.8.2"
+ruff = "^0.8.4"
 pytest-cov = "^6.0.0"
-mypy = "^1.13.0"
-httpx = "^0.28.0"
+mypy = "^1.14.0"
+httpx = "^0.28.1"
 
 [tool.black]
 line-length = 120
