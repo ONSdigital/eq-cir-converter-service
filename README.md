@@ -24,6 +24,10 @@ This repository is for the CIR Converter service Python FastAPI application
 - [Development](#development)
     - [Run Tests with Coverage](#run-tests-with-coverage)
     - [Linting and Formatting](#linting-and-formatting)
+    - [Build the docker image](#build-the-docker-image)
+    - [Start the docker container](#start-the-docker-container)
+    - [View the local application](#view-the-local-application)
+    - [Stop the docker container](#stop-the-docker-container)
 - [Contributing](#contributing)
 - [License](#license)
 <!-- markdown-link-check-enable -->
@@ -135,6 +139,30 @@ To start the linter and automatically rectify fixable issues, run:
 
 ```bash
 make megalint
+```
+
+### Build the docker image
+
+```bash
+make docker-build
+```
+
+### Start the docker container
+
+```bash
+make docker-compose-up
+```
+
+### View the local application
+
+<!-- markdown-link-check-disable-next-line -->
+- Navigate to [http://localhost:5010/docs](http://localhost:5010/docs) to view the FastAPI application
+- View the API endpoints available and test to see the response
+
+### Stop the docker container
+
+```bash
+make docker-compose-down
 ```
 
 ## Contributing
