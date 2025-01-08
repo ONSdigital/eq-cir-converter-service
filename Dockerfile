@@ -4,11 +4,9 @@ WORKDIR /app
 
 COPY pyproject.toml poetry.lock /app/
 
-RUN pip install --no-cache-dir poetry==1.8.4
-
-RUN poetry config virtualenvs.create false
-
-RUN poetry install --no-root --no-dev
+RUN pip install --no-cache-dir poetry==1.8.4 && \
+    poetry config virtualenvs.in-project true && \
+    poetry install --no-root --no-dev
 
 COPY . /app
 
