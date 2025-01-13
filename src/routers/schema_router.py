@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body
 
 router = APIRouter()
+
 
 @router.post(
     "/convert/schema",
