@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter
 
 router = APIRouter()
 
 
 @router.post(
     "/convert/schema",
-    response_model = dict,
+    response_model=dict,
     #     responses={
     #     400: {
     #         "model": ExceptionResponseModel,
@@ -22,6 +22,6 @@ router = APIRouter()
 async def post_schema(
     current_version: str,
     target_version: str,
-    schema: dict = Body(...),
+    schema: dict,
 ) -> dict:
     return schema
