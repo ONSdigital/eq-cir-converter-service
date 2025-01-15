@@ -28,7 +28,7 @@ lint:  ## Run all linters (black/ruff/pylint/mypy).
 
 .PHONY: test
 test:  ## Run the tests and check coverage.
-	poetry run pytest -n auto --cov=src --cov-report term-missing --cov-fail-under=100
+	poetry run pytest -vv -n auto --cov=src --cov-report term-missing --cov-fail-under=100
 
 .PHONY: mypy
 mypy:  ## Run mypy.
@@ -59,7 +59,7 @@ docker-build:  ## Build the docker image.
 
 .PHONY: docker-compose-up
 docker-compose-up:  ## Start the docker container using docker-compose.
-	docker-compose up -d
+	docker-compose up --build -d
 
 .PHONY: docker-compose-down
 docker-compose-down:  ## Stop the docker container using docker-compose.
