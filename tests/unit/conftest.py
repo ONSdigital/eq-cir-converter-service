@@ -1,8 +1,11 @@
-# import pytest
+import pytest
+from fastapi.testclient import TestClient
 
 
-# @pytest.fixture()
-# def calculator():
-#     # Create a new instance of the Calculator class for each test session.
-#     yield Calculator()
-#     # Clean up after the test session is complete.
+@pytest.fixture
+def test_client():
+    """General client for hitting endpoints in tests."""
+    import src.main as app
+
+    test_client = TestClient(app.app)
+    yield test_client
