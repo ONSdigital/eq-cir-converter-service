@@ -3,21 +3,10 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
+# The POST endpoint to convert the CIR schema from one version to another
 @router.post(
     "/convert/schema",
     response_model=dict,
-    #     responses={
-    #     400: {
-    #         "model": ExceptionResponseModel,
-    #         "content": {
-    #             "application/json": {"example": erm.erm_400_validation_exception}
-    #         },
-    #     },
-    #     500: {
-    #         "model": ExceptionResponseModel,
-    #         "content": {"application/json": {"example": erm.erm_500_global_exception}},
-    #     },
-    # },
 )
 async def post_schema(
     current_version: str,
