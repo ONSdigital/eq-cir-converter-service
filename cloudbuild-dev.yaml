@@ -14,7 +14,7 @@ steps:
     args:
       - "-c"
       - |
-        docker build --cache-from "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:latest" -t "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:${SHORT_SHA}" -t "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:latest" .
+        docker build -f Dockerfile --cache-from "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:latest" -t "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:${SHORT_SHA}" -t "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:latest" .
         docker push "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:${SHORT_SHA}"
         docker push "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:latest"
 
