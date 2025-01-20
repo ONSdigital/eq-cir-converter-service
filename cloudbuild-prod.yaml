@@ -13,9 +13,8 @@ steps:
     args:
       - "-c"
       - |
-        docker build -t "europe-west2-docker.pkg.dev/ons-cir-mig-images/docker-images/${PROJECT_ID}:latest" -t "europe-west2-docker.pkg.dev/ons-cir-mig-images/docker-images/${PROJECT_ID}:${TAG_NAME}" .
+        docker build -t "europe-west2-docker.pkg.dev/ons-cir-mig-images/docker-images/${PROJECT_ID}:latest" .
         docker push "europe-west2-docker.pkg.dev/ons-cir-mig-images/docker-images/${PROJECT_ID}:latest"
-        docker push "europe-west2-docker.pkg.dev/ons-cir-mig-images/docker-images/${PROJECT_ID}:${TAG_NAME}"
 
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     id: "Run container"
@@ -43,5 +42,4 @@ options:
 
 # Store images in Google Artifact Registry
 images:
-  - europe-west2-docker.pkg.dev/ons-cir-mig-images/docker-images/${PROJECT_ID}:${TAG_NAME}
   - europe-west2-docker.pkg.dev/ons-cir-mig-images/docker-images/${PROJECT_ID}:latest
