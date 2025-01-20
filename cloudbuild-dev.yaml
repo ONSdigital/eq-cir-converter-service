@@ -1,11 +1,22 @@
 steps:
-  # Build the container image
-  - name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-f", "Dockerfile", "-t", "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:$SHORT_SHA", "."]
+  # # Build the container image
+  # - name: "gcr.io/cloud-builders/docker"
+  #   args: ["build", "-f", "Dockerfile", "-t", "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:$SHORT_SHA", "."]
 
-  # Push the container image to Google Artifact Registry
-  - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:$SHORT_SHA"]
+  # # Push the container image to Google Artifact Registry
+  # - name: "gcr.io/cloud-builders/docker"
+  #   args: ["push", "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:$SHORT_SHA"]
+
+  # Build and push the container image to Google Artifact Registry
+  - name: docker
+    id: "docker build and push"
+    entrypoint: sh
+    args:
+      - "-c"
+      - |
+        docker build --cache-from "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:latest" -t "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:${SHORT_SHA}" -t "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:latest" .
+        docker push "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:${SHORT_SHA}"
+        docker push "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:latest"
 
   # Deploy the container to Google Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
