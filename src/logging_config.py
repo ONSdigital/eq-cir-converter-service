@@ -1,8 +1,9 @@
 import logging
 import os
+from typing import Any
 
 
-def get_log_level():
+def get_log_level() -> Any:
     """Get the logging level from the LOG_LEVEL environment variable, or use the default value of INFO.
 
     Returns: int: The logging level
