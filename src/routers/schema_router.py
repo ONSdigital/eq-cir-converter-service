@@ -1,9 +1,11 @@
 from fastapi import APIRouter
+
 from src.logging_config import logging
 
 router = APIRouter()
 
 logger = logging.getLogger(__name__)
+
 
 # The POST endpoint to convert the CIR schema from one version to another
 @router.post(
