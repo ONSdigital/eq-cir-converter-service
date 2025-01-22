@@ -9,10 +9,10 @@ logger = logging.getLogger(__name__)
 
 # The POST endpoint to convert the CIR schema from one version to another
 @router.post(
-    "/convert/schema",
+    "/schema",
     response_model=dict,
 )
-async def post_schema(
+async def convert_schema(
     current_version: str,
     target_version: str,
     schema: dict,
