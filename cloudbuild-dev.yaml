@@ -27,6 +27,8 @@ steps:
         "--allow-unauthenticated",
         "--ingress",
         "internal-and-cloud-load-balancing",
+        "--service-account"
+        "cir-converter-cloud-run@${PROJECT_ID}.iam.gserviceaccount.com"
       ]
 
 options:
