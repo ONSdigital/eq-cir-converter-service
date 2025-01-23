@@ -59,8 +59,8 @@ docker-build:  ## Build the docker image.
 
 .PHONY: docker-compose-up
 docker-compose-up:  ## Start the docker container using docker-compose.
-	docker-compose up --build -d
+	docker compose up --build -d
 
 .PHONY: docker-compose-down
 docker-compose-down:  ## Stop the docker container using docker-compose.
-	docker-compose down
+	docker compose down
