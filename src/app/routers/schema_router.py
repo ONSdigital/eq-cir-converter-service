@@ -1,8 +1,7 @@
 """This module contains the FastAPI router for the schema conversion endpoint."""
 
+from config.logging_config import logging
 from fastapi import APIRouter
-
-from src.config.logging_config import logging
 
 router = APIRouter()
 

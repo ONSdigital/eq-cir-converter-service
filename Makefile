@@ -28,7 +28,8 @@ lint:  ## Run all linters (black/ruff/pylint/mypy).
 
 .PHONY: test
 test:  ## Run the tests and check coverage.
-	poetry run pytest -n auto --cov=src --cov-report term-missing --cov-fail-under=100
+	export PYTHONPATH=src/app && \
+	poetry run pytest -n auto --cov=src/app ./src/tests --cov-report term-missing --cov-fail-under=100
 
 .PHONY: mypy
 mypy:  ## Run mypy.
@@ -51,7 +52,8 @@ megalint:  ## Run the mega-linter.
 
 .PHONY: run
 run:  ## Start the local application.
-	poetry run uvicorn src.main:app --reload --port 5010
+	export PYTHONPATH=src/app && \
+	poetry run uvicorn src.app.main:app --reload --port 5010
 
 .PHONY: docker-build
 docker-build:  ## Build the docker image.

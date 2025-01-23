@@ -8,6 +8,8 @@ RUN pip install --no-cache-dir poetry==1.8.4 && \
     poetry config virtualenvs.create false && \
     poetry install --no-root --no-dev
 
-COPY . /app
+COPY src src
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "5010"]
+ENV PYTHONPATH=src/app
+
+CMD ["uvicorn", "src.app.main:app", "--host", "0.0.0.0", "--port", "5010"]
