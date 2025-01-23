@@ -1,3 +1,5 @@
+"""Configure the logging level for the application."""
+
 import logging
 import os
 from typing import Any

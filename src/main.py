@@ -1,3 +1,5 @@
+"""This module is the entry point of the FastAPI application."""
+
 import fastapi
 
 from src.routers import schema_router

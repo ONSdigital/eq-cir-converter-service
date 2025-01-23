@@ -1,3 +1,5 @@
+"""Configuration for unit tests."""
+
 import pytest
 from fastapi.testclient import TestClient
 
