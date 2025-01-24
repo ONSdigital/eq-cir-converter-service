@@ -13,7 +13,7 @@ steps:
     args:
       - "-c"
       - |
-        gcloud artifacts vulnerabilities list europe-west2-docker.pkg.dev/${PROJECT_ID}/sds/sds:latest \
+        gcloud artifacts vulnerabilities list europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:latest \
           --format=json > /workspace/vulnerability_report
 
   - name: "gcr.io/cloud-builders/gcloud"
