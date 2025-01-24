@@ -26,9 +26,13 @@ lint:  ## Run all linters (black/ruff/pylint/mypy).
 	poetry run ruff check .
 	make mypy
 
+.PHONY: init-path
+init-path:  ## Set the PYTHONPATH to the src/app folder.
+	export PYTHONPATH=src/app
+
 .PHONY: test
 test:  ## Run the tests and check coverage.
-	export PYTHONPATH=src/app && \
+	make init-path && \
 	poetry run pytest -n auto --cov=src/app ./src/tests --cov-report term-missing --cov-fail-under=100
 
 .PHONY: mypy
@@ -52,7 +56,7 @@ megalint:  ## Run the mega-linter.
 
 .PHONY: run
 run:  ## Start the local application.
-	export PYTHONPATH=src/app && \
+	make init-path && \
 	poetry run uvicorn src.app.main:app --reload --port 5010
 
 .PHONY: docker-build
