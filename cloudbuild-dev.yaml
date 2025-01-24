@@ -12,8 +12,7 @@ steps:
     entrypoint: bash
     args:
       - "-c"
-      - |
-        gcloud artifacts vulnerabilities list europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:latest \
+      - gcloud artifacts vulnerabilities list europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:latest \
           --format=json > /workspace/vulnerability_report
 
   - name: "gcr.io/cloud-builders/gcloud"
@@ -21,8 +20,7 @@ steps:
     entrypoint: bash
     args:
       - "-c"
-      - |
-        apt-get -y update && apt-get install -y jq
+      - apt-get -y update && apt-get install -y jq
         if jq -e '.[] | select( .vulnerability.effectiveSeverity == "CRITICAL")' /workspace/vulnerability_report > /dev/null; then
           echo "Error: Critical vulnerability found with image"
           exit 1
