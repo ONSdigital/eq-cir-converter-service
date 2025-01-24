@@ -12,18 +12,30 @@ steps:
     entrypoint: bash
     args:
       - "-c"
-      - gcloud artifacts vulnerabilities list europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:latest \
-          --format=json > /workspace/vulnerability_report
+      - |
+        if [ ${PROJECT_ID} == "ons-cir-mig-dev" || ${PROJECT_ID} == "ons-cir-mig-sandbox"]
+        then
+          gcloud artifacts vulnerabilities list europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:$SHORT_SHA \
+            --format=json > /workspace/vulnerability_report
+        else
+          echo "Step not run for ${PROJECT_ID}"
+        fi
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "Check for critical vulnerabilities"
     entrypoint: bash
     args:
       - "-c"
-      - apt-get -y update && apt-get install -y jq
-        if jq -e '.[] | select( .vulnerability.effectiveSeverity == "CRITICAL")' /workspace/vulnerability_report > /dev/null; then
-          echo "Error: Critical vulnerability found with image"
-          exit 1
+      - |
+        if [ ${PROJECT_ID} == "ons-cir-mig-dev" || ${PROJECT_ID} == "ons-cir-mig-sandbox" ]
+        then
+          apt-get -y update && apt-get install -y jq
+          if jq -e '.[] | select( .vulnerability.effectiveSeverity == "CRITICAL")' /workspace/vulnerability_report > /dev/null; then
+            echo "Error: Critical vulnerability found with image"
+            exit 1
+          fi
+        else
+          echo "Step not run for ${PROJECT_ID}"
         fi
 
   # Deploy the container to Google Cloud Run
