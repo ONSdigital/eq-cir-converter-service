@@ -19,7 +19,18 @@ async def convert_schema(
     target_version: str,
     schema: dict,
 ) -> dict:
-    """Convert the CIR schema from one version to another."""
+    """Convert the CIR schema from one version to another.
+
+    Request query parameters:
+    - current_version: The current version of the schema.
+    - target_version: The target version of the schema.
+
+    Request body:
+    - schema: The schema to convert.
+
+    Returns:
+    - dict: The converted schema.
+    """
     logger.info("Posting the cir schema...")
 
     logger.debug("Received current version %s and target version %s", current_version, target_version)

@@ -2,10 +2,9 @@
 
 from collections.abc import Generator
 
+import app.main as app
 import pytest
 from fastapi.testclient import TestClient
-
-import app.main as app
 
 
 @pytest.fixture
