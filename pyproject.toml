@@ -56,6 +56,13 @@ select = [
     "PL",
 ]
 
+ignore = [
+    # Allow missing docstring, remove to enforce docstrings across the board
+    "D100", "D104",
+    # Remove E501 when ruff supports all black rules
+    "E501",
+]
+
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
