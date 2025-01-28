@@ -1,7 +1,8 @@
 """This module contains the FastAPI router for the schema conversion endpoint."""
 
-from config.logging_config import logging
 from fastapi import APIRouter
+
+from eq_cir_converter_service.app.config.logging_config import logging
 
 router = APIRouter()
 

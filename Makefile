@@ -28,12 +28,11 @@ lint:  ## Run all linters (black/ruff/pylint/mypy).
 
 .PHONY: test
 test:  ## Run the tests and check coverage.
-	export PYTHONPATH=eq_cir_converter_service/app && \
-	poetry run pytest -n auto --cov=eq_cir_converter_service/app ./eq_cir_converter_service/tests --cov-report term-missing --cov-fail-under=100
+	poetry run pytest -n auto --cov=eq_cir_converter_service --cov-report term-missing --cov-fail-under=100
 
 .PHONY: mypy
 mypy:  ## Run mypy.
-	poetry run mypy eq_cir_converter_service
+	poetry run mypy -p eq_cir_converter_service
 
 .PHONY: install
 install:  ## Install the dependencies excluding dev.
@@ -52,7 +51,6 @@ megalint:  ## Run the mega-linter.
 
 .PHONY: run
 run:  ## Start the local application.
-	export PYTHONPATH=eq_cir_converter_service/app && \
 	poetry run uvicorn eq_cir_converter_service.app.main:app --reload --port 5010
 
 .PHONY: docker-build

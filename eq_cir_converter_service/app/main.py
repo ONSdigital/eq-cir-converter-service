@@ -1,7 +1,8 @@
 """This module is the entry point of the FastAPI application."""
 
 import fastapi
-from routers import schema_router
+
+from eq_cir_converter_service.app.routers import schema_router
 
 app = fastapi.FastAPI()
 

@@ -2,9 +2,10 @@
 
 from collections.abc import Generator
 
-import app.main as app
 import pytest
 from fastapi.testclient import TestClient
+
+import eq_cir_converter_service.app.main as app
 
 
 @pytest.fixture
