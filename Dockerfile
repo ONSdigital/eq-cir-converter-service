@@ -1,8 +1,8 @@
 FROM python:3.12.6-slim
 
-WORKDIR /app
+WORKDIR /root
 
-COPY pyproject.toml poetry.lock /app/
+COPY pyproject.toml poetry.lock /root/
 
 RUN pip install --no-cache-dir poetry==1.8.4 && \
     poetry config virtualenvs.create false && \
