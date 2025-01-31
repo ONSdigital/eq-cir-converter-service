@@ -8,6 +8,7 @@ from eq_cir_converter_service.app.config import logging_config
 
 def test_get_log_level():
     """Test that the logging level is set to INFO by default."""
+    os.environ["LOG_LEVEL"] = ""
     log_level = logging_config.get_log_level()
     assert log_level == logging.INFO
 
