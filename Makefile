@@ -57,10 +57,10 @@ run:  ## Start the local application.
 docker-build:  ## Build the docker image.
 	docker build -t cir-converter-service .
 
-.PHONY: docker-compose-up
-docker-compose-up:  ## Start the docker container using docker-compose.
-	docker compose up --build -d
+.PHONY: docker-run
+docker-run:  ## Run the docker container using the built image.
+	docker run -d -p 5010:5010 --name eq-cir-converter-service cir-converter-service
 
-.PHONY: docker-compose-down
-docker-compose-down:  ## Stop the docker container using docker-compose.
-	docker compose down
+.PHONY: docker-stop-remove
+docker-stop-remove:  ## Stop and remove the docker container.
+	docker stop eq-cir-converter-service && docker rm eq-cir-converter-service
