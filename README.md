@@ -72,7 +72,7 @@ Ensure you have the following installed:
    make install
    ```
 
-3. Set the LOG_LEVEL environment variable to INFO, DEBUG, WARN, ERROR (If the log level is not set, it will be set to INFO by default.)
+3. Set the LOG_LEVEL to INFO, DEBUG, WARN, ERROR (If the log level is not set, it will be set to INFO by default.)
 
     ```bash
     export LOG_LEVEL=INFO
