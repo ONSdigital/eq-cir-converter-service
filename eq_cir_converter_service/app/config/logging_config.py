@@ -2,13 +2,12 @@
 
 import logging
 import os
-from typing import Any
 
 
-def get_log_level() -> Any:
+def get_log_level() -> int:
     """Get the logging level from the LOG_LEVEL environment variable, or use the default value of INFO."""
     log_level = os.environ.get("LOG_LEVEL", "INFO")
-    return getattr(logging, log_level)
+    return int(getattr(logging, log_level, logging.INFO))
 
 
 logging.basicConfig(
