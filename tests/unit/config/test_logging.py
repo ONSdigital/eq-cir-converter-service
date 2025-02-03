@@ -3,7 +3,7 @@
 import logging
 import os
 
-from eq_cir_converter_service.app.config import logging_config
+from eq_cir_converter_service.config import logging_config
 
 
 def test_get_log_level():

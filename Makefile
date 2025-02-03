@@ -51,7 +51,7 @@ megalint:  ## Run the mega-linter.
 
 .PHONY: run
 run:  ## Start the local application.
-	poetry run uvicorn eq_cir_converter_service.app.main:app --reload --port 5010
+	poetry run uvicorn eq_cir_converter_service.main:app --reload --port 5010
 
 .PHONY: docker-build
 docker-build:  ## Build the docker image.

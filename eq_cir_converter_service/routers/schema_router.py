@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from eq_cir_converter_service.app.config.logging_config import logging
+from eq_cir_converter_service.config.logging_config import logging
 
 router = APIRouter()
 

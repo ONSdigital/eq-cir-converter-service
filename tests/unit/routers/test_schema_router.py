@@ -3,8 +3,6 @@
 from fastapi import status
 from fastapi.testclient import TestClient
 
-"""Test the schema router with valid JSON."""
-
 
 def test_schema_router_with_valid_json(test_client: TestClient) -> None:
     """Test the post schema method with valid JSON."""

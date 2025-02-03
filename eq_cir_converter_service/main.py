@@ -2,7 +2,7 @@
 
 import fastapi
 
-from eq_cir_converter_service.app.routers import schema_router
+from eq_cir_converter_service.routers import schema_router
 
 app = fastapi.FastAPI()
 
