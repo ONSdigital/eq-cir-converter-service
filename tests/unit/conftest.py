@@ -1,8 +1,14 @@
-# import pytest
+"""Configuration for unit tests."""
+
+from collections.abc import Generator
+
+import pytest
+from fastapi.testclient import TestClient
+
+import eq_cir_converter_service.main as app
 
 
-# @pytest.fixture()
-# def calculator():
-#     # Create a new instance of the Calculator class for each test session.
-#     yield Calculator()
-#     # Clean up after the test session is complete.
+@pytest.fixture
+def test_client() -> Generator[TestClient, None, None]:
+    """General client for hitting endpoints in tests."""
+    yield TestClient(app.app)
