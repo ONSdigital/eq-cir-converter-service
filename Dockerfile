@@ -1,13 +1,13 @@
-FROM python:3.12.6
+FROM python:3.12.6-alpine
 
-WORKDIR /app
+WORKDIR /eq_cir_converter_service
 
-COPY pyproject.toml poetry.lock /app/
+COPY pyproject.toml poetry.lock /eq_cir_converter_service/
 
 RUN pip install --no-cache-dir poetry==1.8.4 && \
     poetry config virtualenvs.create false && \
     poetry install --no-root --no-dev
 
-COPY . /app
+COPY eq_cir_converter_service eq_cir_converter_service
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "5010"]
+CMD ["uvicorn", "eq_cir_converter_service.main:app", "--host", "0.0.0.0", "--port", "5010"]
