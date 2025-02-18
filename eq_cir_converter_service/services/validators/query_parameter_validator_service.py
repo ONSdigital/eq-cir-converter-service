@@ -1,6 +1,7 @@
 """This module contains the query parameter validator service."""
 
-import re, os
+import os
+import re
 
 from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.exception import exceptions
@@ -14,6 +15,7 @@ class QueryParameterValidatorService:
     @staticmethod
     def validate_current_target_version(current_version: str, target_version: str) -> None:
         """Validates the current and target version in the request parameters using the regex pattern x.y.z where x, y, z are numbers.
+
         Also, validates the current and target version against the environment variables.
 
         Parameters:

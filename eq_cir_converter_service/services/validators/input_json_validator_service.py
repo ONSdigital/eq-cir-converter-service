@@ -1,7 +1,10 @@
+"""This module contains the service class for validating the input JSON."""
+
 from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.exception import exceptions
 
 logger = logging.getLogger(__name__)
+
 
 class InputJSONValidatorService:
     """Service class for validating the input JSON."""
@@ -17,4 +20,3 @@ class InputJSONValidatorService:
             logger.error("Input JSON schema is empty")
             raise exceptions.InputJSONValidationException
         logger.info("Input JSON schema is not empty")
-        return None
