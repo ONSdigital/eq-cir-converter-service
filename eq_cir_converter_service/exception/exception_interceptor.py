@@ -28,7 +28,7 @@ class ExceptionInterceptor:
         """When a validation fails and a 400 HTTP response is returned."""
         er = ExceptionResponder(status.HTTP_400_BAD_REQUEST, erm.erm_400_invalid_target_version_exception)
         return er.throw_er_with_json()
-    
+
     @staticmethod
     def throw_400_empty_input_json_exception(request: Request, exc: Exception) -> Any:
         """When a validation fails and a 400 HTTP response is returned."""

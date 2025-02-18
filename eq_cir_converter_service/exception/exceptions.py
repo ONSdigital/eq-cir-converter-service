@@ -6,18 +6,20 @@ class SchemaProcessingException(Exception):
 
     pass
 
+
 class InvalidCurrentVersionException(Exception):
     """This is the Validation exception for request parameters."""
 
     pass
+
 
 class InvalidTargetVersionException(Exception):
     """This is the Validation exception for request parameters."""
 
     pass
 
+
 class InputJSONValidationException(Exception):
     """This is the Validation exception for empty input JSON."""
 
     pass
-
