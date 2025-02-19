@@ -10,6 +10,8 @@ RUN pip install --no-cache-dir poetry==1.8.4 && \
 
 COPY eq_cir_converter_service eq_cir_converter_service
 
+ENV LOG_LEVEL=INFO
+
 ENV CURRENT_VERSION=9.0.0
 
 ENV TARGET_VERSION=10.0.0
