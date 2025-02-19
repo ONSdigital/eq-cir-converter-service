@@ -1,10 +1,10 @@
 """This module contains the query parameter validator service."""
 
-import os
 import re
 
 from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.exception import exceptions
+from eq_cir_converter_service.config.config_helpers import get_current_version_env, get_target_version_env
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ class QueryParameterValidatorService:
         if re.match(pattern, current_version):
             logger.info("Current version matches the pattern")
 
-            env_current_version = os.getenv("CURRENT_VERSION", "9.0.0")
+            env_current_version = get_current_version_env()
 
             if current_version == env_current_version:
                 logger.info("Current version is the expected value %s", env_current_version)
@@ -41,7 +41,7 @@ class QueryParameterValidatorService:
         if re.match(pattern, target_version):
             logger.info("Target version matches the pattern")
 
-            env_target_version = os.getenv("TARGET_VERSION", "10.0.0")
+            env_target_version = get_target_version_env()
 
             if target_version == env_target_version:
                 logger.info("Target version is the expected value %s", env_target_version)
