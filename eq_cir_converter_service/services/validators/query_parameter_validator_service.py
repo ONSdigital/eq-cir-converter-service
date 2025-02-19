@@ -2,9 +2,9 @@
 
 import re
 
+from eq_cir_converter_service.config.config_helpers import get_current_version_env, get_target_version_env
 from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.exception import exceptions
-from eq_cir_converter_service.config.config_helpers import get_current_version_env, get_target_version_env
 
 logger = logging.getLogger(__name__)
 

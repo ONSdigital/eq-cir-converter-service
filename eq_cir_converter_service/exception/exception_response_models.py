@@ -1,6 +1,7 @@
 """This module contains the Pydantic models for the exception responses that are returned by the API."""
 
 from pydantic import BaseModel
+
 from eq_cir_converter_service.config.config_helpers import get_current_version_env, get_target_version_env
 
 env_current_version = get_current_version_env()

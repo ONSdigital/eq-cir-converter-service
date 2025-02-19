@@ -2,8 +2,8 @@
 
 from fastapi import status
 from fastapi.testclient import TestClient
-import eq_cir_converter_service.exception.exception_response_models as erm
 
+import eq_cir_converter_service.exception.exception_response_models as erm
 from eq_cir_converter_service.config.config_helpers import get_current_version_env, get_target_version_env
 
 env_current_version = get_current_version_env()
