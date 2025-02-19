@@ -72,10 +72,13 @@ Ensure you have the following installed:
    make install
    ```
 
-3. Set the LOG_LEVEL to INFO, DEBUG, WARN, ERROR (If the log level is not set, it will be set to INFO by default.)
+3. Set the environment variables - LOG_LEVEL, CURRENT_VERSION, TARGET_VERSION
+   LOG_LEVEL set to INFO (It can be set to INFO, DEBUG, WARN, ERROR - if not set, it will be set to INFO by default.)
+   CURRENT_VERSION set to 9.0.0 (If not set, the value of 9.0.0 will be used by default.)
+   TARGET_VERSION set to 10.0.0 (If not set, the value of 10.0.0 will be used by default.)
 
     ```bash
-    export LOG_LEVEL=INFO
+    make init
     ```
 
 4. Run the application
