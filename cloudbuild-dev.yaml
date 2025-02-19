@@ -27,6 +27,8 @@ steps:
         "--allow-unauthenticated",
         "--ingress",
         "internal-and-cloud-load-balancing",
+        "--update-env-vars",
+        "CURRENT_VERSION=9.0.0,TARGET_VERSION=10.0.0",
       ]
 
 options:
