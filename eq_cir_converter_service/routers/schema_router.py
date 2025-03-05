@@ -61,6 +61,8 @@ async def convert_schema(
 
     """Validate the query parameters and input JSON."""
 
+    # Test commit
+
     QueryParameterValidatorService.validate_current_target_version(current_version, target_version)
     InputJSONValidatorService.validate_input_json(schema)
 
