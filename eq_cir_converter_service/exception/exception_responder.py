@@ -16,7 +16,7 @@ class ExceptionResponder:
         self.status_code = status_code
         self.response = response
 
-    def throw_er_with_json(self) -> JSONResponse:
+    def throw_exception_with_json(self) -> JSONResponse:
         """Throw the exception with a JSON response."""
         return JSONResponse(
             status_code=self.status_code,

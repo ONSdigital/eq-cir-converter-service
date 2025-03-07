@@ -10,19 +10,19 @@ app = fastapi.FastAPI()
 
 app.add_exception_handler(
     exceptions.SchemaProcessingException,
-    ExceptionInterceptor.throw_500_schema_processing_exception,
+    ExceptionInterceptor.throw_exception_500_schema_processing,
 )
 app.add_exception_handler(
     exceptions.InvalidCurrentVersionException,
-    ExceptionInterceptor.throw_400_invalid_current_version_exception,
+    ExceptionInterceptor.throw_exception_400_invalid_current_version,
 )
 app.add_exception_handler(
     exceptions.InvalidTargetVersionException,
-    ExceptionInterceptor.throw_400_invalid_target_version_exception,
+    ExceptionInterceptor.throw_exception_400_invalid_target_version,
 )
 app.add_exception_handler(
     exceptions.InputJSONValidationException,
-    ExceptionInterceptor.throw_400_empty_input_json_exception,
+    ExceptionInterceptor.throw_exception_400_empty_input_json,
 )
 
 app.include_router(schema_router.router)
