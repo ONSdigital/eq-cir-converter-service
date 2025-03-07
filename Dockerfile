@@ -12,8 +12,4 @@ COPY eq_cir_converter_service eq_cir_converter_service
 
 ENV LOG_LEVEL=INFO
 
-ENV CURRENT_VERSION=9.0.0
-
-ENV TARGET_VERSION=10.0.0
-
 CMD ["uvicorn", "eq_cir_converter_service.main:app", "--host", "0.0.0.0", "--port", "5010"]

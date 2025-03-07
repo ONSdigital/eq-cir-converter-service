@@ -1,8 +1,14 @@
 """Configure the logging level for the application."""
 
 import logging
+import os
 
-from eq_cir_converter_service.config.config_helpers import get_log_level
+
+def get_log_level() -> int:
+    """Get the logging level from the LOG_LEVEL environment variable, or use the default value of INFO."""
+    log_level = os.getenv("LOG_LEVEL", "INFO")
+    return int(getattr(logging, log_level, logging.INFO))
+
 
 logging.basicConfig(
     level=get_log_level(),

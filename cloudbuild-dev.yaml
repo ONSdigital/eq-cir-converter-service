@@ -28,7 +28,7 @@ steps:
         "--ingress",
         "internal-and-cloud-load-balancing",
         "--update-env-vars",
-        "LOG_LEVEL=${_LOG_LEVEL},CURRENT_VERSION=${_CURRENT_VERSION},TARGET_VERSION=${_TARGET_VERSION}",
+        "LOG_LEVEL=${_LOG_LEVEL}",
       ]
 
 options:
