@@ -49,8 +49,8 @@ megalint:  ## Run the mega-linter.
 		-v $(shell pwd):/tmp/lint:rw \
 		oxsecurity/megalinter:v7
 
-.PHONY: set-env-vars
-set-env-vars: ## Set the environment variables.
+.PHONY: set-env-var
+set-env-var: ## Set the environment variable.
 	export LOG_LEVEL=INFO
 
 .PHONY: run

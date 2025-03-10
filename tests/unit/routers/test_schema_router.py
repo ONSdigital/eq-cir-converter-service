@@ -66,6 +66,7 @@ def test_convert_schema_exception(test_client: TestClient) -> None:
     )
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
     assert response.json() == {"status": "error", "message": "Error encountered while processing the schema"}
+
     SchemaProcessorService.convert_schema.assert_called_with(
         current_version, target_version, {"valid_json": "valid_json"}
     )
