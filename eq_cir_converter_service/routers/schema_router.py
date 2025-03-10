@@ -3,6 +3,7 @@
 from fastapi import APIRouter
 
 from eq_cir_converter_service.config.logging_config import logging
+from eq_cir_converter_service.exception import exceptions
 from eq_cir_converter_service.exception.exception_response_models import (
     ExceptionResponseModel,
     exception_400_invalid_current_version,
@@ -64,8 +65,14 @@ async def convert_schema(
     validate_current_target_version(current_version, target_version)
     validate_input_json(schema)
 
-    # TO DO: Implement the logic to convert the schema from one version to another
-    # The logic should be implemented in the services package
-    converted_schema = SchemaProcessorService.convert_schema(current_version, target_version, schema)
+    try:
+        # TO DO: Implement the logic to convert the schema from one version to another
+        # The logic should be implemented in the services package
 
-    return converted_schema
+        converted_schema = SchemaProcessorService.convert_schema(current_version, target_version, schema)
+
+        return converted_schema
+
+    except Exception as exc:
+        logger.error(f"An exception occurred while processing the schema: {exc}")
+        raise exceptions.SchemaProcessingException from exc
