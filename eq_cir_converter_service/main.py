@@ -3,7 +3,7 @@
 import fastapi
 
 from eq_cir_converter_service.exception import exceptions
-from eq_cir_converter_service.exception.exception_interceptor import ExceptionInterceptor
+import eq_cir_converter_service.exception.exception_interceptor as ExceptionInterceptor
 from eq_cir_converter_service.routers import schema_router
 
 app = fastapi.FastAPI()

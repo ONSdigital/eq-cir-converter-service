@@ -74,5 +74,6 @@ async def convert_schema(
         return converted_schema
 
     except Exception as exc:
-        logger.error(f"An exception occurred while processing the schema: {exc}")
+
+        logger.error("An exception occurred while processing the schema", exc_info=exc)
         raise exceptions.SchemaProcessingException from exc
