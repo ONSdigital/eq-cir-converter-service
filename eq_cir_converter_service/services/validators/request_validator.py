@@ -17,7 +17,7 @@ def validate_current_target_version(current_version: str, target_version: str) -
     - current_version: The current version of the schema.
     - target_version: The target version of the schema.
     """
-    pattern = r"^(\d+\.\d+\.\d+)$"
+    pattern = r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$"
 
     if re.match(pattern, current_version):
         logger.info("Current version matches the pattern")
