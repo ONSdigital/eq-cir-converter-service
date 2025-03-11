@@ -79,7 +79,7 @@ Ensure you have the following installed:
     make set-env-var
     ```
 
-5. Run the application
+4. Run the application
 
    ```bash
    make run
