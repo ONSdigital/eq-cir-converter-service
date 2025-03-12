@@ -5,13 +5,8 @@ from unittest.mock import MagicMock
 from fastapi import status
 from fastapi.testclient import TestClient
 
-from eq_cir_converter_service.exception.exception_response_models import (
-    exception_400_empty_input_json,
-    exception_400_invalid_current_version,
-    exception_400_invalid_target_version,
-)
-from eq_cir_converter_service.exception.exceptions import SchemaProcessingException
-from eq_cir_converter_service.services.schema.schema_processor_service import SchemaProcessorService
+from eq_cir_converter_service.exception import exception_messages
+import eq_cir_converter_service.services.schema.schema_processor_service as SchemaProcessorService
 
 current_version = "9.0.0"
 target_version = "10.0.0"
@@ -34,7 +29,9 @@ def test_schema_router_with_invalid_current_version(test_client: TestClient) -> 
         json={"valid_json": "valid_json"},
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert response.json() == {"status": "error", "message": exception_400_invalid_current_version.message}
+    assert response.json() == {
+        "detail": {"status": "error", "message": exception_messages.exception_400_invalid_version("current")}
+    }
 
 
 def test_schema_router_with_invalid_target_version(test_client: TestClient) -> None:
@@ -44,7 +41,9 @@ def test_schema_router_with_invalid_target_version(test_client: TestClient) -> N
         json={"valid_json": "valid_json"},
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert response.json() == {"status": "error", "message": exception_400_invalid_target_version.message}
+    assert response.json() == {
+        "detail": {"status": "error", "message": exception_messages.exception_400_invalid_version("target")}
+    }
 
 
 def test_schema_router_with_empty_json(test_client: TestClient) -> None:
@@ -54,18 +53,22 @@ def test_schema_router_with_empty_json(test_client: TestClient) -> None:
         json={},
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert response.json() == {"status": "error", "message": exception_400_empty_input_json.message}
+    assert response.json() == {
+        "detail": {"status": "error", "message": exception_messages.exception_400_empty_input_json}
+    }
 
 
 def test_convert_schema_exception(test_client: TestClient) -> None:
-    """Test convert_schema method to raise SchemaProcessingException."""
-    SchemaProcessorService.convert_schema = MagicMock(side_effect=SchemaProcessingException("Test Exception"))
+    """Test the convert schema method with an exception."""
+    SchemaProcessorService.convert_schema = MagicMock(side_effect=Exception("Test Exception"))
     response = test_client.post(
         f"/schema?current_version={current_version}&target_version={target_version}",
         json={"valid_json": "valid_json"},
     )
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
-    assert response.json() == {"status": "error", "message": "Error encountered while processing the schema"}
+    assert response.json() == {
+        "detail": {"status": "error", "message": exception_messages.exception_500_schema_processing}
+    }
 
     SchemaProcessorService.convert_schema.assert_called_with(
         current_version, target_version, {"valid_json": "valid_json"}
