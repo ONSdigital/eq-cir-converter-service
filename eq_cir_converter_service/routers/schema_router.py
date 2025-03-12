@@ -1,14 +1,9 @@
 """This module contains the FastAPI router for the schema conversion endpoint."""
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from eq_cir_converter_service.config.logging_config import logging
-from eq_cir_converter_service.exception import exceptions
-from eq_cir_converter_service.exception.exception_response_models import (
-    ExceptionResponseModel,
-    exception_400_invalid_current_version,
-    exception_500_schema_processing,
-)
+from eq_cir_converter_service.exception import exception_messages
 from eq_cir_converter_service.services.schema.schema_processor_service import (
     SchemaProcessorService,
 )
@@ -27,16 +22,6 @@ logger = logging.getLogger(__name__)
 @router.post(
     "/schema",
     response_model=dict,
-    responses={
-        400: {
-            "model": ExceptionResponseModel,
-            "content": {"application/json": {"example": exception_400_invalid_current_version}},
-        },
-        500: {
-            "model": ExceptionResponseModel,
-            "content": {"application/json": {"example": exception_500_schema_processing}},
-        },
-    },
 )
 async def convert_schema(
     current_version: str,
@@ -76,4 +61,6 @@ async def convert_schema(
     except Exception as exc:
 
         logger.error("An exception occurred while processing the schema", exc_info=exc)
-        raise exceptions.SchemaProcessingException from exc
+        raise HTTPException(
+            status_code=500, detail={"status": "error", "message": exception_messages.exception_500_schema_processing}
+        ) from exc
