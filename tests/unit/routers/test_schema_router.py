@@ -5,8 +5,8 @@ from unittest.mock import MagicMock
 from fastapi import status
 from fastapi.testclient import TestClient
 
-from eq_cir_converter_service.exception import exception_messages
 import eq_cir_converter_service.services.schema.schema_processor_service as SchemaProcessorService
+from eq_cir_converter_service.exception import exception_messages
 
 current_version = "9.0.0"
 target_version = "10.0.0"
