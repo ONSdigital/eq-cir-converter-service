@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
     "/schema",
     response_model=dict,
 )
-async def convert_schema(
+async def post_schema(
     current_version: str,
     target_version: str,
     schema: dict,
