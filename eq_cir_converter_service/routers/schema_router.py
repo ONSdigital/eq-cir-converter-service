@@ -56,9 +56,7 @@ async def post_schema(
         # TO DO: Implement the logic to convert the schema from one version to another
         # The logic should be implemented in the services package
 
-        converted_schema = await SchemaProcessorService.convert_schema(current_version, target_version, schema)
-
-        return converted_schema
+        return await SchemaProcessorService.convert_schema(current_version, target_version, schema)
 
     except Exception as exc:
 
