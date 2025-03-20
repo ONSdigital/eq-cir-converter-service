@@ -10,7 +10,7 @@ from eq_cir_converter_service.exception import exception_messages
 logger = logging.getLogger(__name__)
 
 
-def check_valid_pattern(version: str, version_type: str) -> None:
+def validate_version(version: str, version_type: str) -> None:
     """Checks if the version matches the regex pattern.
 
     Parameters:
@@ -28,19 +28,6 @@ def check_valid_pattern(version: str, version_type: str) -> None:
             status_code=status.HTTP_400_BAD_REQUEST,
             detail={"status": "error", "message": exception_messages.exception_400_invalid_version(version_type)},
         )
-
-
-def validate_current_target_version(current_version: str, target_version: str) -> None:
-    """Validates the current and target version in the request parameters using the regex pattern x.y.z where x, y, z are numbers.
-
-    Parameters:
-    - current_version: The current version of the schema.
-    - target_version: The target version of the schema.
-    """
-    check_valid_pattern(current_version, "current")
-    check_valid_pattern(target_version, "target")
-
-    logger.info("The current and target versions are valid")
 
 
 def validate_input_json(schema: dict) -> None:

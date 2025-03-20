@@ -6,8 +6,8 @@ import eq_cir_converter_service.services.schema.schema_processor_service as Sche
 from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.exception import exception_messages
 from eq_cir_converter_service.services.validators.request_validator import (
-    validate_current_target_version,
     validate_input_json,
+    validate_version,
 )
 
 router = APIRouter()
@@ -43,9 +43,13 @@ async def post_schema(
     logger.debug("Received current version %s and target version %s", current_version, target_version)
     logger.debug("Input body: %s", schema)
 
-    """Validate the query parameters and input JSON."""
+    """Validate the current and target version."""
 
-    validate_current_target_version(current_version, target_version)
+    validate_version(current_version, "current")
+    validate_version(target_version, "target")
+
+    """Validate the input JSON schema."""
+
     validate_input_json(schema)
 
     try:
