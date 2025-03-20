@@ -10,10 +10,15 @@ steps:
       "-t", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:latest", ".",
     ]
 
-  # Push the container images to Google Artifact Registry
+  # Push the SHORT_SHA image to Google Artifact Registry
   - name: "gcr.io/cloud-builders/docker"
     args: [
       "push", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:$SHORT_SHA",
+    ]
+
+  # Push the latest image to Google Artifact Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: [
       "push", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:latest",
     ]
 
