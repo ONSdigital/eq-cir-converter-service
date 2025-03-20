@@ -14,8 +14,8 @@ def validate_version(version: str, version_type: str) -> None:
     """Checks if the version matches the regex pattern.
 
     Parameters:
-    - pattern: The regex pattern to match.
-    - version: The version to match against the pattern.
+    - version: The version to validate.
+    - version_type: The type of version (current or target).
     """
     pattern = r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$"
 
