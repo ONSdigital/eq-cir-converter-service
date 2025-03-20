@@ -1,11 +1,21 @@
+#TODO: In cloud build, point at the changes here (which need to be pushed up to a branch)
+
+
 steps:
   # Build the container image
   - name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-f", "Dockerfile", "-t", "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:$SHORT_SHA", "."]
+    args: [
+      "build", "--cache-from", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:latest",
+      "-t", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:$SHORT_SHA",
+      "-t", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:latest", "."
+    ]
 
-  # Push the container image to Google Artifact Registry
+  # Push the container images to Google Artifact Registry
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:$SHORT_SHA"]
+    args: [
+      "push", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:$SHORT_SHA"
+      "push", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:latest"
+    ]
 
   # Deploy the container to Google Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
@@ -17,7 +27,7 @@ steps:
         "deploy",
         "cir-converter-service",
         "--image",
-        "europe-west2-docker.pkg.dev/${PROJECT_ID}/docker-images/cir-converter-service:$SHORT_SHA",
+        "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:$SHORT_SHA",
         "--port",
         "5010",
         "--region",
