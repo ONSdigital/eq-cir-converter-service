@@ -5,7 +5,7 @@ from eq_cir_converter_service.config.logging_config import logging
 logger = logging.getLogger(__name__)
 
 
-async def convert_schema(current_version: str, target_version: str, schema: dict) -> dict:
+async def convert_schema(current_version: str, target_version: str, schema: dict) -> dict[str, str]:
     """Converts the schema from the current to the target version.
 
     Parameters:
