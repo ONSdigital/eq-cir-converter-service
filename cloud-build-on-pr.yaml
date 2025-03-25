@@ -1,0 +1,16 @@
+steps:
+  # Build the container image using the BRANCH_NAME as the tag
+  - name: "gcr.io/cloud-builders/docker"
+    args: [
+      "build", "--cache-from", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:latest",
+      "-t", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:$BRANCH_NAME", ".",
+    ]
+
+  # Push the BRANCH_NAME image to Google Artifact Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: [
+      "push", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:$BRANCH_NAME",
+    ]
+
+options:
+  logging: CLOUD_LOGGING_ONLY
