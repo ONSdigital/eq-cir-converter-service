@@ -1,6 +1,7 @@
 """This module contains the request validators for the EQ CIR Converter Service."""
 
 import re
+from collections.abc import Mapping
 
 from fastapi import HTTPException, status
 
@@ -30,7 +31,7 @@ def validate_version(version: str, version_type: str) -> None:
         )
 
 
-def validate_input_json(schema: dict) -> None:
+def validate_input_json(schema: Mapping[str, str]) -> None:
     """Validates the input JSON schema to ensure it is not empty.
 
     Parameters:

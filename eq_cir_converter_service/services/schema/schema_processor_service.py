@@ -1,11 +1,13 @@
 """This module converts the schema from the current to the target version."""
 
+from collections.abc import Mapping
+
 from eq_cir_converter_service.config.logging_config import logging
 
 logger = logging.getLogger(__name__)
 
 
-async def convert_schema(current_version: str, target_version: str, schema: dict[str, str]) -> dict[str, str]:
+async def convert_schema(current_version: str, target_version: str, schema: Mapping[str, str]) -> dict[str, str]:
     """Converts the schema from the current to the target version.
 
     Parameters:
@@ -20,4 +22,9 @@ async def convert_schema(current_version: str, target_version: str, schema: dict
 
     # TO DO: Implement the logic to convert the schema from one version to another
 
-    return schema
+    converted_schema = {}
+
+    for key, value in schema.items():
+        converted_schema[key] = value
+
+    return converted_schema
