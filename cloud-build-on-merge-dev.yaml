@@ -2,21 +2,21 @@ steps:
   # Build the container image
   - name: "gcr.io/cloud-builders/docker"
     args: [
-      "build", "--cache-from", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:latest",
-      "-t", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:$SHORT_SHA",
-      "-t", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:latest", ".",
+      "build", "--cache-from", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
+      "-t", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:$SHORT_SHA",
+      "-t", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest", ".",
     ]
 
   # Push the SHORT_SHA image to Google Artifact Registry
   - name: "gcr.io/cloud-builders/docker"
     args: [
-      "push", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:$SHORT_SHA",
+      "push", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:$SHORT_SHA",
     ]
 
   # Push the latest image to Google Artifact Registry
   - name: "gcr.io/cloud-builders/docker"
     args: [
-      "push", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:latest",
+      "push", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
     ]
 
   # Deploy the container to Google Cloud Run
@@ -29,7 +29,7 @@ steps:
         "deploy",
         "${_SERVICE_NAME}",
         "--image",
-        "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/cir-converter-service:latest",
+        "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
         "--port",
         "${_PORT}",
         "--region",
