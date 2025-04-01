@@ -25,9 +25,7 @@ def validate_version(version: str, version_type: str) -> None:
         logger.info("The %s version matches the pattern", version_type)
 
     else:
-        logger.error(
-            "Invalid %s version %s", version_type, version
-        )
+        logger.error("Invalid %s version %s", version_type, version)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail={"status": "error", "message": exception_messages.exception_400_invalid_version(version_type)},
