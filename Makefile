@@ -1,4 +1,5 @@
 .DEFAULT_GOAL := all
+LOG_LEVEL=INFO
 
 .PHONY: all
 all: ## Show the available make targets.
@@ -49,12 +50,9 @@ megalint:  ## Run the mega-linter.
 		-v $(shell pwd):/tmp/lint:rw \
 		oxsecurity/megalinter:v7
 
-.PHONY: set-env-var
-set-env-var: ## Set the environment variable.
-	export LOG_LEVEL=INFO
-
 .PHONY: run
 run:  ## Start the local application.
+	export LOG_LEVEL=${LOG_LEVEL} && \
 	poetry run uvicorn eq_cir_converter_service.main:app --reload --port 5010
 
 .PHONY: docker-build

@@ -44,10 +44,9 @@ async def post_schema(
     logger.info("Posting the cir schema...")
 
     logger.debug(
-        "Received current version {current_version} and target version {target_version}",
-        extra={"current_version": current_version, "target_version": target_version},
+        "Received current version %s and target version %s", current_version, target_version
     )
-    logger.debug("Received schema: {schema}", extra={"schema": schema})
+    logger.debug("Received schema: %s", schema)
 
     """Validate the current and target version."""
 

@@ -22,11 +22,11 @@ def validate_version(version: str, version_type: str) -> None:
     pattern = r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$"
 
     if re.match(pattern, version):
-        logger.info("The {version_type} version matches the pattern", extra={"version_type": version_type})
+        logger.info("The %s version matches the pattern", version_type)
 
     else:
         logger.error(
-            "Invalid {version_type} version {version}", extra={"version_type": version_type, "version": version}
+            "Invalid %s version %s", version_type, version
         )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
