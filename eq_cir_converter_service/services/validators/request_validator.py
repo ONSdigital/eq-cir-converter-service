@@ -2,6 +2,7 @@
 
 import re
 from collections.abc import Mapping
+from typing import Union
 
 from fastapi import HTTPException, status
 
@@ -33,7 +34,7 @@ def validate_version(version: str, version_type: str) -> None:
         )
 
 
-def validate_input_json(schema: Mapping[str, str]) -> None:
+def validate_input_json(schema: Mapping[str, Union[bool, int, str, list, object]]) -> None:
     """Validates the input JSON schema to ensure it is not empty.
 
     Parameters:
