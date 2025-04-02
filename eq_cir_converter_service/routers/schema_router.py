@@ -1,8 +1,5 @@
 """This module contains the FastAPI router for the schema conversion endpoint."""
 
-from collections.abc import Mapping
-from typing import Union
-
 from fastapi import APIRouter, HTTPException
 
 import eq_cir_converter_service.services.schema.schema_processor_service as SchemaProcessorService
@@ -12,6 +9,7 @@ from eq_cir_converter_service.services.validators.request_validator import (
     validate_input_json,
     validate_version,
 )
+from eq_cir_converter_service.types.custom_types import ConvertedSchema, InputSchema
 
 router = APIRouter()
 
@@ -22,13 +20,13 @@ logger = logging.getLogger(__name__)
 
 @router.post(
     "/schema",
-    response_model=dict,
+    response_model=ConvertedSchema,
 )
 async def post_schema(
     current_version: str,
     target_version: str,
-    schema: Mapping[str, Union[bool, int, str, list, object]],
-) -> dict[str, Union[bool, int, str, list, object]]:
+    schema: InputSchema,
+) -> ConvertedSchema:
     """Convert the CIR schema from one version to another.
 
     Request query parameters:
