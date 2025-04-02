@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := all
-LOG_LEVEL=INFO
+LOG_LEVEL = INFO
 
 .PHONY: all
 all: ## Show the available make targets.

@@ -42,7 +42,7 @@ def validate_input_json(schema: Mapping[str, Union[bool, int, str, list, object]
         logger.error("Input JSON schema is empty")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail={"status": "error", "message": exception_messages.exception_400_empty_input_json},
+            detail={"status": "error", "message": exception_messages.EXCEPTION_400_EMPTY_INPUT_JSON},
         )
 
     logger.info("Input JSON schema is not empty")

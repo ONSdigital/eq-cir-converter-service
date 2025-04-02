@@ -54,7 +54,7 @@ def test_schema_router_with_empty_json(test_client: TestClient) -> None:
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json() == {
-        "detail": {"status": "error", "message": exception_messages.exception_400_empty_input_json}
+        "detail": {"status": "error", "message": exception_messages.EXCEPTION_400_EMPTY_INPUT_JSON}
     }
 
 
@@ -67,7 +67,7 @@ def test_convert_schema_exception(test_client: TestClient) -> None:
     )
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
     assert response.json() == {
-        "detail": {"status": "error", "message": exception_messages.exception_500_schema_processing}
+        "detail": {"status": "error", "message": exception_messages.EXCEPTION_500_SCHEMA_PROCESSING}
     }
 
     SchemaProcessorService.convert_schema.assert_called_with(
