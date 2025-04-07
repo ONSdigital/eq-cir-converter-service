@@ -1,23 +1,25 @@
 steps:
   # Build the container image
   - name: "gcr.io/cloud-builders/docker"
-    args: [
-      "build", "--cache-from", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
-      "-t", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:$SHORT_SHA",
-      "-t", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest", ".",
-    ]
+    args:
+      [
+        "build",
+        "--cache-from",
+        "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
+        "-t",
+        "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:$SHORT_SHA",
+        "-t",
+        "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
+        ".",
+      ]
 
   # Push the SHORT_SHA image to Google Artifact Registry
   - name: "gcr.io/cloud-builders/docker"
-    args: [
-      "push", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:$SHORT_SHA",
-    ]
+    args: ["push", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:$SHORT_SHA"]
 
   # Push the latest image to Google Artifact Registry
   - name: "gcr.io/cloud-builders/docker"
-    args: [
-      "push", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
-    ]
+    args: ["push", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest"]
 
   # Deploy the container to Google Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"

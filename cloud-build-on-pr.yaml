@@ -1,16 +1,19 @@
 steps:
   # Build the container image using the BRANCH_NAME as the tag
   - name: "gcr.io/cloud-builders/docker"
-    args: [
-      "build", "--cache-from", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
-      "-t", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:$BRANCH_NAME", ".",
-    ]
+    args:
+      [
+        "build",
+        "--cache-from",
+        "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
+        "-t",
+        "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:$BRANCH_NAME",
+        ".",
+      ]
 
   # Push the BRANCH_NAME image to Google Artifact Registry
   - name: "gcr.io/cloud-builders/docker"
-    args: [
-      "push", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:$BRANCH_NAME",
-    ]
+    args: ["push", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:$BRANCH_NAME"]
 
 options:
   logging: CLOUD_LOGGING_ONLY
