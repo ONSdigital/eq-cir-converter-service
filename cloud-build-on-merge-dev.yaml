@@ -2,21 +2,21 @@ steps:
   # Build the container image
   - name: "gcr.io/cloud-builders/docker"
     args: [
-      "build", "--cache-from", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
-      "-t", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:$SHORT_SHA",
-      "-t", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest", ".",
+      "build", "--cache-from", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
+      "-t", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:$SHORT_SHA",
+      "-t", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest", ".",
     ]
 
   # Push the SHORT_SHA image to Google Artifact Registry
   - name: "gcr.io/cloud-builders/docker"
     args: [
-      "push", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:$SHORT_SHA",
+      "push", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:$SHORT_SHA",
     ]
 
   # Push the latest image to Google Artifact Registry
   - name: "gcr.io/cloud-builders/docker"
     args: [
-      "push", "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
+      "push", "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
     ]
 
   # Deploy the container to Google Cloud Run
@@ -29,16 +29,18 @@ steps:
         "deploy",
         "${_SERVICE_NAME}",
         "--image",
-        "europe-west2-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
+        "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
         "--port",
         "${_PORT}",
         "--region",
-        "europe-west2",
+        "${_REGION}",
         "--platform",
         "managed",
         "--allow-unauthenticated",
         "--ingress",
         "internal-and-cloud-load-balancing",
+        "--update-env-vars",
+        "LOG_LEVEL=${_LOG_LEVEL}",
       ]
 
 options:
