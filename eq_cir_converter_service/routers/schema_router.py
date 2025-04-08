@@ -1,8 +1,15 @@
 """This module contains the FastAPI router for the schema conversion endpoint."""
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
+import eq_cir_converter_service.services.schema.schema_processor_service as SchemaProcessorService
 from eq_cir_converter_service.config.logging_config import logging
+from eq_cir_converter_service.exception import exception_messages
+from eq_cir_converter_service.services.validators.request_validator import (
+    validate_input_json,
+    validate_version,
+)
+from eq_cir_converter_service.types.custom_types import ConvertedSchema, InputSchema
 
 router = APIRouter()
 
@@ -13,13 +20,13 @@ logger = logging.getLogger(__name__)
 
 @router.post(
     "/schema",
-    response_model=dict,
+    response_model=ConvertedSchema,
 )
-async def convert_schema(
+async def post_schema(
     current_version: str,
     target_version: str,
-    schema: dict,
-) -> dict:
+    schema: InputSchema,
+) -> ConvertedSchema:
     """Convert the CIR schema from one version to another.
 
     Request query parameters:
@@ -35,8 +42,26 @@ async def convert_schema(
     logger.info("Posting the cir schema...")
 
     logger.debug("Received current version %s and target version %s", current_version, target_version)
-    logger.debug("Input body: %s", schema)
+    logger.debug("Received schema: %s", schema)
 
-    # TO DO: Implement the logic to convert the schema from one version to another
+    """Validate the current and target version."""
 
-    return schema
+    validate_version(current_version, "current")
+    validate_version(target_version, "target")
+
+    """Validate the input JSON schema."""
+
+    validate_input_json(schema)
+
+    try:
+        # TO DO: Implement the logic to convert the schema from one version to another
+        # The logic should be implemented in the services package.
+
+        return await SchemaProcessorService.convert_schema(current_version, target_version, schema)
+
+    except Exception as exc:
+
+        logger.error("An exception occurred while processing the schema", exc_info=exc)
+        raise HTTPException(
+            status_code=500, detail={"status": "error", "message": exception_messages.EXCEPTION_500_SCHEMA_PROCESSING}
+        ) from exc
