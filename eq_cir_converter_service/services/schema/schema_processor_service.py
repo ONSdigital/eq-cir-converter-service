@@ -13,6 +13,12 @@ def replace_b_with_strong(text):
     text = re.sub(r'<\s*/\s*b\s*>', '</strong>', text, flags=re.IGNORECASE)
     return text
 
+def split_paragraphs(text):
+    """Splits the text content by <p>...</p> and returns cleaned parts."""
+    parts = re.findall(r'<p>(.*?)</p>', text, flags=re.DOTALL)
+    logger.debug("Split paragraphs: %s", parts)
+    return [part.strip() for part in parts if part.strip()]
+
 def clean_text(text):
     """Removes <p> tags and splits text based on occurrences of {string}."""
     text = re.sub(r'</?p>', '', text)  # Remove <p> tags
