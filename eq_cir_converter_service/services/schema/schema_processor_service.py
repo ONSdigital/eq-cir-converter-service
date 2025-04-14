@@ -1,6 +1,7 @@
 """This module converts the schema from the current to the target version."""
 
 import re
+from typing import Any
 
 from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.types.custom_types import ConvertedSchema, InputSchema
@@ -8,21 +9,21 @@ from eq_cir_converter_service.types.custom_types import ConvertedSchema, InputSc
 logger = logging.getLogger(__name__)
 
 
-def replace_b_with_strong(text):
+def replace_b_with_strong(text: str) -> str:
     """Replaces <b> and </b> tags with <strong> and </strong>."""
     text = re.sub(r"<\s*b\s*>", "<strong>", text, flags=re.IGNORECASE)
     text = re.sub(r"<\s*/\s*b\s*>", "</strong>", text, flags=re.IGNORECASE)
     return text
 
 
-def split_paragraphs(text):
+def split_paragraphs(text: str) -> list[str]:
     """Splits the text content by <p>...</p> and returns cleaned parts."""
     parts = re.findall(r"<p>(.*?)</p>", text, flags=re.DOTALL)
     logger.debug("Split paragraphs: %s", parts)
     return [part.strip() for part in parts if part.strip()]
 
 
-def clean_text(text):
+def clean_text(text: str) -> str:
     """Removes <p> tags and splits text based on occurrences of {string}."""
     text = re.sub(r"</?p>", "", text)  # Remove <p> tags
     text = replace_b_with_strong(text)  # Replace <b> with <strong>
@@ -30,9 +31,9 @@ def clean_text(text):
     return text.strip()
 
 
-def process_description(description):
+def process_description(description: list[dict[str, Any] | str]) -> list[dict[str, Any] | str]:
     """Processes the description field by cleaning and splitting."""
-    new_description = []
+    new_description: list[dict[str, Any] | str] = []
 
     for item in description:
         if isinstance(item, dict) and "text" in item:
@@ -55,13 +56,15 @@ def process_description(description):
 
                 # Remaining parts added as plain strings
                 new_description.extend(paragraphs[1:])
-        else:
+        elif isinstance(item, str):
+            # If the item is a string, clean it and add to the new description
+            # This handles cases where the description is a list of strings
             new_description.append(clean_text(item))
 
     return new_description
 
 
-def transform_json(json_data):
+def transform_json(json_data: dict) -> dict:
     """Recursively transforms the JSON structure."""
     if isinstance(json_data, dict):
         logger.debug("Processing dictionary")
