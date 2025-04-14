@@ -7,10 +7,16 @@ logger = logging.getLogger(__name__)
 
 import re
 
+def replace_b_with_strong(text):
+    """Replaces <b> and </b> tags with <strong> and </strong>."""
+    text = re.sub(r'<\s*b\s*>', '<strong>', text, flags=re.IGNORECASE)
+    text = re.sub(r'<\s*/\s*b\s*>', '</strong>', text, flags=re.IGNORECASE)
+    return text
 
 def clean_text(text):
     """Removes <p> tags and splits text based on occurrences of {string}."""
     text = re.sub(r'</?p>', '', text)  # Remove <p> tags
+    text = replace_b_with_strong(text)  # Replace <b> with <strong>
     logger.debug("Cleaned text: %s", text)
     return text.strip()
 
