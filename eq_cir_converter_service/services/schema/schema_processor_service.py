@@ -74,6 +74,7 @@ def transform_json(json_data):
     
     return json_data
 
+
 async def convert_schema(current_version: str, target_version: str, schema: InputSchema) -> ConvertedSchema:
     """Converts the schema from the current to the target version.
 
@@ -95,7 +96,7 @@ async def convert_schema(current_version: str, target_version: str, schema: Inpu
         input_schema[key] = value
 
     # Transform JSON
-    converted_schema = clean_text(input_schema)
+    converted_schema = transform_json(input_schema)
     logger.info("Schema converted successfully")
 
     return converted_schema
