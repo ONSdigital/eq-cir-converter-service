@@ -26,6 +26,36 @@ def clean_text(text):
     logger.debug("Cleaned text: %s", text)
     return text.strip()
 
+def process_description(description):
+    """Processes the description field by cleaning and splitting."""
+    new_description = []
+    
+    for item in description:
+        if isinstance(item, dict) and 'text' in item:
+            # cleaned_text = clean_text(item['text'])
+            # text_parts = re.split(r'(?<=})', cleaned_text)  # Split at {string} occurrences
+            
+            # # First part retains placeholders
+            # if text_parts:
+            #     first_part = {"text": text_parts[0].strip(), "placeholders": item.get("placeholders", [])}
+            #     new_description.append(first_part)
+                
+            #     # Remaining parts are added as separate entries
+            #     new_description.extend([part.strip() for part in text_parts[1:] if part.strip()])
+            paragraphs = split_paragraphs(item['text'])
+
+            if paragraphs:
+                # First part retains placeholders
+                first_part = {"text": paragraphs[0], "placeholders": item.get("placeholders", [])}
+                new_description.append(first_part)
+
+                # Remaining parts added as plain strings
+                new_description.extend(paragraphs[1:])            
+        else:
+            new_description.append(clean_text(item))
+    
+    return new_description
+
 async def convert_schema(current_version: str, target_version: str, schema: InputSchema) -> ConvertedSchema:
     """Converts the schema from the current to the target version.
 
