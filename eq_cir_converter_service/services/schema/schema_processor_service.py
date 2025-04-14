@@ -56,6 +56,24 @@ def process_description(description):
     
     return new_description
 
+def transform_json(json_data):
+    """Recursively transforms the JSON structure."""
+    if isinstance(json_data, dict):
+        logger.debug("Processing dictionary")
+        for key, value in json_data.items():
+            if isinstance(value, str):
+                json_data[key] = clean_text(value)
+            elif key == "description" and isinstance(value, list):
+                logger.debug("Processing description field")
+                json_data[key] = process_description(value)
+                logger.debug("Processed description: %s", json_data[key])
+            else:
+                json_data[key] = transform_json(value)
+    elif isinstance(json_data, list):
+        json_data = [transform_json(item) for item in json_data]
+    
+    return json_data
+
 async def convert_schema(current_version: str, target_version: str, schema: InputSchema) -> ConvertedSchema:
     """Converts the schema from the current to the target version.
 
