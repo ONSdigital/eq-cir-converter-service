@@ -5,6 +5,14 @@ from eq_cir_converter_service.types.custom_types import ConvertedSchema, InputSc
 
 logger = logging.getLogger(__name__)
 
+import re
+
+
+def clean_text(text):
+    """Removes <p> tags and splits text based on occurrences of {string}."""
+    text = re.sub(r'</?p>', '', text)  # Remove <p> tags
+    logger.debug("Cleaned text: %s", text)
+    return text.strip()
 
 async def convert_schema(current_version: str, target_version: str, schema: InputSchema) -> ConvertedSchema:
     """Converts the schema from the current to the target version.
@@ -21,9 +29,13 @@ async def convert_schema(current_version: str, target_version: str, schema: Inpu
 
     # TO DO: Implement the logic to convert the schema from one version to another
 
-    converted_schema = {}
+    input_schema = {}
 
     for key, value in schema.items():
-        converted_schema[key] = value
+        input_schema[key] = value
+
+    # Transform JSON
+    converted_schema = clean_text(input_schema)
+    logger.info("Schema converted successfully")
 
     return converted_schema
