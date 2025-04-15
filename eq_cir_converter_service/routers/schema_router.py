@@ -36,6 +36,10 @@ async def post_schema(
     Request body:
     - schema: The schema to convert.
 
+    Steps:
+    - Validate the current and target version.
+    - Validate the input JSON schema.
+
     Returns:
     - dict: The converted schema.
     """
@@ -44,13 +48,11 @@ async def post_schema(
     logger.debug("Received current version %s and target version %s", current_version, target_version)
     logger.debug("Received schema: %s", schema)
 
-    """Validate the current and target version."""
-
+    logger.info("Validating the current and target version...")
     validate_version(current_version, "current")
     validate_version(target_version, "target")
 
-    """Validate the input JSON schema."""
-
+    logger.info("Validating the input JSON schema...")
     validate_input_json(schema)
 
     try:
