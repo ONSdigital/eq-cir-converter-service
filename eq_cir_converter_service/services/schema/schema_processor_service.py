@@ -11,9 +11,8 @@ logger = logging.getLogger(__name__)
 
 def replace_b_with_strong(text: str) -> str:
     """Replaces <b> and </b> tags with <strong> and </strong>."""
-    
     logger.debug("Replacing <b> with <strong> in text: %s", text)
-    
+
     # Replace <b> with <strong> and </b> with </strong>
     text = re.sub(r"<\s*b\s*>", "<strong>", text, flags=re.IGNORECASE)
     text = re.sub(r"<\s*/\s*b\s*>", "</strong>", text, flags=re.IGNORECASE)
@@ -22,7 +21,6 @@ def replace_b_with_strong(text: str) -> str:
 
 def split_paragraphs(text: str) -> list[str]:
     """Splits the text content by <p>...</p> and returns cleaned parts."""
-
     logger.debug("Splitting paragraphs from text: %s", text)
 
     # Use regex to find all <p>...</p> sections
@@ -33,7 +31,6 @@ def split_paragraphs(text: str) -> list[str]:
 
 def clean_text(text: str) -> str:
     """Removes <p> tags and splits text based on occurrences of {string}."""
-    
     logger.debug("Cleaning text: %s", text)
 
     text = re.sub(r"</?p>", "", text)  # Remove <p> tags
@@ -44,7 +41,6 @@ def clean_text(text: str) -> str:
 
 def process_description(description: list[dict[str, Any] | str]) -> list[dict[str, Any] | str]:
     """Processes the description field by cleaning and splitting."""
-
     logger.debug("Processing description: %s", description)
 
     new_description: list[dict[str, Any] | str] = []
@@ -70,7 +66,6 @@ def process_description(description: list[dict[str, Any] | str]) -> list[dict[st
 
 def transform_json(json_data: dict) -> dict:
     """Recursively transforms the JSON structure."""
-
     logger.debug("Transforming JSON data: %s", json_data)
 
     # Check if the JSON data is a dictionary or a list
