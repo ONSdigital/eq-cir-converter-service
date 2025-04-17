@@ -8,14 +8,14 @@ from fastapi.testclient import TestClient
 import eq_cir_converter_service.services.schema.schema_processor_service as SchemaProcessorService
 from eq_cir_converter_service.exception import exception_messages
 
-current_version = "9.0.0"
-target_version = "10.0.0"
+CURRENT_VERSION = "9.0.0"
+TARGET_VERSION = "10.0.0"
 
 
 def test_schema_router_with_valid_json(test_client: TestClient) -> None:
     """Test the post schema method with valid JSON."""
     response = test_client.post(
-        f"/schema?current_version={current_version}&target_version={target_version}",
+        f"/schema?current_version={CURRENT_VERSION}&target_version={TARGET_VERSION}",
         json={"valid_json": "valid_json"},
     )
     assert response.status_code == status.HTTP_200_OK
@@ -25,7 +25,7 @@ def test_schema_router_with_valid_json(test_client: TestClient) -> None:
 def test_schema_router_with_invalid_current_version(test_client: TestClient) -> None:
     """Test the post schema method with invalid current version."""
     response = test_client.post(
-        f"/schema?current_version=1&target_version={target_version}",
+        f"/schema?current_version=1&target_version={TARGET_VERSION}",
         json={"valid_json": "valid_json"},
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -37,7 +37,7 @@ def test_schema_router_with_invalid_current_version(test_client: TestClient) -> 
 def test_schema_router_with_invalid_target_version(test_client: TestClient) -> None:
     """Test the post schema method with invalid target version."""
     response = test_client.post(
-        f"/schema?current_version={current_version}&target_version=2",
+        f"/schema?current_version={CURRENT_VERSION}&target_version=2",
         json={"valid_json": "valid_json"},
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -49,7 +49,7 @@ def test_schema_router_with_invalid_target_version(test_client: TestClient) -> N
 def test_schema_router_with_empty_json(test_client: TestClient) -> None:
     """Test the post schema method with empty JSON."""
     response = test_client.post(
-        f"/schema?current_version={current_version}&target_version={target_version}",
+        f"/schema?current_version={CURRENT_VERSION}&target_version={TARGET_VERSION}",
         json={},
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -62,7 +62,7 @@ def test_convert_schema_exception(test_client: TestClient) -> None:
     """Test the convert schema method with an exception."""
     SchemaProcessorService.convert_schema = MagicMock(side_effect=Exception("Test Exception"))
     response = test_client.post(
-        f"/schema?current_version={current_version}&target_version={target_version}",
+        f"/schema?current_version={CURRENT_VERSION}&target_version={TARGET_VERSION}",
         json={"valid_json": "valid_json"},
     )
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -71,5 +71,5 @@ def test_convert_schema_exception(test_client: TestClient) -> None:
     }
 
     SchemaProcessorService.convert_schema.assert_called_with(
-        current_version, target_version, {"valid_json": "valid_json"}
+        CURRENT_VERSION, TARGET_VERSION, {"valid_json": "valid_json"}
     )
