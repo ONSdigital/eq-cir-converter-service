@@ -33,6 +33,7 @@ def clean_text(text: str) -> str:
     """Removes <p> tags and splits text based on occurrences of {string}."""
     logger.debug("Cleaning text: %s", text)
 
+    text = re.sub(r"</?br>", "", text)  # Remove <br> tags
     text = re.sub(r"</?p>", "", text)  # Remove <p> tags
     text = replace_b_with_strong(text)  # Replace <b> with <strong>
     logger.debug("Cleaned text: %s", text)
@@ -51,7 +52,7 @@ def process_description(description: list[dict[str, Any] | str]) -> list[dict[st
 
             if paragraphs:
                 # First part retains placeholders
-                first_part = {"text": paragraphs[0], "placeholders": item.get("placeholders", [])}
+                first_part = {"text": clean_text(paragraphs[0]), "placeholders": item.get("placeholders", [])}
                 new_description.append(first_part)
 
                 # Remaining parts added as plain strings
@@ -61,6 +62,7 @@ def process_description(description: list[dict[str, Any] | str]) -> list[dict[st
             # This handles cases where the description is a list of strings
             new_description.append(clean_text(item))
 
+    logger.debug("Processed description: %s", new_description)
     return new_description
 
 
@@ -76,16 +78,24 @@ def transform_json(json_data: dict) -> dict:
         for key, value in json_data.items():
             if isinstance(value, str):
                 json_data[key] = clean_text(value)
+                logger.debug("Cleaned string value for key '%s': %s", key, json_data[key])
             elif key == "description" and isinstance(value, list):
                 logger.debug("Processing description field")
                 json_data[key] = process_description(value)
                 logger.debug("Processed description: %s", json_data[key])
             else:
                 json_data[key] = transform_json(value)
+                logger.debug("Transformed value for key '%s': %s", key, json_data[key])
 
     # If the JSON data is a list, process each item in the list
     elif isinstance(json_data, list):
         json_data = [transform_json(item) for item in json_data]
+        logger.debug("Transformed list: %s", json_data)
+
+    elif isinstance(json_data, str):
+        logger.debug("Processing other data type: %s", json_data)
+        json_data = clean_text(json_data)
+        logger.debug("Transformed JSON data: %s", json_data)
 
     return json_data
 
