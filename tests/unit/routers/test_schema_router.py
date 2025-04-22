@@ -71,5 +71,7 @@ def test_convert_schema_exception(test_client: TestClient) -> None:
     }
 
     schema_processor_sevice.convert_schema.assert_called_with(
-        CURRENT_VERSION, TARGET_VERSION, {"valid_json": "valid_json"},
+        CURRENT_VERSION,
+        TARGET_VERSION,
+        {"valid_json": "valid_json"},
     )

@@ -65,5 +65,6 @@ async def post_schema(
 
         logger.exception("An exception occurred while processing the schema", exc_info=exc)
         raise HTTPException(
-            status_code=500, detail={"status": "error", "message": exception_messages.EXCEPTION_500_SCHEMA_PROCESSING},
+            status_code=500,
+            detail={"status": "error", "message": exception_messages.EXCEPTION_500_SCHEMA_PROCESSING},
         ) from exc
