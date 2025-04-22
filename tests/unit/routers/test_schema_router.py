@@ -2,11 +2,13 @@
 
 from unittest.mock import MagicMock
 
+import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
 
 import eq_cir_converter_service.services.schema.schema_processor_service as schema_processor_sevice
 from eq_cir_converter_service.exception import exception_messages
+from eq_cir_converter_service.services.schema.schema_processor_service import convert_schema
 
 CURRENT_VERSION = "9.0.0"
 TARGET_VERSION = "10.0.0"
@@ -75,3 +77,14 @@ def test_convert_schema_exception(test_client: TestClient) -> None:
         TARGET_VERSION,
         {"valid_json": "valid_json"},
     )
+
+
+def test_convert_schema() -> None:
+    with pytest.raises(ValueError) as error:
+        assert convert_schema(
+            "1.0.0",
+            "1.0.2",
+            {"valid_json": "valid_json"},
+        )
+
+        # assert(str(error.value) == "Current version and target version are different.")

@@ -24,6 +24,6 @@ async def convert_schema(current_version: str, target_version: str, schema: Inpu
     logger.debug("Target version: %s", target_version)
 
     if current_version != target_version:
-        raise ValueError()
+        raise ValueError("Current version and target version are different.")
 
     return dict(schema)
