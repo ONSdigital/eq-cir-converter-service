@@ -65,7 +65,7 @@ async def post_schema(
         logger.exception("An exception occurred while comparing versions", exc_info=exc)
         raise HTTPException(
             status_code=500,
-            detail={"status": "info", "message": exception_messages.EXCEPTION_500_MATCHING_SCHEMA_VERSIONS},
+            detail={"status": "error", "message": exception_messages.EXCEPTION_500_MATCHING_SCHEMA_VERSIONS},
         ) from exc
     except HTTPException as exc:
         logger.exception("An exception occurred while processing the schema", exc_info=exc)
