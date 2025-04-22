@@ -80,6 +80,10 @@ ignore = [
     "D104",
     # Remove E501 when ruff supports all black rules
     "E501",
+    # Allow TODO comments without a listed author
+    "TD002",
+    # Allow TODO comments without a linked issue
+    "TD003",
 ]
 
 [tool.ruff.lint.pydocstyle]
