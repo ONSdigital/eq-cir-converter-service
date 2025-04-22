@@ -2,7 +2,6 @@
 
 from unittest.mock import MagicMock
 
-import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
 
@@ -61,7 +60,7 @@ def test_schema_router_with_empty_json(test_client: TestClient) -> None:
 
 
 def test_convert_schema_exception(test_client: TestClient) -> None:
-    """Test the convert schema method with an exception."""
+    """Test the convert schema method with an HTTPException."""
     schema_processor_sevice.convert_schema = MagicMock(side_effect=Exception("Test Exception"))
     response = test_client.post(
         f"/schema?current_version={CURRENT_VERSION}&target_version={TARGET_VERSION}",
@@ -79,12 +78,22 @@ def test_convert_schema_exception(test_client: TestClient) -> None:
     )
 
 
-def test_convert_schema() -> None:
-    with pytest.raises(ValueError) as error:
-        assert convert_schema(
-            "1.0.0",
-            "1.0.2",
-            {"valid_json": "valid_json"},
-        )
+def test_schema_router_with_matching_versions(test_client: TestClient) -> None:
+    """Test the post schema method with current version and target version equal."""
+    current = "10.0.0"
+    response = test_client.post(
+        f"/schema?current_version={current}&target_version={TARGET_VERSION}",
+        json={"valid_json": "valid_json"},
+    )
 
-        # assert(str(error.value) == "Current version and target version are different.")
+    assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+
+
+def test_schema_router_with_new_version(test_client: TestClient) -> None:
+    """Test the post schema method with a new target version number to represent a valid schema update."""
+    response = test_client.post(
+        f"/schema?current_version={CURRENT_VERSION}&target_version={TARGET_VERSION}",
+        json={"valid_json": "valid_json"},
+    )
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["valid_json"] == "valid_json"
