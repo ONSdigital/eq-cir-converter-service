@@ -77,7 +77,7 @@ def test_convert_schema_http_exception(test_client: TestClient) -> None:
         TARGET_VERSION,
         {"valid_json": "valid_json"},
     )
-    
+
     schema_processor_sevice.convert_schema.reset_mock()
 
 
