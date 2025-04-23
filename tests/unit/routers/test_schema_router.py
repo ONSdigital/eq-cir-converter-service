@@ -88,6 +88,9 @@ def test_schema_router_with_matching_versions(test_client: TestClient) -> None:
     )
 
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+    assert response.json() == {
+        "detail": {"status": "error", "message": exception_messages.EXCEPTION_500_MATCHING_SCHEMA_VERSIONS},
+    }
 
 
 def test_schema_router_with_new_version(test_client: TestClient) -> None:
