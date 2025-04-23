@@ -2,7 +2,7 @@
 
 from unittest.mock import MagicMock
 
-from fastapi import status
+from fastapi import status, HTTPException
 from fastapi.testclient import TestClient
 
 import eq_cir_converter_service.services.schema.schema_processor_service as schema_processor_sevice
@@ -59,9 +59,9 @@ def test_schema_router_with_empty_json(test_client: TestClient) -> None:
     }
 
 
-def test_convert_schema_exception(test_client: TestClient) -> None:
+def test_convert_schema_http_exception(test_client: TestClient) -> None:
     """Test the convert schema method with an HTTPException."""
-    schema_processor_sevice.convert_schema = MagicMock(side_effect=Exception("Test Exception"))
+    schema_processor_sevice.convert_schema =  MagicMock(side_effect=HTTPException(status_code=400, detail="Mocked HTTPException"))
     response = test_client.post(
         f"/schema?current_version={CURRENT_VERSION}&target_version={TARGET_VERSION}",
         json={"valid_json": "valid_json"},
