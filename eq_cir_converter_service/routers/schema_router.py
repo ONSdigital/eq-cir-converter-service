@@ -2,9 +2,9 @@
 
 from fastapi import APIRouter, HTTPException
 
-import eq_cir_converter_service.services.schema.schema_processor_service as schema_processor_service
 from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.exception import exception_messages
+from eq_cir_converter_service.services.schema import schema_processor_service
 from eq_cir_converter_service.services.validators.request_validator import (
     validate_input_json,
     validate_version,
