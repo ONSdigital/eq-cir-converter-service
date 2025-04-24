@@ -56,8 +56,8 @@ def test_schema_router_with_empty_json(test_client: TestClient) -> None:
     assert response.json() == {
         "detail": {"status": "error", "message": exception_messages.EXCEPTION_400_EMPTY_INPUT_JSON},
     }
-    
-    
+
+
 def test_schema_router_with_matching_versions(test_client: TestClient) -> None:
     """Test the post schema method with current version and target version equal."""
     current = "10.0.0"
@@ -71,7 +71,7 @@ def test_schema_router_with_matching_versions(test_client: TestClient) -> None:
         "detail": {"status": "error", "message": exception_messages.EXCEPTION_500_MATCHING_SCHEMA_VERSIONS},
     }
 
-    
+
 def test_schema_router_with_new_version(test_client: TestClient) -> None:
     """Test the post schema method with a new target version number to represent a valid schema update."""
     response = test_client.post(
@@ -80,7 +80,6 @@ def test_schema_router_with_new_version(test_client: TestClient) -> None:
     )
     assert response.status_code == status.HTTP_200_OK
     assert response.json()["valid_json"] == "valid_json"
-
 
 
 def test_convert_schema_http_exception(test_client: TestClient) -> None:
