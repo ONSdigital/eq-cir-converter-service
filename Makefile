@@ -30,7 +30,7 @@ lint:  ## Run all linters (black/ruff/pylint/mypy).
 
 .PHONY: test
 test:  ## Run the tests and check coverage.
-	poetry run pytest -n auto --cov=eq_cir_converter_service --cov-report term-missing --cov-fail-under=100
+	poetry run pytest -n auto --cov=eq_cir_converter_service --cov-report term-missing --cov-append --cov-fail-under=100
 
 .PHONY: mypy
 mypy:  ## Run mypy.
