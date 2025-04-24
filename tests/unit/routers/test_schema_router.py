@@ -82,9 +82,8 @@ def test_convert_schema_http_exception(test_client: TestClient) -> None:
 
 def test_schema_router_with_matching_versions(test_client: TestClient) -> None:
     """Test the post schema method with current version and target version equal."""
-    current = "10.0.0"
     response = test_client.post(
-        f"/schema?current_version={current}&target_version={TARGET_VERSION}",
+        f"/schema?current_version={CURRENT_VERSION}&target_version={CURRENT_VERSION}",
         json={"valid_json": "valid_json"},
     )
 
