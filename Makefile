@@ -25,6 +25,7 @@ format:  ## Format the code.
 lint:  ## Run all linters (black/ruff/pylint/mypy).
 	poetry run black --check .
 	poetry run ruff check .
+	poetry run pylint --reports=n --output-format=colorized .
 	make mypy
 
 .PHONY: test
@@ -48,7 +49,7 @@ megalint:  ## Run the mega-linter.
 	docker run --platform linux/amd64 --rm \
 		-v /var/run/docker.sock:/var/run/docker.sock:rw \
 		-v $(shell pwd):/tmp/lint:rw \
-		oxsecurity/megalinter:v7
+		oxsecurity/megalinter:v8
 
 .PHONY: run
 run:  ## Start the local application.
