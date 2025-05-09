@@ -4,8 +4,6 @@ steps:
     args:
       [
         "build",
-        "--cache-from",
-        "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:latest",
         "-t",
         "${_REGION}-docker.pkg.dev/${_ARTIFACT_REGISTRY_PROJECT}/docker-images/${_SERVICE_NAME}:$SHORT_SHA",
         "-t",
