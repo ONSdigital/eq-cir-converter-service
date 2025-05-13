@@ -21,6 +21,8 @@ async def convert_schema(current_version: str, target_version: str, schema: Inpu
 
     # TO DO: Implement the logic to convert the schema from one version to another
 
+    # Test PR build
+
     converted_schema = {}
 
     for key, value in schema.items():
