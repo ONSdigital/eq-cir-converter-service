@@ -72,10 +72,11 @@ Ensure you have the following installed:
    make install
    ```
 
-3. Set the LOG_LEVEL to INFO, DEBUG, WARN, ERROR (If the log level is not set, it will be set to INFO by default.)
+3. Set the environment variable LOG_LEVEL.
+   It can be set to INFO, DEBUG, WARN, ERROR - if not set, it will be set to INFO by default.
 
     ```bash
-    export LOG_LEVEL=INFO
+    make set-env-var
     ```
 
 4. Run the application
