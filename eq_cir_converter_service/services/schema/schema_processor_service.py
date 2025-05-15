@@ -19,11 +19,11 @@ async def convert_schema(current_version: str, target_version: str, schema: Inpu
     """
     logger.info("Converting the schema...")
 
-    # TO DO: Implement the logic to convert the schema from one version to another
+    # TODO: Implement the logic to convert the schema from one version to another
+    logger.debug("Current version: %s", current_version)
+    logger.debug("Target version: %s", target_version)
 
-    converted_schema = {}
+    if current_version == target_version:
+        raise ValueError()
 
-    for key, value in schema.items():
-        converted_schema[key] = value
-
-    return converted_schema
+    return dict(schema)

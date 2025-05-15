@@ -2,9 +2,9 @@
 
 from fastapi import APIRouter, HTTPException
 
-import eq_cir_converter_service.services.schema.schema_processor_service as SchemaProcessorService
 from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.exception import exception_messages
+from eq_cir_converter_service.services.schema import schema_processor_service
 from eq_cir_converter_service.services.validators.request_validator import (
     validate_input_json,
     validate_version,
@@ -36,6 +36,10 @@ async def post_schema(
     Request body:
     - schema: The schema to convert.
 
+    Steps:
+    - Validate the current and target version.
+    - Validate the input JSON schema.
+
     Returns:
     - dict: The converted schema.
     """
@@ -44,24 +48,28 @@ async def post_schema(
     logger.debug("Received current version %s and target version %s", current_version, target_version)
     logger.debug("Received schema: %s", schema)
 
-    """Validate the current and target version."""
-
+    logger.info("Validating the current and target version...")
     validate_version(current_version, "current")
     validate_version(target_version, "target")
 
-    """Validate the input JSON schema."""
-
+    logger.info("Validating the input JSON schema...")
     validate_input_json(schema)
 
     try:
-        # TO DO: Implement the logic to convert the schema from one version to another
+        # TODO: Implement the logic to convert the schema from one version to another
         # The logic should be implemented in the services package.
 
-        return await SchemaProcessorService.convert_schema(current_version, target_version, schema)
+        return await schema_processor_service.convert_schema(current_version, target_version, schema)
 
-    except Exception as exc:
-
-        logger.error("An exception occurred while processing the schema", exc_info=exc)
+    except ValueError as exc:
+        logger.exception("An exception occurred while comparing versions", exc_info=exc)
         raise HTTPException(
-            status_code=500, detail={"status": "error", "message": exception_messages.EXCEPTION_500_SCHEMA_PROCESSING}
+            status_code=500,
+            detail={"status": "error", "message": exception_messages.EXCEPTION_500_MATCHING_SCHEMA_VERSIONS},
+        ) from exc
+    except HTTPException as exc:
+        logger.exception("An exception occurred while processing the schema", exc_info=exc)
+        raise HTTPException(
+            status_code=500,
+            detail={"status": "error", "message": exception_messages.EXCEPTION_500_SCHEMA_PROCESSING},
         ) from exc
