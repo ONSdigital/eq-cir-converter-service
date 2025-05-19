@@ -48,9 +48,9 @@ class TestSchemaProcessorService(unittest.TestCase):
         sample = {
             "description": [
                 {
-                    "text": "<p>Please note: what constitutes a &#x2018;significant change&#x2019; is dependent on " \
-                    "your own interpretation in relation to {trad_as}&#x2019;s figures from the previous reporting " \
-                    "period and the same reporting period last year.</p><p>This information will help us to validate " \
+                    "text": "<p>Please note: what constitutes a &#x2018;significant change&#x2019; is dependent on "
+                    "your own interpretation in relation to {trad_as}&#x2019;s figures from the previous reporting "
+                    "period and the same reporting period last year.</p><p>This information will help us to validate "
                     "your data and should reduce the need to query any figures with you.</p>",
                     "placeholders": [
                         {
@@ -77,13 +77,13 @@ class TestSchemaProcessorService(unittest.TestCase):
 
         self.assertEqual(
             transformed["description"][0]["text"],
-            "Please note: what constitutes a &#x2018;significant change&#x2019; is dependent on your own " \
-            "interpretation in relation to {trad_as}&#x2019;s figures from the previous reporting period and the same " \
+            "Please note: what constitutes a &#x2018;significant change&#x2019; is dependent on your own "
+            "interpretation in relation to {trad_as}&#x2019;s figures from the previous reporting period and the same "
             "reporting period last year.",
         )
         self.assertEqual(
             transformed["description"][1],
-            "This information will help us to validate your data and should reduce the need to query any " \
+            "This information will help us to validate your data and should reduce the need to query any "
             "figures with you.",
         )
         self.assertEqual(transformed["nested"]["html"], "<strong>Bold</strong>")
