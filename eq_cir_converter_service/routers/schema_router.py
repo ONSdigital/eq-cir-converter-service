@@ -1,6 +1,6 @@
 """This module contains the FastAPI router for the schema conversion endpoint."""
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 
 from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.exception import exception_messages
@@ -52,6 +52,14 @@ async def post_schema(
     validate_version(current_version, "current")
     validate_version(target_version, "target")
 
+    # Check if the current and target versions are the same
+    if(current_version == target_version):
+        logger.error("The current and target schema versions are the same")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"status": "error", "message": exception_messages.EXCEPTION_400_MATCHING_SCHEMA_VERSIONS},
+        )
+
     logger.info("Validating the input JSON schema...")
     validate_input_json(schema)
 
@@ -61,12 +69,6 @@ async def post_schema(
 
         return await schema_processor_service.convert_schema(current_version, target_version, schema)
 
-    except ValueError as exc:
-        logger.exception("An exception occurred while comparing versions", exc_info=exc)
-        raise HTTPException(
-            status_code=500,
-            detail={"status": "error", "message": exception_messages.EXCEPTION_500_MATCHING_SCHEMA_VERSIONS},
-        ) from exc
     except HTTPException as exc:
         logger.exception("An exception occurred while processing the schema", exc_info=exc)
         raise HTTPException(
