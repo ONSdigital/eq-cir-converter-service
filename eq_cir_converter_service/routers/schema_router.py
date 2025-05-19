@@ -53,7 +53,7 @@ async def post_schema(
     validate_version(target_version, "target")
 
     # Check if the current and target versions are the same
-    if(current_version == target_version):
+    if current_version == target_version:
         logger.error("The current and target schema versions are the same")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
