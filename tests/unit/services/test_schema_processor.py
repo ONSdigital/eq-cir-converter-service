@@ -28,7 +28,8 @@ class TestSchemaProcessorService(unittest.TestCase):
     def test_replace_b_with_strong(self):
         """Test the replacement of <b> and </b> tags with <strong> and </strong>."""
         self.assertEqual(
-            replace_b_with_strong("<b>bold</b> and <B>also</B>"), "<strong>bold</strong> and <strong>also</strong>"
+            replace_b_with_strong("<b>bold</b> and <B>also</B>"),
+            "<strong>bold</strong> and <strong>also</strong>",
         )
 
     def test_split_paragraphs(self):
@@ -58,13 +59,13 @@ class TestSchemaProcessorService(unittest.TestCase):
                                         "items": [
                                             {"source": "metadata", "identifier": "trad_as"},
                                             {"source": "metadata", "identifier": "ru_name"},
-                                        ]
+                                        ],
                                     },
-                                }
+                                },
                             ],
-                        }
+                        },
                     ],
-                }
+                },
             ],
             "nested": {"html": "<b>Bold</b>", "list": ["<b>item1</b>", "item2"]},
         }

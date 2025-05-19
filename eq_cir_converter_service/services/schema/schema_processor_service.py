@@ -1,5 +1,7 @@
 """This module converts the schema from the current to the target version."""
 
+from __future__ import annotations
+
 import re
 from typing import Any
 
@@ -14,9 +16,12 @@ def replace_b_with_strong(text: str) -> str:
     logger.debug("Replacing <b> with <strong> in text: %s", text)
 
     # Replace <b> with <strong> and </b> with </strong>
-    text = re.sub(r"<\s*b\s*>", "<strong>", text, flags=re.IGNORECASE)
-    text = re.sub(r"<\s*/\s*b\s*>", "</strong>", text, flags=re.IGNORECASE)
-    return text
+    return re.sub(
+        r"<\s*/\s*b\s*>",
+        "</strong>",
+        re.sub(r"<\s*b\s*>", "<strong>", text, flags=re.IGNORECASE),
+        flags=re.IGNORECASE,
+    )
 
 
 def split_paragraphs(text: str) -> list[str]:
@@ -117,10 +122,7 @@ async def convert_schema(current_version: str, target_version: str, schema: Inpu
     logger.debug("Current version: %s", current_version)
     logger.debug("Target version: %s", target_version)
 
-    input_schema = {}
-
-    for key, value in schema.items():
-        input_schema[key] = value
+    input_schema = dict(schema)
 
     logger.debug("Input schema: %s", input_schema)
 
