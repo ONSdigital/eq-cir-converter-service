@@ -1,42 +1,18 @@
-"""Unit tests for the schema processor service.
-
-These tests cover the functionality of the schema processor service,
-including the replacement of HTML tags, splitting paragraphs,
-and processing descriptions.
-"""
+"""Unit tests for the schema processor service."""
 
 import unittest
 
 from eq_cir_converter_service.services.schema.schema_processor_service import (
-    clean_text,
     process_description,
-    replace_b_with_strong,
-    split_paragraphs,
     transform_json,
 )
 
 
 class TestSchemaProcessorService(unittest.TestCase):
-    """Unit tests for the schema processor service."""
+    """These tests cover the schema processor service.
 
-    def test_clean_text(self):
-        """Test the cleaning of HTML text."""
-        html_text = "<p>Hello <b>World</b></p><br><p>Second</p>"
-        expected = "Hello <strong>World</strong>Second"
-        self.assertEqual(clean_text(html_text), expected)
-
-    def test_replace_b_with_strong(self):
-        """Test the replacement of <b> and </b> tags with <strong> and </strong>."""
-        self.assertEqual(
-            replace_b_with_strong("<b>bold</b> and <B>also</B>"),
-            "<strong>bold</strong> and <strong>also</strong>",
-        )
-
-    def test_split_paragraphs(self):
-        """Test the splitting of HTML text into paragraphs."""
-        html_text = "<p>One</p><p>Two <b>bold</b></p><p>Three</p>"
-        expected = ["One", "Two <b>bold</b>", "Three"]
-        self.assertEqual(split_paragraphs(html_text), expected)
+    This includes the transformation of JSON data and the processing of description fields.
+    """
 
     def test_process_description_string_passthrough(self):
         """Test the processing of a description with a string input."""
