@@ -31,7 +31,7 @@ def split_paragraphs(text: str) -> list[str]:
 
 
 def clean_text(text: str) -> str:
-    """Removes <p> tags and splits text based on occurrences of {string}."""
+    """Removes <p>, <br> tags and replaces <b> tags with <strong> tags in the text."""
     logger.debug("Cleaning text: %s", text)
 
     text = re.sub(r"</?br>", "", text)  # Remove <br> tags
