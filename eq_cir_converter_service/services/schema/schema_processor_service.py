@@ -37,7 +37,7 @@ def process_description(description: list[dict[str, Any] | str]) -> list[dict[st
     return new_description
 
 
-def transform_json(json_data: dict) -> dict:
+def transform_json(json_data: dict | list | str) -> dict | list | str:
     """Recursively transforms the JSON structure."""
     logger.debug("Transforming JSON data: %s", json_data)
 
