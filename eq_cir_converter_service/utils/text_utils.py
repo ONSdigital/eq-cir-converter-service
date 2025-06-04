@@ -11,13 +11,10 @@ def replace_b_with_strong(text: str) -> str:
     """Replaces <b> and </b> tags with <strong> and </strong>."""
     logger.debug("Replacing <b> with <strong> in text: %s", text)
 
-    # Replace <b> with <strong> and </b> with </strong>
-    return re.sub(
-        r"<\s*/\s*b\s*>",
-        "</strong>",
-        re.sub(r"<\s*b\s*>", "<strong>", text, flags=re.IGNORECASE),
-        flags=re.IGNORECASE,
-    )
+    text = re.sub(r"<\s*b\s*>", "<strong>", text, flags=re.IGNORECASE)
+    text = re.sub(r"<\s*/\s*b\s*>", "</strong>", text, flags=re.IGNORECASE)
+    logger.debug("Replaced text: %s", text)
+    return text
 
 
 def split_paragraphs(text: str) -> list[str]:
@@ -34,8 +31,8 @@ def clean_text(text: str) -> str:
     """Removes <p>, <br> tags and replaces <b> tags with <strong> tags in the text."""
     logger.debug("Cleaning text: %s", text)
 
-    text = re.sub(r"</?br>", "", text)  # Remove <br> tags
-    text = re.sub(r"</?p>", "", text)  # Remove <p> tags
+    text = re.sub(r"</?br>", "", text, flags=re.IGNORECASE)  # Remove <br> tags
+    text = re.sub(r"</?p>", "", text, flags=re.IGNORECASE)  # Remove <p> tags
     text = replace_b_with_strong(text)  # Replace <b> with <strong>
     logger.debug("Cleaned text: %s", text)
     return text.strip()
