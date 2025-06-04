@@ -64,9 +64,13 @@ async def post_schema(
     validate_input_json(schema)
 
     try:
-        # TODO: Implement the logic to convert the schema from one version to another
-        # The logic should be implemented in the services package.
-
+        logger.info(
+            "Converting the schema from current version %s to target version %s",
+            current_version,
+            target_version,
+        )
+        # Call the schema processor service to convert the schema
+        logger.debug("Converting schema: %s", schema)
         return await schema_processor_service.convert_schema(current_version, target_version, schema)
 
     except HTTPException as exc:
