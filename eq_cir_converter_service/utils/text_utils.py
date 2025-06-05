@@ -23,7 +23,7 @@ def replace_b_with_strong(text: str) -> str:
     return text
 
 
-def split_paragraphs(text: dict[str, str | list | object] | str) -> list[str]:
+def split_paragraphs(text: str) -> list[str]:
     """Splits the text content by <p>...</p> and returns cleaned parts."""
     logger.debug("Splitting paragraphs from text: %s", text)
 

@@ -93,7 +93,7 @@ def convert_schema(current_version: str, target_version: str, schema: InputSchem
     logger.debug("Input schema: %s", input_schema)
 
     # Transform JSON
-    converted_schema = dict(transform_json(input_schema))
+    converted_schema = transform_json(input_schema)
 
     logger.debug("Converted schema: %s", converted_schema)
     logger.info("Schema converted successfully")
