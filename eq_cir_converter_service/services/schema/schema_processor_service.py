@@ -13,7 +13,7 @@ def process_description(
     """Processes the description field by cleaning and splitting."""
     logger.debug("Processing description: %s", description)
 
-    new_description: list[dict[str, str | list | object] | str] = []
+    processed_description: list[dict[str, str | list | object] | str] = []
 
     for item in description:
         if isinstance(item, dict) and "text" in item:
@@ -22,17 +22,17 @@ def process_description(
             if paragraphs:
                 # First part retains placeholders
                 first_part = {"text": clean_text(paragraphs[0]), "placeholders": item.get("placeholders", [])}
-                new_description.append(first_part)
+                processed_description.append(first_part)
 
                 # Remaining parts added as plain strings
-                new_description.extend(paragraphs[1:])
+                processed_description.extend(paragraphs[1:])
         elif isinstance(item, str):
             # If the item is a string, clean it and add to the new description
             # This handles cases where the description is a list of strings
-            new_description.append(clean_text(item))
+            processed_description.append(clean_text(item))
 
-    logger.debug("Processed description: %s", new_description)
-    return new_description
+    logger.debug("Processed description: %s", processed_description)
+    return processed_description
 
 
 def transform_json(json_data: dict | list | str) -> dict | list | str:
