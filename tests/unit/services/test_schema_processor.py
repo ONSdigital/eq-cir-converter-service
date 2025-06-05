@@ -13,6 +13,7 @@ from eq_cir_converter_service.services.schema.schema_processor_service import (
     [
         (["Simple string"], ["Simple string"]),
         (["<p>Text with HTML</p>"], ["Text with HTML"]),
+        (["valid string", 123, {"foo": "bar"}], ["valid string"]),
         ([], []),
     ],
 )

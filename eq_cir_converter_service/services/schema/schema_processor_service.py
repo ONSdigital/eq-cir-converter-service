@@ -30,6 +30,10 @@ def process_description(
             # If the item is a string, clean it and add to the new description
             # This handles cases where the description is a list of strings
             processed_description.append(clean_text(item))
+        else:
+            # If the item is neither a dict nor a string, we can skip it or handle it as needed
+            logger.warning("Unexpected item type in description: %s", type(item))
+            continue
 
     logger.debug("Processed description: %s", processed_description)
     return processed_description
