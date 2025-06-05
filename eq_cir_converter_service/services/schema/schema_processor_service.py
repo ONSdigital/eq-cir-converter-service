@@ -49,7 +49,6 @@ def transform_json(json_data: dict | list | str) -> dict | list | str:
                 json_data[key] = clean_text(value)
                 logger.debug("Cleaned string value for key '%s': %s", key, json_data[key])
             elif key == "description" and isinstance(value, list):
-                logger.debug("Processing description field")
                 json_data[key] = process_description(value)
                 logger.debug("Processed description: %s", json_data[key])
             else:
