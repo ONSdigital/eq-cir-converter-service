@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-import re
 from collections.abc import Mapping
 
+import semver
 from fastapi import HTTPException, status
 
 from eq_cir_converter_service.config.logging_config import logging
@@ -20,17 +20,14 @@ def validate_version(version: str, version_type: str) -> None:
     - version: The version to validate.
     - version_type: The type of version (current or target).
     """
-    pattern = r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$"
-
-    if re.match(pattern, version):
-        logger.info("The %s version matches the pattern", version_type)
-
-    else:
-        logger.error("Invalid %s version %s", version_type, version)
+    try:
+        semver.VersionInfo.parse(version)
+    except ValueError as exception:
+        logger.exception("Invalid %s version: %s", version_type, version)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail={"status": "error", "message": exception_messages.exception_400_invalid_version(version_type)},
-        )
+        ) from exception
 
 
 def validate_input_json(schema: Mapping[str, bool | int | str | list | object]) -> None:

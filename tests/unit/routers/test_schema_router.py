@@ -60,9 +60,9 @@ DEFAULT_RESPONSE_JSON = {"valid_json": "valid_json"}
             DEFAULT_CURRENT_VERSION,  # Uses same value for both current and target version
             DEFAULT_RESPONSE_JSON,
             {
-                "detail": {"status": "error", "message": exception_messages.EXCEPTION_500_MATCHING_SCHEMA_VERSIONS},
+                "detail": {"status": "error", "message": exception_messages.EXCEPTION_400_MATCHING_SCHEMA_VERSIONS},
             },
-            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status.HTTP_400_BAD_REQUEST,
         ),
     ],
 )
