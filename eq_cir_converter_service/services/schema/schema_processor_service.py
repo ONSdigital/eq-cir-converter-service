@@ -1,7 +1,5 @@
 """This module converts the schema from the current to the target version."""
 
-from typing import Any
-
 from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.types.custom_types import ConvertedSchema, InputSchema
 from eq_cir_converter_service.utils.text_utils import clean_text, split_paragraphs
@@ -10,15 +8,15 @@ logger = logging.getLogger(__name__)
 
 
 def process_description(
-    description: list[dict[str, Any] | str],
-) -> list[dict[str, Any] | str]:
+    description: list[dict[str, str | list | object] | str],
+) -> list[dict[str, str | list | object] | str]:
     """Processes the description field by cleaning and splitting."""
     logger.debug("Processing description: %s", description)
 
-    processed_description: list[dict[str, Any] | str] = []
+    processed_description: list[dict[str, str | list | object] | str] = []
 
     for item in description:
-        if isinstance(item, dict) and "text" in item:
+        if isinstance(item, dict) and "text" in item and isinstance(item["text"], str):
             paragraphs = split_paragraphs(item["text"])
 
             if paragraphs:
