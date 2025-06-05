@@ -1,7 +1,5 @@
 """This module converts the schema from the current to the target version."""
 
-from __future__ import annotations
-
 from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.types.custom_types import ConvertedSchema, InputSchema
 from eq_cir_converter_service.utils.text_utils import clean_text, split_paragraphs
