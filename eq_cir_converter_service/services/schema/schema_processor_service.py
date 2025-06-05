@@ -69,7 +69,7 @@ def transform_json(json_data: dict | list | str) -> dict | list | str:
     return json_data
 
 
-async def convert_schema(current_version: str, target_version: str, schema: InputSchema) -> ConvertedSchema:
+def convert_schema(current_version: str, target_version: str, schema: InputSchema) -> ConvertedSchema:
     """Converts the schema from the current to the target version.
 
     Parameters:
