@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-import re
 from collections.abc import Mapping
 
+import semver
 from fastapi import HTTPException, status
 
 from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.exception import exception_messages
-import semver
 
 logger = logging.getLogger(__name__)
 
@@ -23,12 +22,12 @@ def validate_version(version: str, version_type: str) -> None:
     """
     try:
         semver.VersionInfo.parse(version)
-    except ValueError:
-        logger.error("Invalid %s version %s", version_type, version)
+    except ValueError as exception:
+        logger.exception("Invalid %s version: %s", version_type, version)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail={"status": "error", "message": exception_messages.exception_400_invalid_version(version_type)},
-        )
+        ) from exception
 
 
 def validate_input_json(schema: Mapping[str, bool | int | str | list | object]) -> None:
