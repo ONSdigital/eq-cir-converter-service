@@ -9,6 +9,7 @@ from fastapi import HTTPException, status
 
 from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.exception import exception_messages
+import semver
 
 logger = logging.getLogger(__name__)
 
@@ -20,12 +21,9 @@ def validate_version(version: str, version_type: str) -> None:
     - version: The version to validate.
     - version_type: The type of version (current or target).
     """
-    pattern = r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$"
-
-    if re.match(pattern, version):
-        logger.info("The %s version matches the pattern", version_type)
-
-    else:
+    try:
+        semver.VersionInfo.parse(version)
+    except ValueError:
         logger.error("Invalid %s version %s", version_type, version)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
