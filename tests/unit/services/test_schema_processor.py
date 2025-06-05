@@ -21,44 +21,6 @@ def test_process_description_varied_inputs(input_description, expected_output):
     assert process_description(input_description) == expected_output
 
 
-@pytest.fixture
-def sample_json():
-    """Provides a sample JSON structure for transform_json testing."""
-    return {
-        "description": [
-            {
-                "text": (
-                    "<p>Please note: what constitutes a &#x2018;significant change&#x2019; is dependent on "
-                    "your own interpretation in relation to {trad_as}&#x2019;s figures from the previous reporting "
-                    "period and the same reporting period last year.</p>"
-                    "<p>This information will help us to validate your data and should reduce the need to query any "
-                    "figures with you.</p>"
-                ),
-                "placeholders": [
-                    {
-                        "placeholder": "trad_as",
-                        "transforms": [
-                            {
-                                "transform": "first_non_empty_item",
-                                "arguments": {
-                                    "items": [
-                                        {"source": "metadata", "identifier": "trad_as"},
-                                        {"source": "metadata", "identifier": "ru_name"},
-                                    ],
-                                },
-                            },
-                        ],
-                    },
-                ],
-            },
-        ],
-        "nested": {
-            "html": "<b>Bold</b>",
-            "list": ["<b>item1</b>", "item2"],
-        },
-    }
-
-
 def test_transform_json_recursive(sample_json):
     """Test recursive transformation of JSON using sample fixture."""
     transformed = transform_json(sample_json)
