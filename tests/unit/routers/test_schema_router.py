@@ -10,6 +10,7 @@ from eq_cir_converter_service.exception import exception_messages
 
 DEFAULT_CURRENT_VERSION = "9.0.0"
 DEFAULT_TARGET_VERSION = "10.0.0"
+NO_CONVERSION_TARGET_VERSION = "9.0.5"
 DEFAULT_RESPONSE_JSON = {"valid_json": "valid_json"}
 
 
@@ -20,6 +21,14 @@ DEFAULT_RESPONSE_JSON = {"valid_json": "valid_json"}
         (
             DEFAULT_CURRENT_VERSION,
             DEFAULT_TARGET_VERSION,
+            DEFAULT_RESPONSE_JSON,
+            DEFAULT_RESPONSE_JSON,
+            status.HTTP_200_OK,
+        ),
+        # Test the post schema method with valid JSON and no conversion
+        (
+            DEFAULT_CURRENT_VERSION,
+            NO_CONVERSION_TARGET_VERSION,
             DEFAULT_RESPONSE_JSON,
             DEFAULT_RESPONSE_JSON,
             status.HTTP_200_OK,
@@ -60,9 +69,9 @@ DEFAULT_RESPONSE_JSON = {"valid_json": "valid_json"}
             DEFAULT_CURRENT_VERSION,  # Uses same value for both current and target version
             DEFAULT_RESPONSE_JSON,
             {
-                "detail": {"status": "error", "message": exception_messages.EXCEPTION_500_MATCHING_SCHEMA_VERSIONS},
+                "detail": {"status": "error", "message": exception_messages.EXCEPTION_400_MATCHING_SCHEMA_VERSIONS},
             },
-            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status.HTTP_400_BAD_REQUEST,
         ),
     ],
 )
