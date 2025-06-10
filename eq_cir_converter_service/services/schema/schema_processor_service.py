@@ -92,8 +92,14 @@ def convert_schema(current_version: str, target_version: str, schema: InputSchem
 
     logger.debug("Input schema: %s", input_schema)
 
-    # Transform JSON
-    converted_schema = transform_json(input_schema)
+    if target_version == "10.0.0":
+        # If the target version is 10.0.0, we need to transform the schema
+        logger.info("Transforming schema for version 10.0.0")
+        converted_schema = transform_json(input_schema)
+    else:
+        # For other versions, we can assume no specific transformation is needed
+        logger.info("No specific transformation for version %s, using input schema as is", target_version)
+        converted_schema = input_schema
 
     logger.debug("Converted schema: %s", converted_schema)
     logger.info("Schema converted successfully")
