@@ -12,6 +12,7 @@ python = "^3.12.6"
 fastapi = "^0.115.12"
 uvicorn = "^0.34.2"
 semver = "^3.0.4"
+jsonpath-ng = "^1.7.0"
 
 [tool.poetry.group.dev.dependencies]
 # :TODO: Remove pylint when ruff supports all pylint rules
