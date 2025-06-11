@@ -2,7 +2,7 @@
 
 import pytest
 
-from eq_cir_converter_service.utils.text_utils import (
+from eq_cir_converter_service.utils.helper_utils import (
     clean_text,
     replace_b_with_strong,
     split_paragraphs,
