@@ -1,40 +1,73 @@
-"""Unit tests for the schema processor service."""
+"""Tests for the schema processing service."""
 
 import pytest
 
-from eq_cir_converter_service.services.schema.schema_processor_service import (
-    process_description,
-    transform_json,
-)
+from eq_cir_converter_service.services.schema.schema_processor_service import transform_json
 
 
-@pytest.mark.parametrize(
-    "input_description, expected_output",
-    [
-        (["Simple string"], ["Simple string"]),
-        (["<p>Text with HTML</p>"], ["Text with HTML"]),
-        (["valid string", 123, {"foo": "bar"}], ["valid string"]),
-        ([], []),
-    ],
-)
-def test_process_description_varied_inputs(input_description, expected_output):
-    """Test the processing of a description with varied string inputs."""
-    assert process_description(input_description) == expected_output
+@pytest.fixture
+def placeholder_obj():
+    """Fixture to provide a sample placeholder object."""
+    return {"placeholder": "first_name", "value": {"source": "metadata", "identifier": "FIRST_NAME"}}
 
 
-def test_transform_json_recursive(sample_json):
-    """Test recursive transformation of JSON using sample fixture."""
-    transformed = transform_json(sample_json)
+def test_transform_json_with_single_text_block():
+    """Test transforming a single text block with HTML content into a list of paragraphs."""
+    data = {"contents": [{"description": "<p>Block1</p><p>Block2</p>"}]}
+    paths = [{"json_path": "contents[*].description"}]
+    result = transform_json(data, paths)
 
-    assert transformed["description"][0]["text"] == (
-        "Please note: what constitutes a &#x2018;significant change&#x2019; is dependent on your own "
-        "interpretation in relation to {trad_as}&#x2019;s figures from the previous reporting period and the same "
-        "reporting period last year."
-    )
-    assert transformed["description"][1] == (
-        "This information will help us to validate your data and should reduce the need to query any "
-        "figures with you."
-    )
-    assert transformed["nested"]["html"] == "<strong>Bold</strong>"
-    assert transformed["nested"]["list"][0] == "<strong>item1</strong>"
-    assert transformed["nested"]["list"][1] == "item2"
+    assert result == {"contents": [{"description": ["Block1", "Block2"]}]}
+
+
+def test_transform_json_with_text_object_and_placeholders(placeholder_obj):
+    """Test transforming a text object with HTML content and placeholders."""
+    data = {
+        "question": {
+            "description": [
+                {
+                    "text": "<p>Hello {first_name}</p><p>Welcome again {first_name}</p>",
+                    "placeholders": [placeholder_obj],
+                },
+            ],
+        },
+    }
+    paths = [{"json_path": "question.description[*]"}]
+    result = transform_json(data, paths)
+    desc = result["question"]["description"]
+    assert len(desc) == 2
+    assert desc[0]["text"] == "Hello {first_name}"
+    assert desc[1]["text"] == "Welcome again {first_name}"
+    assert len(desc[0]["placeholders"]) == 1
+    assert len(desc[1]["placeholders"]) == 1
+
+
+def test_transform_json_with_string_only():
+    """Test transforming a simple string without HTML tags."""
+    data = {"meta": {"notes": "<p>Alpha</p><p>Beta</p>"}}
+    paths = [{"json_path": "meta.notes"}]
+    result = transform_json(data, paths)
+    assert result == {"meta": {"notes": ["Alpha", "Beta"]}}
+
+
+def test_transform_json_with_mixed_types(placeholder_obj):
+    """Test transforming a mixed list with strings, text objects, and other structures."""
+    data = {
+        "items": [
+            "Simple <b>value</b>",
+            {"text": "<p>Hi {first_name}</p>", "placeholders": [placeholder_obj]},
+            {"info": "<p>Info1</p><p>Info2</p>"},
+        ],
+    }
+    paths = [{"json_path": "items[*]"}]
+    result = transform_json(data, paths)
+
+    assert isinstance(result["items"], list)
+    assert result["items"][0] == "Simple <strong>value</strong>"
+
+    text_objs = [x for x in result["items"] if isinstance(x, dict) and "text" in x]
+    assert any(obj["text"] == "Hi {first_name}" for obj in text_objs)
+
+    info_objs = [x for x in result["items"] if isinstance(x, dict) and "info" in x]
+    assert len(info_objs) == 1
+    assert info_objs[0]["info"] == ["Info1", "Info2"]
