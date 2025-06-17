@@ -1,21 +1,28 @@
-"""Tests for the schema processing service."""
 
 import pytest
-
 from eq_cir_converter_service.services.schema.schema_processor_service import transform_json
 
 
-def test_transform_json_with_single_text_block():
-    """Test transforming a single text block with HTML content into a list of paragraphs."""
-    data = {"contents": [{"description": "<p>Block1</p><p>Block2</p>"}]}
-    paths = [{"json_path": "contents[*].description"}]
-    result = transform_json(data, paths)
+@pytest.mark.parametrize("data, paths, expected", [
+    (
+        {"contents": [{"description": "<p>Block1</p><p>Block2</p>"}]},
+        [{"json_path": "contents[*].description"}],
+        {"contents": [{"description": ["Block1", "Block2"]}]}
+    ),
+    (
+        {"meta": {"notes": "<p>Alpha</p><p>Beta</p>"}},
+        [{"json_path": "meta.notes"}],
+        {"meta": {"notes": ["Alpha", "Beta"]}}
+    )
+])
 
-    assert result == {"contents": [{"description": ["Block1", "Block2"]}]}
+
+def test_transform_json_basic_cases(data, paths, expected):
+    result = transform_json(data, paths)
+    assert result == expected
 
 
 def test_transform_json_with_text_object_and_placeholders(placeholder_obj):
-    """Test transforming a text object with HTML content and placeholders."""
     data = {
         "question": {
             "description": [
@@ -36,16 +43,7 @@ def test_transform_json_with_text_object_and_placeholders(placeholder_obj):
     assert len(desc[1]["placeholders"]) == 1
 
 
-def test_transform_json_with_string_only():
-    """Test transforming a simple string without HTML tags."""
-    data = {"meta": {"notes": "<p>Alpha</p><p>Beta</p>"}}
-    paths = [{"json_path": "meta.notes"}]
-    result = transform_json(data, paths)
-    assert result == {"meta": {"notes": ["Alpha", "Beta"]}}
-
-
 def test_transform_json_with_mixed_types(placeholder_obj):
-    """Test transforming a mixed list with strings, text objects, and other structures."""
     data = {
         "items": [
             "Simple <b>value</b>",
