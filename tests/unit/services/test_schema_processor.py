@@ -1,28 +1,33 @@
+"""Tests for the schema processor service."""
 
 import pytest
+
 from eq_cir_converter_service.services.schema.schema_processor_service import transform_json
 
 
-@pytest.mark.parametrize("data, paths, expected", [
-    (
-        {"contents": [{"description": "<p>Block1</p><p>Block2</p>"}]},
-        [{"json_path": "contents[*].description"}],
-        {"contents": [{"description": ["Block1", "Block2"]}]}
-    ),
-    (
-        {"meta": {"notes": "<p>Alpha</p><p>Beta</p>"}},
-        [{"json_path": "meta.notes"}],
-        {"meta": {"notes": ["Alpha", "Beta"]}}
-    )
-])
-
-
+@pytest.mark.parametrize(
+    "data, paths, expected",
+    [
+        (
+            {"contents": [{"description": "<p>Block1</p><p>Block2</p>"}]},
+            [{"json_path": "contents[*].description"}],
+            {"contents": [{"description": ["Block1", "Block2"]}]},
+        ),
+        (
+            {"meta": {"notes": "<p>Alpha</p><p>Beta</p>"}},
+            [{"json_path": "meta.notes"}],
+            {"meta": {"notes": ["Alpha", "Beta"]}},
+        ),
+    ],
+)
 def test_transform_json_basic_cases(data, paths, expected):
+    """Test basic JSON transformation cases."""
     result = transform_json(data, paths)
     assert result == expected
 
 
 def test_transform_json_with_text_object_and_placeholders(placeholder_obj):
+    """Test transformation of a JSON object with text and placeholders."""
     data = {
         "question": {
             "description": [
@@ -44,6 +49,7 @@ def test_transform_json_with_text_object_and_placeholders(placeholder_obj):
 
 
 def test_transform_json_with_mixed_types(placeholder_obj):
+    """Test transformation of a JSON object with mixed types."""
     data = {
         "items": [
             "Simple <b>value</b>",
