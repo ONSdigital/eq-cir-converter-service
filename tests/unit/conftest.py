@@ -13,6 +13,10 @@ def test_client() -> Generator[TestClient, None, None]:
     """General client for hitting endpoints in tests."""
     yield TestClient(app.app)
 
+@pytest.fixture
+def placeholder_obj():
+    """Fixture to provide a sample placeholder object."""
+    yield {"placeholder": "first_name", "value": {"source": "metadata", "identifier": "FIRST_NAME"}}
 
 @pytest.fixture
 def sample_json():

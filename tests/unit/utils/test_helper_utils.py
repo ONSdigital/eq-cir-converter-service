@@ -53,12 +53,6 @@ def test_extract_placeholders(text, expected):
     assert extract_placeholders(text) == expected
 
 
-@pytest.fixture
-def placeholder_obj():
-    """Fixture to provide a sample placeholder object."""
-    return {"placeholder": "first_name", "value": {"source": "metadata", "identifier": "FIRST_NAME"}}
-
-
 def test_split_text_with_placeholders_single(placeholder_obj):
     """Test splitting text with a single placeholder."""
     input_obj = {"text": "<p>Hello {first_name}</p>", "placeholders": [placeholder_obj]}

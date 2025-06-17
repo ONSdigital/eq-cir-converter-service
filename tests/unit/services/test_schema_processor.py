@@ -5,12 +5,6 @@ import pytest
 from eq_cir_converter_service.services.schema.schema_processor_service import transform_json
 
 
-@pytest.fixture
-def placeholder_obj():
-    """Fixture to provide a sample placeholder object."""
-    return {"placeholder": "first_name", "value": {"source": "metadata", "identifier": "FIRST_NAME"}}
-
-
 def test_transform_json_with_single_text_block():
     """Test transforming a single text block with HTML content into a list of paragraphs."""
     data = {"contents": [{"description": "<p>Block1</p><p>Block2</p>"}]}
