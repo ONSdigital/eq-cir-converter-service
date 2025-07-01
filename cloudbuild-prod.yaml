@@ -7,9 +7,9 @@ steps:
     args:
       - "-c"
       - |
-        if [ $_ENV = "prod" ]; then
+        if [ $_ENV = "staging" ]; then
           echo "*************************************************************"
-          echo "* Building Docker image for production environment...       *"
+          echo "* Building Docker image for environment...                  *"
           echo "*************************************************************"
 
           docker build -t "$_EQ_CIR_CONVERTER_SERVICE_IMAGE_REPO:${SHORT_SHA}" .
@@ -26,7 +26,7 @@ steps:
     args:
       - "-c"
       - |
-        if [ $_ENV = "prod" ]; then
+        if [ $_ENV = "staging" ]; then
           echo "*************************************************************"
           echo "* Pushing Docker image to Artifact Registry...              *"
           echo "*************************************************************"
