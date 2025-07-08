@@ -76,7 +76,10 @@ def process_string(text: str) -> str | list[str]:
     if REGEX_PARA_SPLIT.search(text):
         # If the text contains <p> tags, split into paragraphs
         # and clean each paragraph
-        return [clean_html_tags(p).strip() for p in extract_paragraphs(text) if clean_html_tags(p).strip()]
+        paragraphs = [clean_html_tags(p).strip() for p in extract_paragraphs(text) if clean_html_tags(p).strip()]
+        if len(paragraphs) == 1:
+            return paragraphs[0]  # return string if only one paragraph
+        return paragraphs
     return clean_html_tags(text).strip()
 
 
