@@ -75,13 +75,25 @@ def test_split_text_with_placeholders_multiple(placeholder_obj):
     "text,expected",
     [
         ("<p>One</p><p>Two</p>", ["One", "Two"]),
-        ("<p></p><p>Second</p>", ["Second"]),
+        ("<p></p><p>Second</p>", "Second"),
         ("No tags", "No tags"),
     ],
 )
 def test_process_string(text, expected):
     """Test the process_string function."""
     assert process_string(text) == expected
+
+
+@pytest.mark.parametrize(
+    "input_text,expected",
+    [
+        ("<p>Single</p>", "Single"),
+        ("<p>One</p><p>Two</p>", ["One", "Two"]),
+    ],
+)
+def test_process_string_single_vs_multiple(input_text, expected):
+    """Test processing a string that may expand to multiple paragraphs."""
+    assert process_string(input_text) == expected
 
 
 def test_process_text_object_with_paragraphs(placeholder_obj):
@@ -109,7 +121,7 @@ def test_process_list_with_dict_and_string():
 
 def test_process_element_string():
     """Test processing a simple string."""
-    assert process_element("<p>Test</p>") == ["Test"]
+    assert process_element("<p>Test</p>") == "Test"
     assert process_element("Simple") == "Simple"
 
 
@@ -140,7 +152,7 @@ def test_process_element_dict():
     """Test processing a dictionary with mixed content."""
     obj = {"a": "<p>One</p>", "b": "plain"}
     result = process_element(obj)
-    assert result == {"a": ["One"], "b": "plain"}
+    assert result == {"a": "One", "b": "plain"}
 
 
 def test_split_text_with_placeholders_empty_paragraph_skipped():
@@ -169,6 +181,32 @@ def test_process_list_string_expands_to_multiple():
     data = ["<p>First</p><p>Second</p>"]
     result = process_list(data)
     assert result == ["First", "Second"]
+
+
+@pytest.mark.parametrize(
+    "input_list,expected",
+    [
+        ([{"description": "<p>Only one</p>"}], [{"description": "Only one"}]),
+        ([{"description": "<p>First</p><p>Second</p>"}], [{"description": "First"}, {"description": "Second"}]),
+    ],
+)
+def test_process_list_single_vs_multiple(input_list, expected):
+    """Test processing a list that may contain single or multiple paragraphs."""
+    assert process_list(input_list) == expected
+
+
+@pytest.mark.parametrize(
+    "input_data,expected",
+    [
+        ("<p>Just one</p>", "Just one"),
+        ("<p>First</p><p>Second</p>", ["First", "Second"]),
+        ({"description": "<p>One desc</p>"}, {"description": "One desc"}),
+        ({"description": "<p>First</p><p>Second</p>"}, {"description": ["First", "Second"]}),
+    ],
+)
+def test_process_element_single_vs_multiple(input_data, expected):
+    """Test processing an element that may expand to single or multiple paragraphs."""
+    assert process_element(input_data) == expected
 
 
 def test_process_element_returns_raw_types():
