@@ -101,20 +101,25 @@ def process_list(elements: list[str | list | object]) -> list[str | list | objec
 
     for item in elements:
         if isinstance(item, dict):
+            expandable_key = None
             for k, v in item.items():
                 if isinstance(v, str) and REGEX_PARA_SPLIT.search(v):
                     # If the value is a string with <p> tags, extract paragraphs
                     # and clean each paragraph
                     # and extract placeholders
-                    paragraphs = extract_paragraphs(v)
-                    for para in paragraphs:
-                        cleaned = clean_html_tags(para).strip()
-                        if cleaned:
-                            result.append({k: cleaned})
+                    expandable_key = k
                     break
+
+            if expandable_key:
+                paragraphs = extract_paragraphs(item[expandable_key])
+                cleaned_paragraphs = [
+                    clean_html_tags(p).strip()
+                    for p in paragraphs
+                    if clean_html_tags(p).strip()
+                ]
+                result.extend({expandable_key: p} for p in cleaned_paragraphs)
             else:
-                processed = process_element(item)
-                result.append(processed)
+                result.append(process_element(item))
         else:
             processed = process_element(item)
             if isinstance(processed, list):
@@ -123,7 +128,6 @@ def process_list(elements: list[str | list | object]) -> list[str | list | objec
                 result.append(processed)
 
     return result
-
 
 # --- Recursive Processor ---
 def process_element(element: str | list | object) -> str | list | object:
