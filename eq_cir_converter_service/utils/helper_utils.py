@@ -64,9 +64,9 @@ def split_text_with_placeholders(
                         # Ensure the placeholder is a dictionary with a 'placeholder' key
                         matching = [placeholder]
 
-            # If the placeholder is found, create a deep copy for each occurrence
-            if matching:
-                relevant.extend(deepcopy(matching[0]) for _ in range(count))
+                    # If the placeholder is found, create a deep copy for each occurrence
+                    if matching:
+                        relevant.extend(deepcopy(matching[0]) for _ in range(count))
 
         if relevant:
             result.append({"text": cleaned, "placeholders": relevant})
