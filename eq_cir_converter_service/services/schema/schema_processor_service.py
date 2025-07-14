@@ -11,10 +11,11 @@ logger = logging.getLogger(__name__)
 
 
 # --- JSONPath-Based Transformation ---
-def transform_json(data: dict[str, str | list | object], paths: list[str]) -> dict[str, str | list | object]:
+def transform_json(data: dict[str, str | list | object], paths: list[object]) -> dict[str, str | list | object]:
     """Transforms the JSON data based on the provided JSONPath expressions."""
     for path_expr in paths:
-        expr = parse(path_expr["json_path"])
+        if isinstance(path_expr, dict) and "json_path" in path_expr:
+            expr = parse(path_expr["json_path"])
         for match in expr.find(data):
             context = match.context.value
             key = match.path.fields[0] if hasattr(match.path, "fields") else None
@@ -53,6 +54,7 @@ def convert_schema(current_version: str, target_version: str, schema: InputSchem
     logger.debug("Input schema: %s", input_schema)
 
     logger.debug("Extractable strings for transformation: %s", EXTRACTABLE_STRINGS)
+
     if target_version == "10.0.0":
         # If the target version is 10.0.0, we need to transform the schema
         logger.info("Transforming schema for version 10.0.0")
