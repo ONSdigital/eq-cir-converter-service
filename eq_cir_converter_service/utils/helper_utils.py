@@ -112,11 +112,7 @@ def process_list(elements: list[str | list | object]) -> list[str | list | objec
 
             if expandable_key:
                 paragraphs = extract_paragraphs(item[expandable_key])
-                cleaned_paragraphs = [
-                    clean_html_tags(p).strip()
-                    for p in paragraphs
-                    if clean_html_tags(p).strip()
-                ]
+                cleaned_paragraphs = [clean_html_tags(p).strip() for p in paragraphs if clean_html_tags(p).strip()]
                 result.extend({expandable_key: p} for p in cleaned_paragraphs)
             else:
                 result.append(process_element(item))
@@ -128,6 +124,7 @@ def process_list(elements: list[str | list | object]) -> list[str | list | objec
                 result.append(processed)
 
     return result
+
 
 # --- Recursive Processor ---
 def process_element(element: str | list | object) -> str | list | object:
