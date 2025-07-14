@@ -98,9 +98,9 @@ def process_text_object(
 def process_list(elements: list[str | list | object]) -> list[str | list | object]:
     """Processes a list of elements, cleaning HTML tags and extracting paragraphs from text objects."""
     result: list[str | list | object] = []
+
     for item in elements:
         if isinstance(item, dict):
-            expanded = False
             for k, v in item.items():
                 if isinstance(v, str) and REGEX_PARA_SPLIT.search(v):
                     # If the value is a string with <p> tags, extract paragraphs
@@ -111,16 +111,17 @@ def process_list(elements: list[str | list | object]) -> list[str | list | objec
                         cleaned = clean_html_tags(para).strip()
                         if cleaned:
                             result.append({k: cleaned})
-                    expanded = True
                     break
-            if not expanded:
-                result.append(process_element(item))
+            else:
+                processed = process_element(item)
+                result.append(processed)
         else:
             processed = process_element(item)
             if isinstance(processed, list):
                 result.extend(processed)
             else:
                 result.append(processed)
+
     return result
 
 
