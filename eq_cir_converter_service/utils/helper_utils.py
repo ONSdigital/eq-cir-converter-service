@@ -87,11 +87,11 @@ def process_text_object(
     obj: dict[str, str | list | object],
 ) -> dict[str, str | list | object] | list[str | dict[str, str | list | object]]:
     """Processes a text object, cleaning HTML tags and extracting paragraphs with placeholders."""
-    if REGEX_PARA_SPLIT.search(obj.get("text", "")):
+    if REGEX_PARA_SPLIT.search(str(obj.get("text", ""))):
         # If the text contains <p> tags, split into paragraphs
         # and clean each paragraph, extracting placeholders
         return split_text_with_placeholders(obj)
-    obj["text"] = clean_html_tags(obj["text"]).strip()
+    obj["text"] = clean_html_tags(str(obj["text"])).strip()
     return obj
 
 
