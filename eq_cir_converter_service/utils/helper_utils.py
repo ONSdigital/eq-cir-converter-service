@@ -47,7 +47,7 @@ def split_text_with_placeholders(
     """Splits the 'text' field in the text_obj into paragraphs, cleaning HTML tags and extracting placeholders."""
     raw_text = text_obj.get("text", "")
     placeholders = text_obj.get("placeholders", [])
-    paragraphs = extract_paragraphs(raw_text)
+    paragraphs = extract_paragraphs(str(raw_text))
 
     result = []
     for para in paragraphs:
@@ -56,7 +56,7 @@ def split_text_with_placeholders(
             continue
 
         used_counts = Counter(extract_placeholders(cleaned))
-        relevant = []
+        relevant: list[dict] = []
         for ph_name, count in used_counts.items():
             matching = [ph for ph in placeholders if ph["placeholder"] == ph_name]
             if matching:
