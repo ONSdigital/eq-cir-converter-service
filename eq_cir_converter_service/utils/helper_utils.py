@@ -49,7 +49,7 @@ def split_text_with_placeholders(
     placeholders = text_obj.get("placeholders", [])
     paragraphs = extract_paragraphs(str(raw_text))
 
-    result = []
+    result: list[str | dict[str, str | list | object]] = []
     for para in paragraphs:
         cleaned = clean_html_tags(para).strip()
         if not cleaned:
@@ -58,7 +58,13 @@ def split_text_with_placeholders(
         used_counts = Counter(extract_placeholders(cleaned))
         relevant: list[dict] = []
         for ph_name, count in used_counts.items():
-            matching = [ph for ph in placeholders if ph["placeholder"] == ph_name]
+            if isinstance(placeholders, list):
+                for placeholder in placeholders:
+                    if isinstance(placeholder, dict) and placeholder.get("placeholder") == ph_name:
+                        # Ensure the placeholder is a dictionary with a 'placeholder' key
+                        matching = [placeholder]
+
+            # If the placeholder is found, create a deep copy for each occurrence
             if matching:
                 relevant.extend(deepcopy(matching[0]) for _ in range(count))
 
