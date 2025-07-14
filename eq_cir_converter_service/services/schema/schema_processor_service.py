@@ -16,10 +16,11 @@ def transform_json(data: dict[str, str | list | object], paths: list[object]) ->
     for path_expr in paths:
         if isinstance(path_expr, dict) and "json_path" in path_expr:
             expr = parse(path_expr["json_path"])
-        for match in expr.find(data):
-            context = match.context.value
-            key = match.path.fields[0] if hasattr(match.path, "fields") else None
-            index = getattr(match.path, "index", None)
+        if expr:
+            for match in expr.find(data):
+                context = match.context.value
+                key = match.path.fields[0] if hasattr(match.path, "fields") else None
+                index = getattr(match.path, "index", None)
 
             if isinstance(context, dict) and key:
                 context[key] = process_element(context[key])
