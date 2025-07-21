@@ -2,7 +2,9 @@
 
 import pytest
 
-from eq_cir_converter_service.services.schema.schema_processor_service import transform_json
+from eq_cir_converter_service.services.schema.schema_processor_service import (
+    transform_json,
+)
 
 
 @pytest.mark.parametrize(

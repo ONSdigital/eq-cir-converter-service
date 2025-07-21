@@ -3,7 +3,9 @@
 from jsonpath_ng.ext import parse
 
 from eq_cir_converter_service.config.logging_config import logging
-from eq_cir_converter_service.services.schema.extractable_strings import EXTRACTABLE_STRINGS
+from eq_cir_converter_service.services.schema.extractable_strings import (
+    EXTRACTABLE_STRINGS,
+)
 from eq_cir_converter_service.types.custom_types import ConvertedSchema, InputSchema
 from eq_cir_converter_service.utils.helper_utils import process_element
 
