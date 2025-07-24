@@ -2,7 +2,9 @@
 
 import re
 from collections import Counter
+from collections.abc import Sequence
 from copy import deepcopy
+from typing import Any
 
 from eq_cir_converter_service.config.logging_config import logging
 
@@ -102,7 +104,7 @@ def process_text_object(
     return obj
 
 
-def process_list(elements: list[str | list | object]) -> list[str | list | object]:
+def process_list(elements: Sequence[str | Sequence[Any] | dict]) -> list[str | list | object]:
     """Processes a list of elements, cleaning HTML tags and extracting paragraphs from text objects."""
     result: list[str | list | object] = []
 
