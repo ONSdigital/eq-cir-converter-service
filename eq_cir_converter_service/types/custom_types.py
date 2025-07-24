@@ -5,4 +5,4 @@ from collections.abc import Mapping
 InputSchema = Mapping[str, object]
 
 # Define the type for the converted schema
-ConvertedSchema = dict | list | str
+ConvertedSchema = Mapping[str, object]
