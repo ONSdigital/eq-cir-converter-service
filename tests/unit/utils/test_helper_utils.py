@@ -58,6 +58,9 @@ def test_split_text_with_placeholders_single(placeholder_obj):
     input_obj = {"text": "<p>Hello {first_name}</p>", "placeholders": [placeholder_obj]}
     result = split_text_with_placeholders(input_obj)
     assert len(result) == 1
+    assert isinstance(result[0], dict)
+    assert "text" in result[0]
+    assert "placeholders" in result[0]
     assert result[0]["text"] == "Hello {first_name}"
     assert result[0]["placeholders"] == [placeholder_obj]
 
@@ -68,6 +71,8 @@ def test_split_text_with_placeholders_multiple(placeholder_obj):
     result = split_text_with_placeholders(input_obj)
     assert len(result) == 2
     for item in result:
+        assert isinstance(item, dict)
+        assert "placeholders" in item
         assert item["placeholders"] == [placeholder_obj]
 
 
@@ -129,6 +134,10 @@ def test_process_element_text_object(placeholder_obj):
     """Test processing a text object with placeholders."""
     obj = {"text": "<p>Hello {first_name}</p>", "placeholders": [placeholder_obj]}
     result = process_element(obj)
+    assert isinstance(result, list)
+    assert len(result) == 1
+    assert isinstance(result[0], dict)
+    assert "text" in result[0]
     assert result[0]["text"] == "Hello {first_name}"
 
 
@@ -141,6 +150,7 @@ def test_process_element_list(placeholder_obj):
     ]
     result = process_element(data)
 
+    assert isinstance(result, list)
     assert {"description": "Item1"} in result
     assert {"description": "Item2"} in result
     assert "Some text" in result
