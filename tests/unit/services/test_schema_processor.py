@@ -3,7 +3,7 @@
 import pytest
 
 from eq_cir_converter_service.services.schema.schema_processor_service import (
-    transform_json,
+    transform_json_schema,
 )
 
 
@@ -22,13 +22,13 @@ from eq_cir_converter_service.services.schema.schema_processor_service import (
         ),
     ],
 )
-def test_transform_json_basic_cases(data, paths, expected):
+def test_transform_json_schema_basic_cases(data, paths, expected):
     """Test basic JSON transformation cases."""
-    result = transform_json(data, paths)
+    result = transform_json_schema(data, paths)
     assert result == expected
 
 
-def test_transform_json_with_text_object_and_placeholders(placeholder_obj):
+def test_transform_json_schema_with_text_object_and_placeholders(placeholder_obj):
     """Test transformation of a JSON object with text and placeholders."""
     data = {
         "question": {
@@ -41,7 +41,7 @@ def test_transform_json_with_text_object_and_placeholders(placeholder_obj):
         },
     }
     paths = [{"json_path": "question.description[*]"}]
-    result = transform_json(data, paths)
+    result = transform_json_schema(data, paths)
     desc = result["question"]["description"]
     assert len(desc) == 2
     assert desc[0]["text"] == "Hello {first_name}"
@@ -50,7 +50,7 @@ def test_transform_json_with_text_object_and_placeholders(placeholder_obj):
     assert len(desc[1]["placeholders"]) == 1
 
 
-def test_transform_json_with_mixed_types(placeholder_obj):
+def test_transform_json_schema_with_mixed_types(placeholder_obj):
     """Test transformation of a JSON object with mixed types."""
     data = {
         "items": [
@@ -60,7 +60,7 @@ def test_transform_json_with_mixed_types(placeholder_obj):
         ],
     }
     paths = [{"json_path": "items[*]"}]
-    result = transform_json(data, paths)
+    result = transform_json_schema(data, paths)
 
     assert isinstance(result["items"], list)
     assert result["items"][0] == "Simple <strong>value</strong>"

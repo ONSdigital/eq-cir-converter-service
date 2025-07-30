@@ -16,12 +16,12 @@ logger = logging.getLogger(__name__)
 
 
 # --- JSONPath-Based Transformation ---
-def transform_json(data: Mapping[str, Any], paths: Sequence[Mapping[str, str]]) -> Mapping[str, Any]:
-    """Transforms the JSON data based on the provided JSONPath expressions."""
+def transform_json_schema(schema: Mapping[str, Any], paths: Sequence[Mapping[str, str]]) -> Mapping[str, Any]:
+    """Transforms the JSON schema based on the provided JSONPath expressions."""
     for path_expr in paths:
         if isinstance(path_expr, dict) and "json_path" in path_expr:
             expr = parse(path_expr["json_path"])
-            for match in expr.find(data):
+            for match in expr.find(schema):
                 context = match.context.value
                 key = match.path.fields[0] if hasattr(match.path, "fields") else None
                 index = getattr(match.path, "index", None)
@@ -34,7 +34,7 @@ def transform_json(data: Mapping[str, Any], paths: Sequence[Mapping[str, str]]) 
                         context[index : index + 1] = processed
                     else:
                         context[index] = processed
-    return data
+    return schema
 
 
 # --- Schema Conversion Service ---
@@ -68,7 +68,7 @@ def convert_schema(current_version: str, target_version: str, schema: InputSchem
     if target_version == "10.0.0":
         # If the target version is 10.0.0, we need to transform the schema
         logger.info("Transforming schema for version 10.0.0")
-        converted_schema = transform_json(input_schema, extractable_paths)
+        converted_schema = transform_json_schema(input_schema, extractable_paths)
     else:
         # For other versions, we can assume no specific transformation is needed
         logger.info("No specific transformation for version %s, using input schema as is", target_version)
