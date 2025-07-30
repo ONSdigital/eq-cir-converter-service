@@ -2,7 +2,7 @@
 
 EXCEPTION_500_SCHEMA_PROCESSING = "Error encountered while processing the schema"
 
-EXCEPTION_500_MATCHING_SCHEMA_VERSIONS = (
+EXCEPTION_400_MATCHING_SCHEMA_VERSIONS = (
     "The current and target schema versions are the same - provide different versions"
 )
 
