@@ -10,6 +10,7 @@ DEFAULT_TARGET_VERSION = "10.0.0"
 
 def test_schema_transformation_matches_expected_output(test_client: TestClient):
     """Test that the schema transformation endpoint returns the expected output."""
+
     # Define the input and output file paths
     input_file_path = "tests/integration/input_schema.json"
     output_file_path = "tests/integration/output_schema.json"
