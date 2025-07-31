@@ -6,15 +6,12 @@ of the extracted strings.
 """
 
 EXTRACTABLE_STRINGS = [
-    {"json_path": "$.title", "description": "Questionnaire title"},
     {"json_path": "$.legal_basis", "description": "Questionnaire legal basis"},
     {"json_path": "$.messages.*", "description": "Global answer error message"},
-    {"json_path": "$.submission.button", "description": "Submission button"},
     {
         "json_path": "$.submission.guidance",
         "description": "Submission guidance",
     },
-    {"json_path": "$.submission.title", "description": "Submission title"},
     {"json_path": "$.submission.warning", "description": "Submission warning"},
     {
         "json_path": "$.post_submission.guidance.contents[*].title",
@@ -29,7 +26,6 @@ EXTRACTABLE_STRINGS = [
         "description": "Post submission guidance list item",
         "additional_context": ["ListHeading", "ListDescription"],
     },
-    {"json_path": "$.sections[*].title", "description": "Section title"},
     {"json_path": "$..page_title", "description": "Page title"},
     {
         "json_path": "$.sections[*].repeat.title",
@@ -55,9 +51,7 @@ EXTRACTABLE_STRINGS = [
         "json_path": "$.sections[*].summary.items[*].item_label",
         "description": "Label for the item title on a section summary",
     },
-    {"json_path": "$..groups[*].title", "description": "Group title"},
     {"json_path": "$..blocks[*].title", "description": "Block title"},
-    {"json_path": "$..summary.title", "description": "List collector summary heading"},
     {
         "json_path": "$..summary.item_title",
         "description": "List collector summary item",
@@ -120,7 +114,6 @@ EXTRACTABLE_STRINGS = [
         "description": "Content page description",
         "context": "Content",
     },
-    {"json_path": "$..question.title", "description": "Question text"},
     {
         "json_path": "$..question.description[*]",
         "description": "Question description",
@@ -363,51 +356,3 @@ EXTRACTABLE_STRINGS = [
         "context": "ListHeading",
     },
 ]
-
-CONTEXT_DEFINITIONS = {
-    "Question": {
-        "parent_schema_property": "question",
-        "property": "title",
-        "text": "{context}",
-    },
-    "Content": {
-        "parent_schema_property": "content",
-        "property": "title",
-        "text": "{context}",
-    },
-    "Answer": {
-        "parent_schema_property": "answers",
-        "property": "label",
-        "text": "For answer: {context}",
-    },
-    "AnswerOption": {
-        "parent_schema_property": "options",
-        "property": "label",
-        "text": "For answer option: {context}",
-    },
-    "ListHeading": {
-        "parent_schema_property": "contents",
-        "property": "title",
-        "text": "For heading: {context}",
-    },
-    "ListDescription": {
-        "parent_schema_property": "contents",
-        "property": "description",
-        "text": "For description: {context}",
-    },
-    "PrimaryContent": {
-        "parent_schema_property": "primary_content",
-        "property": "title",
-        "text": "{context}",
-    },
-    "PreviewContent": {
-        "parent_schema_property": "preview_content",
-        "property": "title",
-        "text": "{context}",
-    },
-    "PreviewQuestionListHeading": {
-        "parent_schema_property": "questions",
-        "property": "question",
-        "text": "For question: {context}",
-    },
-}
