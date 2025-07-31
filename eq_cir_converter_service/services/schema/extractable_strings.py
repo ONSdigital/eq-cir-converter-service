@@ -315,10 +315,6 @@ EXTRACTABLE_STRINGS = [
         "additional_context": ["ListHeading"],
     },
     {
-        "json_path": "$..preview_content.title",
-        "description": "Introduction preview title",
-    },
-    {
         "json_path": "$..preview_content.contents[*].description",
         "description": "Introduction preview description",
         "context": "PreviewContent",
