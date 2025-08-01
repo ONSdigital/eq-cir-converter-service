@@ -337,10 +337,6 @@ EXTRACTABLE_STRINGS = [
         "additional_context": ["PreviewQuestionListHeading"],
     },
     {
-        "json_path": "$..secondary_content[*].contents[*].title",
-        "description": "Introduction additional title",
-    },
-    {
         "json_path": "$..secondary_content[*].contents[*].list[*]",
         "description": "Introduction additional list item",
         "context": "ListHeading",
