@@ -19,21 +19,20 @@ logger = logging.getLogger(__name__)
 def transform_json_schema(schema: Mapping[str, Any], paths: Sequence[Mapping[str, str]]) -> Mapping[str, Any]:
     """Transforms the JSON schema based on the provided JSONPath expressions."""
     for path_expr in paths:
-        if isinstance(path_expr, dict) and "json_path" in path_expr:
-            expr = parse(path_expr["json_path"])
-            for match in expr.find(schema):
-                context = match.context.value
-                key = match.path.fields[0] if hasattr(match.path, "fields") else None
-                index = getattr(match.path, "index", None)
+        expr = parse(path_expr["json_path"])
+        for match in expr.find(schema):
+            context = match.context.value
+            key = match.path.fields[0] if hasattr(match.path, "fields") else None
+            index = getattr(match.path, "index", None)
 
-                if isinstance(context, dict) and key:
-                    context[key] = process_element(context[key])
-                elif isinstance(context, list) and index is not None:
-                    processed = process_element(context[index])
-                    if isinstance(processed, list):
-                        context[index : index + 1] = processed
-                    else:
-                        context[index] = processed
+            if isinstance(context, dict) and key:
+                context[key] = process_element(context[key])
+            elif isinstance(context, list) and index is not None:
+                processed = process_element(context[index])
+                if isinstance(processed, list):
+                    context[index : index + 1] = processed
+                else:
+                    context[index] = processed
     return schema
 
 
