@@ -55,6 +55,8 @@ async def post_schema(
     # Check if the current and target versions are the same
     if current_version == target_version:
         logger.info("The current and target schema versions are the same")
+        # Ideally, the caller must not send to the converter service with the same versions.
+        # Hence it is the best approach to give an error response.
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail={"status": "error", "message": exception_messages.EXCEPTION_400_MATCHING_SCHEMA_VERSIONS},
