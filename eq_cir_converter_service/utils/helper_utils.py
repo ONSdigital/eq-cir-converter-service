@@ -22,7 +22,11 @@ REGEX_PLACEHOLDER = re.compile(r"\{(.*?)\}", flags=re.IGNORECASE)
 
 # --- HTML Tag Processing ---
 def clean_html_tags(text: str) -> str:
-    """Cleans HTML tags from the text, replacing <b> with <strong> and removing <br> and <p> tags."""
+    """Cleans HTML tags from the text, replacing <b> with <strong> and removing <br> and <p> tags.
+
+    :param text: The input text containing HTML tags.
+    :return: The cleaned text with HTML tags removed or replaced.
+    """
     text = REGEX_B_OPEN.sub("<strong>", text)  # Replace <b> with <strong>
     text = REGEX_B_CLOSE.sub("</strong>", text)  # Replace </b> with </strong>
     text = REGEX_BR_TAGS.sub("", text)  # Remove <br> tags
@@ -32,13 +36,21 @@ def clean_html_tags(text: str) -> str:
 
 # --- Paragraph Extraction ---
 def extract_paragraphs(html: str) -> list[str]:
-    """Extracts paragraphs from HTML content, returning a list of cleaned paragraph strings."""
+    """Extracts paragraphs from HTML content, returning a list of cleaned paragraph strings.
+
+    :param html: The HTML content to extract paragraphs from.
+    :return: A list of cleaned paragraphs.
+    """
     return REGEX_PARA_SPLIT.findall(html)
 
 
 # --- Placeholder Extraction ---
 def extract_placeholders(text: str) -> list[str]:
-    """Extracts placeholders from the text, returning a list of placeholder names."""
+    """Extracts placeholders from the text, returning a list of placeholder names.
+
+    :param text: The input text containing placeholders.
+    :return: A list of placeholder names.
+    """
     return REGEX_PLACEHOLDER.findall(text)
 
 
@@ -46,7 +58,11 @@ def extract_placeholders(text: str) -> list[str]:
 def split_text_with_placeholders(
     text_obj: dict[str, str | list | object],
 ) -> list[str | dict[str, str | list | object]]:
-    """Splits the 'text' field in the text_obj into paragraphs, cleaning HTML tags and extracting placeholders."""
+    """Splits the 'text' field in the text_obj into paragraphs, cleaning HTML tags and extracting placeholders.
+
+    :param text_obj: A dictionary containing 'text' and 'placeholders'.
+    :return: A list of cleaned paragraphs or dictionaries with placeholders.
+    """
     raw_text = text_obj.get("text", "")
     placeholders = text_obj.get("placeholders", [])
     paragraphs = extract_paragraphs(str(raw_text))
@@ -81,7 +97,11 @@ def split_text_with_placeholders(
 
 # --- Helper Functions for process_element ---
 def process_string(text: str) -> str | list[str]:
-    """Processes a string, cleaning HTML tags and splitting into paragraphs if necessary."""
+    """Processes a string, cleaning HTML tags and splitting into paragraphs if necessary.
+
+    :param text: The input string to process.
+    :return: A cleaned string or a list of paragraphs.
+    """
     if REGEX_PARA_SPLIT.search(text):
         # If the text contains <p> tags, split into paragraphs
         # and clean each paragraph
@@ -95,7 +115,11 @@ def process_string(text: str) -> str | list[str]:
 def process_text_object(
     obj: dict[str, str | list | object],
 ) -> dict[str, str | list | object] | list[str | dict[str, str | list | object]]:
-    """Processes a text object, cleaning HTML tags and extracting paragraphs with placeholders."""
+    """Processes a text object, cleaning HTML tags and extracting paragraphs with placeholders.
+
+    :param obj: A dictionary containing 'text' and possibly 'placeholders'.
+    :return: A cleaned text object or a list of paragraphs with placeholders.
+    """
     if REGEX_PARA_SPLIT.search(str(obj.get("text", ""))):
         # If the text contains <p> tags, split into paragraphs
         # and clean each paragraph, extracting placeholders
@@ -105,7 +129,11 @@ def process_text_object(
 
 
 def process_list(elements: Sequence[str | Sequence[Any] | dict]) -> list[str | list | object]:
-    """Processes a list of elements, cleaning HTML tags and extracting paragraphs from text objects."""
+    """Processes a list of elements, cleaning HTML tags and extracting paragraphs from text objects.
+
+    :param elements: A sequence of strings, lists, or dictionaries to process.
+    :return: A list of processed elements, which may include cleaned strings or lists of paragraphs.
+    """
     result: list[str | list | object] = []
 
     for item in elements:
@@ -137,7 +165,11 @@ def process_list(elements: Sequence[str | Sequence[Any] | dict]) -> list[str | l
 
 # --- Recursive Processor ---
 def process_element(element: str | list | object) -> str | list | object:
-    """Recursively processes an element, handling strings, text objects, lists, and dictionaries."""
+    """Recursively processes an element, handling strings, text objects, lists, and dictionaries.
+
+    :param element: The element to process, which can be a string, list, or dictionary.
+    :return: The processed element, which may be a cleaned string, a list of paragraphs, or a dictionary.
+    """
     if isinstance(element, str):
         return process_string(element)
     if isinstance(element, dict) and "text" in element:

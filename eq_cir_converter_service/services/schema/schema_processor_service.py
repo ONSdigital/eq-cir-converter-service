@@ -18,7 +18,15 @@ logger = logging.getLogger(__name__)
 
 # --- JSONPath-Based Transformation ---
 def transform_json_schema(schema: Mapping[str, Any], paths: Sequence[Mapping[str, str]]) -> Mapping[str, Any]:
-    """Transforms the JSON schema based on the provided JSONPath expressions."""
+    """Transforms the JSON schema based on the provided JSONPath expressions.
+
+    Parameters:
+    - schema: The input schema to transform.
+    - paths: A sequence of dictionaries containing JSONPath expressions to apply.
+
+    Returns:
+    - A new schema with the transformations applied.
+    """
     converted_schema = copy.deepcopy(schema)  # Work on a deep copy
 
     for path_expr in paths:
