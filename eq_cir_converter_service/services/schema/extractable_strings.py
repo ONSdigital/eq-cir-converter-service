@@ -219,11 +219,6 @@ EXTRACTABLE_STRINGS = [
         "additional_context": ["Answer"],
     },
     {
-        "json_path": "$..answers[*].playback",
-        "description": "Relationships playback template",
-        "context": "Question",
-    },
-    {
         "json_path": "$..answers[*].options[*].label",
         "description": "Answer option",
         "context": "Question",
@@ -249,11 +244,6 @@ EXTRACTABLE_STRINGS = [
     {
         "json_path": "$..answers[*].options[*].title",
         "description": "Relationships answer option question text",
-        "context": "Question",
-    },
-    {
-        "json_path": "$..answers[*].options[*].playback",
-        "description": "Relationships answer option playback text",
         "context": "Question",
     },
     {
