@@ -1,5 +1,8 @@
 """Tests for the schema processor service."""
 
+from collections.abc import Mapping
+from typing import Any, cast
+
 import pytest
 
 from eq_cir_converter_service.services.schema.schema_processor_service import (
@@ -42,6 +45,8 @@ def test_transform_json_schema_with_text_object_and_placeholders(placeholder_obj
     }
     paths = [{"json_path": "question.description[*]"}]
     result = transform_json_schema(data, paths)
+
+    result = cast(Mapping[str, Any], result)
     desc = result["question"]["description"]
     assert len(desc) == 2
     assert desc[0]["text"] == "Hello {first_name}"
