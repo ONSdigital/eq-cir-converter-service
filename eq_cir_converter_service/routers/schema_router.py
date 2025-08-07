@@ -9,7 +9,7 @@ from eq_cir_converter_service.services.validators.request_validator import (
     validate_input_json,
     validate_version,
 )
-from eq_cir_converter_service.types.custom_types import ConvertedSchema, InputSchema
+from eq_cir_converter_service.types.custom_types import Schema
 
 router = APIRouter()
 
@@ -20,13 +20,13 @@ logger = logging.getLogger(__name__)
 
 @router.post(
     "/schema",
-    response_model=ConvertedSchema,
+    response_model=Schema,
 )
 async def post_schema(
     current_version: str,
     target_version: str,
-    schema: InputSchema,
-) -> ConvertedSchema:
+    schema: Schema,
+) -> Schema:
     """Convert the CIR schema from one version to another.
 
     Request query parameters:

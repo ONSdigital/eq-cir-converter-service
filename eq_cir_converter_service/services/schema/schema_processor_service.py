@@ -2,7 +2,6 @@
 
 import copy
 from collections.abc import Mapping, Sequence
-from typing import Any
 
 from jsonpath_ng.ext import parse
 
@@ -10,14 +9,14 @@ from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.services.schema.extractable_strings import (
     EXTRACTABLE_STRINGS,
 )
-from eq_cir_converter_service.types.custom_types import ConvertedSchema, InputSchema
+from eq_cir_converter_service.types.custom_types import Schema
 from eq_cir_converter_service.utils.helper_utils import process_element
 
 logger = logging.getLogger(__name__)
 
 
 # --- JSONPath-Based Transformation ---
-def transform_json_schema(schema: Mapping[str, Any], paths: Sequence[Mapping[str, str]]) -> Mapping[str, Any]:
+def transform_json_schema(schema: Schema, paths: Sequence[Mapping[str, str]]) -> Schema:
     """Transforms the JSON schema based on the provided JSONPath expressions.
 
     Parameters:
@@ -48,7 +47,7 @@ def transform_json_schema(schema: Mapping[str, Any], paths: Sequence[Mapping[str
 
 
 # --- Schema Conversion Service ---
-def convert_schema(current_version: str, target_version: str, schema: InputSchema) -> ConvertedSchema:
+def convert_schema(current_version: str, target_version: str, schema: Schema) -> Schema:
     """Converts the schema from the current to the target version.
 
     Parameters:

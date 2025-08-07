@@ -2,7 +2,5 @@
 
 from collections.abc import Mapping
 
-InputSchema = Mapping[str, object]
-
-# Define the type for the converted schema
-ConvertedSchema = Mapping[str, object]
+# Define a custom type for the schema.
+Schema = Mapping[str, object]
