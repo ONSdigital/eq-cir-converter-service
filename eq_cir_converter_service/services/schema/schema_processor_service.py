@@ -1,5 +1,6 @@
 """This module converts the schema from the current to the target version."""
 
+import copy
 from collections.abc import Mapping, Sequence
 from typing import Any
 
@@ -18,9 +19,11 @@ logger = logging.getLogger(__name__)
 # --- JSONPath-Based Transformation ---
 def transform_json_schema(schema: Mapping[str, Any], paths: Sequence[Mapping[str, str]]) -> Mapping[str, Any]:
     """Transforms the JSON schema based on the provided JSONPath expressions."""
+    converted_schema = copy.deepcopy(schema)  # Work on a deep copy
+
     for path_expr in paths:
         expr = parse(path_expr["json_path"])
-        for match in expr.find(schema):
+        for match in expr.find(converted_schema):
             context = match.context.value
             key = match.path.fields[0] if hasattr(match.path, "fields") else None
             index = getattr(match.path, "index", None)
@@ -33,7 +36,7 @@ def transform_json_schema(schema: Mapping[str, Any], paths: Sequence[Mapping[str
                     context[index : index + 1] = processed
                 else:
                     context[index] = processed
-    return schema
+    return converted_schema
 
 
 # --- Schema Conversion Service ---
