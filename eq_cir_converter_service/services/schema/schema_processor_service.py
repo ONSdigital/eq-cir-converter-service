@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 def process_context_dict(context: dict) -> None:
     """Processes a dictionary context by updating the value at the given key."""
+    # Key is always the first element, dict has one key-value pair, hence we can use `next(iter(context))`
     key = next(iter(context))
     context[key] = process_element(context[key])
 
