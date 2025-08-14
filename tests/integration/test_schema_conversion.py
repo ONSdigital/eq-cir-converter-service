@@ -1,20 +1,14 @@
 """Integration tests for schema transformation."""
 
-import asyncio
 import json
 
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 DEFAULT_CURRENT_VERSION = "9.0.0"
 DEFAULT_TARGET_VERSION = "10.0.0"
 
-# Test settings for local runs
-app = FastAPI()
-client = TestClient(app, backend_options={"loop_factory": asyncio.new_event_loop})
 
-
-def test_schema_transformation_matches_expected_output(test_client: client):
+def test_schema_transformation_matches_expected_output(test_client: TestClient):
     """Test that the schema transformation endpoint returns the expected output."""
     # Define the input and output file paths
     input_file_path = "tests/integration/input_schema.json"

@@ -47,15 +47,12 @@ def transform_json_schema(schema: Schema, paths: list[str]) -> Schema:
             # The result of JsonPath.find provides detailed "context" and "path data", making use of both
             context = extracted_value.context.value
             path_data = extracted_value.path
-            key = path_data.fields[0] if hasattr(path_data, "fields") else None
-            # Process the "context" based on its type (dict)
-            if isinstance(context, dict) and key:
-                process_context_dict(context, key)
-            # Process the "context" based on its type (list)
-            else:
-                index = getattr(path_data, "index", None)
-                if index is not None:
+            # Process the context based on its type
+            if isinstance(context, list):
+                if (index := getattr(path_data, "index", None)) is not None:
                     process_context_list(context, index)
+            elif isinstance(context, dict) and (key := path_data.fields[0] if hasattr(path_data, "fields") else None):
+                process_context_dict(context, key)
 
     return converted_schema
 
