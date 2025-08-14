@@ -86,3 +86,13 @@ def test_transform_json_schema_with_mixed_types(placeholder_obj):
     info_objs = [x for x in result["items"] if isinstance(x, dict) and "info" in x]
     assert len(info_objs) == 1
     assert info_objs[0]["info"] == ["Info1", "Info2"]
+
+
+def test_transform_json_schema_bad_types():
+    """Test transformation with bad types."""
+    data = {"items": [123, None, True, {"text": "<p>Test</p>"}]}
+    paths = ["items[*]"]
+    result = transform_json_schema(data, paths)
+
+    assert isinstance(result["items"], list)
+    assert result["items"] == [123, None, True, "Test"]
