@@ -5,7 +5,7 @@ import copy
 from jsonpath_ng.ext import parse
 
 from eq_cir_converter_service.config.logging_config import logging
-from eq_cir_converter_service.services.schema.extractable_strings import (
+from eq_cir_converter_service.services.schema.paths import (
     PATHS,
 )
 from eq_cir_converter_service.types.custom_types import Schema
@@ -34,24 +34,28 @@ def transform_json_schema(schema: Schema, paths: list[str]) -> Schema:
 
     Parameters:
     - schema: The input schema to transform.
-    - paths: A sequence of dictionaries containing JSONPath expressions to apply.
+    - paths: A list containing JSONPath paths to look for.
 
     Returns:
     - A new schema with the transformations applied.
     """
     converted_schema = copy.deepcopy(schema)
-
     for path in paths:
-        expr = parse(path)
-        for match in expr.find(converted_schema):
-            context = match.context.value
-            key = match.path.fields[0] if hasattr(match.path, "fields") else None
-            index = getattr(match.path, "index", None)
-
+        jsonpath_expression = parse(path)
+        # Extracting and looping through values using JsonPath
+        for extracted_value in jsonpath_expression.find(converted_schema):
+            # The result of JsonPath.find provides detailed "context" and "path data", making use of both
+            context = extracted_value.context.value
+            path_data = extracted_value.path
+            key = path_data.fields[0] if hasattr(path_data, "fields") else None
+            # Process the "context" based on its type (dict)
             if isinstance(context, dict) and key:
                 process_context_dict(context, key)
-            elif isinstance(context, list) and index is not None:
-                process_context_list(context, index)
+            # Process the "context" based on its type (list)
+            else:
+                index = getattr(path_data, "index", None)
+                if index is not None:
+                    process_context_list(context, index)
 
     return converted_schema
 

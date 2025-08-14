@@ -1,8 +1,7 @@
-"""Extractable strings from EQ schemas.
+"""paths based on extractable strings from eq-questionnaire-validator.
 
-This module defines a list of JSON paths and their descriptions for extracting
-strings from EQ schemas. It also provides context definitions for better understanding
-of the extracted strings.
+This module defines a list of paths and their descriptions for extracting
+strings from eq-questionnaire-validator.
 """
 
 PATHS = [
