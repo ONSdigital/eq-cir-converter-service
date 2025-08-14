@@ -15,12 +15,22 @@ from eq_cir_converter_service.services.schema.schema_processor_service import (
     [
         (
             {"contents": [{"description": "<p>Block1</p><p>Block2</p>"}]},
-            [{"json_path": "contents[*].description"}],
+            ["contents[*].description"],
+            {"contents": [{"description": ["Block1", "Block2"]}]},
+        ),
+        (
+            {"contents": [{"description": "<p>Block1</p><p>Block2</p><p>Block3</p><p>"}]},
+            ["contents[*].description"],
+            {"contents": [{"description": ["Block1", "Block2", "Block3"]}]},
+        ),
+        (
+            {"contents": [{"description": "<p><p>Block1</p><p>Block2</p><p></p><p>"}]},
+            ["contents[*].description"],
             {"contents": [{"description": ["Block1", "Block2"]}]},
         ),
         (
             {"meta": {"notes": "<p>Alpha</p><p>Beta</p>"}},
-            [{"json_path": "meta.notes"}],
+            ["meta.notes"],
             {"meta": {"notes": ["Alpha", "Beta"]}},
         ),
     ],
@@ -43,7 +53,7 @@ def test_transform_json_schema_with_text_object_and_placeholders(placeholder_obj
             ],
         },
     }
-    paths = [{"json_path": "question.description[*]"}]
+    paths = ["question.description[*]"]
     result = transform_json_schema(data, paths)
 
     result = cast(Mapping[str, Any], result)
@@ -64,7 +74,7 @@ def test_transform_json_schema_with_mixed_types(placeholder_obj):
             {"info": "<p>Info1</p><p>Info2</p>"},
         ],
     }
-    paths = [{"json_path": "items[*]"}]
+    paths = ["items[*]"]
     result = transform_json_schema(data, paths)
 
     assert isinstance(result["items"], list)
