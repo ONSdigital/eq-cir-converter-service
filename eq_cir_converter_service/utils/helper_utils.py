@@ -62,7 +62,7 @@ def extract_placeholder_names_from_text_field(text: str) -> list[str]:
 
 
 # --- Handle "text" with "placeholders" ---
-def split_text_with_placeholders(
+def split_paragraphs_with_placeholders(
     placeholders_dict: dict[str, str | list | object],
 ) -> list[str | dict[str, str | list | object]]:
     """Splits the 'text' field in the text_obj into paragraphs, cleaning HTML tags and extracting placeholders.
@@ -88,31 +88,37 @@ def split_text_with_placeholders(
     # Divide the string into paragraphs list based on presence of <p> tags
     paragraphs_list = split_paragraphs_into_list(placeholder_text)
 
-    paragraphs_with_placeholders: list[str | dict[str, str | list | object]] = []
+    output_paragraphs: list[str | dict[str, str | list | object]] = []
+    # For each separated paragraph attach the relevant placeholder(s) if present or keep the paragraph as is
     for paragraph in paragraphs_list:
-        # For each separated paragraph attach the relevant placeholder(s)
         paragraph_with_tags_removed = remove_and_replace_tags(paragraph).strip()
         placeholder_names_with_count = Counter(extract_placeholder_names_from_text_field(paragraph_with_tags_removed))
-        relevant: list[dict] = []
+        paragraphs_with_matching_placeholders: list[dict] = []
         for placeholder_name, count in placeholder_names_with_count.items():
             # isinstance() added for type checking purposes
             if isinstance(placeholders_list, list):
-                matching = []
+                # List that stores the placeholder definitions for each placeholder name in "text"
+                placeholders_matching_the_name = []
                 for placeholder in placeholders_list:
-                    if isinstance(placeholder, dict) and placeholder.get("placeholder") == placeholder_name:
-                        # Ensure the placeholder is a dictionary with a 'placeholder' key
-                        matching = [placeholder]
+                    # Ensure the correct placeholder is added that matches the placeholder name in "text"
+                    if placeholder.get("placeholder", None) == placeholder_name:
+                        placeholders_matching_the_name = [placeholder]
 
-                # If the placeholder is found, create a deep copy for each occurrence
-                if len(matching) > 0:
-                    relevant.extend(deepcopy(matching[0]) for _ in range(count))
-
-        if relevant:
-            paragraphs_with_placeholders.append({"text": paragraph_with_tags_removed, "placeholders": relevant})
+                # If any placeholders added to this list, create a deep copy for each placeholder name
+                if placeholders_matching_the_name:
+                    paragraphs_with_matching_placeholders.extend(
+                        deepcopy(placeholders_matching_the_name[0]) for _ in range(count)
+                    )
+        # If there are placeholders in the paragraph, add them to the output in the correct format (with paragraph text)
+        if paragraphs_with_matching_placeholders:
+            output_paragraphs.append(
+                {"text": paragraph_with_tags_removed, "placeholders": paragraphs_with_matching_placeholders},
+            )
+        # Else just add the cleaned paragraph
         else:
-            paragraphs_with_placeholders.append(paragraph_with_tags_removed)
+            output_paragraphs.append(paragraph_with_tags_removed)
 
-    return paragraphs_with_placeholders
+    return output_paragraphs
 
 
 # --- Helper Functions for process_element ---
@@ -146,7 +152,7 @@ def process_placeholder(
     if REGEX_PARAGRAPH_SPLIT.search(str(placeholders_dict.get("text", ""))):
         # If the text contains <p> tags, split into paragraphs
         # and clean each paragraph, extracting placeholders
-        return split_text_with_placeholders(placeholders_dict)
+        return split_paragraphs_with_placeholders(placeholders_dict)
     placeholders_dict["text"] = remove_and_replace_tags(str(placeholders_dict["text"])).strip()
     return placeholders_dict
 

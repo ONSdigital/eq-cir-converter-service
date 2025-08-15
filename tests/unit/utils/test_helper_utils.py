@@ -10,7 +10,7 @@ from eq_cir_converter_service.utils.helper_utils import (
     process_string,
     remove_and_replace_tags,
     split_paragraphs_into_list,
-    split_text_with_placeholders,
+    split_paragraphs_with_placeholders,
 )
 
 
@@ -58,7 +58,7 @@ def test_extract_placeholders(text, expected):
 def test_split_text_with_placeholders_single(placeholder_obj):
     """Test splitting text with a single placeholder."""
     input_obj = {"text": "<p>Hello {first_name}</p>", "placeholders": [placeholder_obj]}
-    result = split_text_with_placeholders(input_obj)
+    result = split_paragraphs_with_placeholders(input_obj)
     assert len(result) == 1
     assert isinstance(result[0], dict)
     assert "text" in result[0]
@@ -70,7 +70,7 @@ def test_split_text_with_placeholders_single(placeholder_obj):
 def test_split_text_with_placeholders_multiple(placeholder_obj):
     """Test splitting text with multiple paragraphs and placeholders."""
     input_obj = {"text": "<p>Hi {first_name}</p><p>Again {first_name}</p>", "placeholders": [placeholder_obj]}
-    result = split_text_with_placeholders(input_obj)
+    result = split_paragraphs_with_placeholders(input_obj)
     assert len(result) == 2
     for item in result:
         assert isinstance(item, dict)
@@ -170,14 +170,14 @@ def test_process_element_dict():
 def test_split_text_with_placeholders_empty_paragraph_skipped():
     """Test that empty paragraphs are skipped in the output."""
     input_obj = {"text": "<p></p><p>Hello</p>", "placeholders": []}
-    result = split_text_with_placeholders(input_obj)
+    result = split_paragraphs_with_placeholders(input_obj)
     assert result == ["Hello"]
 
 
 def test_split_text_with_placeholders_no_placeholders():
     """Test splitting text with no placeholders."""
     input_obj = {"text": "<p>Hello world</p>", "placeholders": []}
-    result = split_text_with_placeholders(input_obj)
+    result = split_paragraphs_with_placeholders(input_obj)
     assert result == ["Hello world"]
 
 
