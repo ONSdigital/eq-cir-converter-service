@@ -33,6 +33,26 @@ from eq_cir_converter_service.services.schema.schema_processor_service import (
             ["meta.notes"],
             {"meta": {"notes": ["Alpha", "Beta"]}},
         ),
+        (
+            {"meta": {"notes": "<p>Alpha</p><b>Beta</b>"}},
+            ["meta.notes"],
+            {"meta": {"notes": "Alpha"}},
+        ),
+        (
+            {"meta": {"notes": "<p>Alpha</p><strong>Beta</strong>"}},
+            ["meta.notes"],
+            {"meta": {"notes": "Alpha"}},
+        ),
+        (
+            {"meta": {"notes": "<strong>Alpha</strong>"}},
+            ["meta.notes"],
+            {"meta": {"notes": "<strong>Alpha</strong>"}},
+        ),
+        (
+            {"meta": {"notes": "<b>Alpha</b>"}},
+            ["meta.notes"],
+            {"meta": {"notes": "<strong>Alpha</strong>"}},
+        ),
     ],
 )
 def test_transform_json_schema_basic_cases(data, paths, expected):

@@ -4,12 +4,12 @@ import pytest
 
 from eq_cir_converter_service.utils.helper_utils import (
     clean_html_tags,
-    extract_paragraphs,
     extract_placeholders,
     process_element,
     process_list,
+    process_placeholder,
     process_string,
-    process_text_object,
+    split_and_clean_paragraphs_string,
     split_text_with_placeholders,
 )
 
@@ -29,15 +29,17 @@ def test_clean_html_tags(input_html, expected):
 
 
 @pytest.mark.parametrize(
-    "html,expected",
+    "paragraphs_string,expected",
     [
+        ("<p>One</p>", ["One"]),
         ("<p>One</p><p>Two</p>", ["One", "Two"]),
+        ("<p>One</p></p><p>Two</p>", ["One", "Two"]),
         ("<p></p><p>Another</p>", ["", "Another"]),
     ],
 )
-def test_extract_paragraphs(html, expected):
+def test_extract_paragraphs(paragraphs_string, expected):
     """Test the extract_paragraphs function."""
-    assert extract_paragraphs(html) == expected
+    assert split_and_clean_paragraphs_string(paragraphs_string) == expected
 
 
 @pytest.mark.parametrize(
@@ -104,7 +106,7 @@ def test_process_string_single_vs_multiple(input_text, expected):
 def test_process_text_object_with_paragraphs(placeholder_obj):
     """Test processing a text object with paragraphs and placeholders."""
     obj = {"text": "<p>Welcome {first_name}</p><p>Again {first_name}</p>", "placeholders": [placeholder_obj]}
-    result = process_text_object(obj)
+    result = process_placeholder(obj)
     assert len(result) == 2
     assert all("text" in item for item in result)
 
@@ -112,7 +114,7 @@ def test_process_text_object_with_paragraphs(placeholder_obj):
 def test_process_text_object_without_paragraphs(placeholder_obj):
     """Test processing a text object without paragraphs."""
     obj = {"text": "Plain text with <b>bold</b>", "placeholders": [placeholder_obj]}
-    result = process_text_object(obj)
+    result = process_placeholder(obj)
     assert isinstance(result, dict)
     assert result["text"] == "Plain text with <strong>bold</strong>"
 
