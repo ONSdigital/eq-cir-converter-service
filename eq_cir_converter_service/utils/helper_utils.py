@@ -21,31 +21,38 @@ REGEX_PLACEHOLDER = re.compile(r"\{(.*?)\}", flags=re.IGNORECASE)
 
 
 # --- HTML Tag Processing ---
-def clean_html_tags(text: str) -> str:
+def remove_and_replace_tags(text: str) -> str:
     """Cleans HTML tags from the text, replacing <b> with <strong> and removing <br> and <p> tags.
 
     :param text: The input text containing HTML tags.
     :return: The cleaned text with HTML tags removed or replaced.
     """
-    text = REGEX_B_OPEN.sub("<strong>", text)  # Replace <b> with <strong>
-    text = REGEX_B_CLOSE.sub("</strong>", text)  # Replace </b> with </strong>
-    text = REGEX_BR_TAGS.sub("", text)  # Remove <br> tags
-    text = REGEX_P_TAGS.sub("", text)  # Remove <p> tags
-    return text.strip()
+    return REGEX_P_TAGS.sub(
+        "",
+        REGEX_BR_TAGS.sub(
+            "",
+            REGEX_B_CLOSE.sub(
+                "</strong>",
+                REGEX_B_OPEN.sub("<strong>", text),
+            ),
+        ),
+    ).strip()
 
 
 # --- Paragraph Extraction ---
-def split_and_clean_paragraphs_string(paragraphs_string: str) -> list[str]:
+def split_paragraphs_into_list(paragraphs_string: str) -> list[str]:
     """Extracts paragraphs from string, returning a list of cleaned paragraph strings.
 
     :param paragraphs_string: The string to extract paragraphs from.
     :return: A list of cleaned paragraphs.
     """
-    return REGEX_PARAGRAPH_SPLIT.findall(paragraphs_string)
+    paragraphs = REGEX_PARAGRAPH_SPLIT.findall(paragraphs_string)
+    # Remove empty items from the list (empties being side effects of regex)
+    return [p.strip() for p in paragraphs if p.strip()]
 
 
 # --- Placeholder Extraction ---
-def extract_placeholders(text: str) -> list[str]:
+def extract_placeholder_names_from_text_field(text: str) -> list[str]:
     """Extracts placeholders from the text, returning a list of placeholder names.
 
     :param text: The input text containing placeholders.
@@ -63,20 +70,17 @@ def split_text_with_placeholders(
     :param placeholders_dict: A dictionary containing 'text' and 'placeholders'.
     :return: A list of cleaned paragraphs or dictionaries with placeholders.
     """
-    paragraphs_string = str(placeholders_dict.get("text", ""))
+    placeholder_text = str(placeholders_dict.get("text", ""))
     placeholders_list = placeholders_dict.get("placeholders", "")
-    # Divide the string into paragraphs list using the extract_paragraphs function
-    paragraphs = split_and_clean_paragraphs_string(paragraphs_string)
+    # Divide the string into paragraphs list
+    paragraphs = split_paragraphs_into_list(placeholder_text)
 
     result: list[str | dict[str, str | list | object]] = []
     for paragraph in paragraphs:
-        cleaned = clean_html_tags(paragraph).strip()
-        if not cleaned:
-            continue
-
-        used_counts = Counter(extract_placeholders(cleaned))
+        paragraph_with_tags_removed = remove_and_replace_tags(paragraph).strip()
+        placeholder_names_with_count = Counter(extract_placeholder_names_from_text_field(paragraph_with_tags_removed))
         relevant: list[dict] = []
-        for placeholder_name, count in used_counts.items():
+        for placeholder_name, count in placeholder_names_with_count.items():
             # Added for type checking purposes
             if isinstance(placeholders_list, list):
                 matching = []
@@ -90,55 +94,58 @@ def split_text_with_placeholders(
                     relevant.extend(deepcopy(matching[0]) for _ in range(count))
 
         if relevant:
-            result.append({"text": cleaned, "placeholders": relevant})
+            result.append({"text": paragraph_with_tags_removed, "placeholders": relevant})
         else:
-            result.append(cleaned)
+            result.append(paragraph_with_tags_removed)
 
     return result
 
 
 # --- Helper Functions for process_element ---
-def process_string(text: str) -> str | list[str]:
+def process_string(string: str) -> str | list[str]:
     """Processes a string, cleaning HTML tags and splitting into paragraphs if necessary.
 
-    :param text: The input string to process.
+    :param string: The input string to process.
     :return: A cleaned string or a list of paragraphs.
     """
-    if REGEX_PARAGRAPH_SPLIT.search(text):
+    if REGEX_PARAGRAPH_SPLIT.search(string):
         # If the text contains <p> tags, split into paragraphs
         # and clean each paragraph
         paragraphs = [
-            clean_html_tags(p).strip() for p in split_and_clean_paragraphs_string(text) if clean_html_tags(p).strip()
+            remove_and_replace_tags(p).strip()
+            for p in split_paragraphs_into_list(string)
+            if remove_and_replace_tags(p).strip()
         ]
-        return paragraphs[0] if len(paragraphs) == 1 else paragraphs  # Return string if only one paragraph
-    return clean_html_tags(text).strip()
+        # Return string if only one paragraph
+        return paragraphs[0] if len(paragraphs) == 1 else paragraphs
+    return remove_and_replace_tags(string).strip()
 
 
 def process_placeholder(
-    obj: dict[str, str | list | object],
+    placeholders_dict: dict[str, str | list | object],
 ) -> dict[str, str | list | object] | list[str | dict[str, str | list | object]]:
     """Processes a placeholder object, cleaning HTML tags and extracting paragraphs with placeholders.
 
-    :param obj: A dictionary containing 'text' and possibly 'placeholders'.
+    :param placeholders_dict: A dictionary containing 'text' and possibly 'placeholders'.
     :return: A cleaned text object or a list of paragraphs with placeholders.
     """
-    if REGEX_PARAGRAPH_SPLIT.search(str(obj.get("text", ""))):
+    if REGEX_PARAGRAPH_SPLIT.search(str(placeholders_dict.get("text", ""))):
         # If the text contains <p> tags, split into paragraphs
         # and clean each paragraph, extracting placeholders
-        return split_text_with_placeholders(obj)
-    obj["text"] = clean_html_tags(str(obj["text"])).strip()
-    return obj
+        return split_text_with_placeholders(placeholders_dict)
+    placeholders_dict["text"] = remove_and_replace_tags(str(placeholders_dict["text"])).strip()
+    return placeholders_dict
 
 
-def process_list(elements: Sequence[str | Sequence[Any] | dict]) -> list[str | list | object]:
+def process_list(list_items: Sequence[str | Sequence[Any] | dict]) -> list[str | list | object]:
     """Processes a list of elements, cleaning HTML tags and extracting paragraphs from text objects.
 
-    :param elements: A sequence of strings, lists, or dictionaries to process.
+    :param list_items: A sequence of strings, lists, or dictionaries to process.
     :return: A list of processed elements, which may include cleaned strings or lists of paragraphs.
     """
     result: list[str | list | object] = []
 
-    for item in elements:
+    for item in list_items:
         if isinstance(item, dict):
             expandable_key = None
             for k, v in item.items():
@@ -150,8 +157,10 @@ def process_list(elements: Sequence[str | Sequence[Any] | dict]) -> list[str | l
                     break
 
             if expandable_key:
-                paragraphs = split_and_clean_paragraphs_string(item[expandable_key])
-                cleaned_paragraphs = [clean_html_tags(p).strip() for p in paragraphs if clean_html_tags(p).strip()]
+                paragraphs = split_paragraphs_into_list(item[expandable_key])
+                cleaned_paragraphs = [
+                    remove_and_replace_tags(p).strip() for p in paragraphs if remove_and_replace_tags(p).strip()
+                ]
                 result.extend({expandable_key: p} for p in cleaned_paragraphs)
             else:
                 result.append(process_element(item))

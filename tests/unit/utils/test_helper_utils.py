@@ -3,13 +3,13 @@
 import pytest
 
 from eq_cir_converter_service.utils.helper_utils import (
-    clean_html_tags,
-    extract_placeholders,
+    extract_placeholder_names_from_text_field,
     process_element,
     process_list,
     process_placeholder,
     process_string,
-    split_and_clean_paragraphs_string,
+    remove_and_replace_tags,
+    split_paragraphs_into_list,
     split_text_with_placeholders,
 )
 
@@ -25,7 +25,7 @@ from eq_cir_converter_service.utils.helper_utils import (
 )
 def test_clean_html_tags(input_html, expected):
     """Test the clean_html_tags function."""
-    assert clean_html_tags(input_html) == expected
+    assert remove_and_replace_tags(input_html) == expected
 
 
 @pytest.mark.parametrize(
@@ -34,12 +34,12 @@ def test_clean_html_tags(input_html, expected):
         ("<p>One</p>", ["One"]),
         ("<p>One</p><p>Two</p>", ["One", "Two"]),
         ("<p>One</p></p><p>Two</p>", ["One", "Two"]),
-        ("<p></p><p>Another</p>", ["", "Another"]),
+        ("<p></p><p>Another</p>", ["Another"]),
     ],
 )
 def test_extract_paragraphs(paragraphs_string, expected):
     """Test the extract_paragraphs function."""
-    assert split_and_clean_paragraphs_string(paragraphs_string) == expected
+    assert split_paragraphs_into_list(paragraphs_string) == expected
 
 
 @pytest.mark.parametrize(
@@ -52,7 +52,7 @@ def test_extract_paragraphs(paragraphs_string, expected):
 )
 def test_extract_placeholders(text, expected):
     """Test the extract_placeholders function."""
-    assert extract_placeholders(text) == expected
+    assert extract_placeholder_names_from_text_field(text) == expected
 
 
 def test_split_text_with_placeholders_single(placeholder_obj):
