@@ -68,20 +68,34 @@ def split_text_with_placeholders(
     """Splits the 'text' field in the text_obj into paragraphs, cleaning HTML tags and extracting placeholders.
 
     :param placeholders_dict: A dictionary containing 'text' and 'placeholders'.
+    example::
+    {
+        'placeholders': [
+            'text': '<p>Hello {first_name}</p>'
+            {
+                'placeholder': 'first_name',
+                'value': {
+                    'identifier': 'FIRST_NAME',
+                    'source': 'metadata'
+                }
+            }
+        ],
+    }
     :return: A list of cleaned paragraphs or dictionaries with placeholders.
     """
     placeholder_text = str(placeholders_dict.get("text", ""))
     placeholders_list = placeholders_dict.get("placeholders", "")
-    # Divide the string into paragraphs list
-    paragraphs = split_paragraphs_into_list(placeholder_text)
+    # Divide the string into paragraphs list based on presence of <p> tags
+    paragraphs_list = split_paragraphs_into_list(placeholder_text)
 
-    result: list[str | dict[str, str | list | object]] = []
-    for paragraph in paragraphs:
+    paragraphs_with_placeholders: list[str | dict[str, str | list | object]] = []
+    for paragraph in paragraphs_list:
+        # For each separated paragraph attach the relevant placeholder(s)
         paragraph_with_tags_removed = remove_and_replace_tags(paragraph).strip()
         placeholder_names_with_count = Counter(extract_placeholder_names_from_text_field(paragraph_with_tags_removed))
         relevant: list[dict] = []
         for placeholder_name, count in placeholder_names_with_count.items():
-            # Added for type checking purposes
+            # isinstance() added for type checking purposes
             if isinstance(placeholders_list, list):
                 matching = []
                 for placeholder in placeholders_list:
@@ -94,11 +108,11 @@ def split_text_with_placeholders(
                     relevant.extend(deepcopy(matching[0]) for _ in range(count))
 
         if relevant:
-            result.append({"text": paragraph_with_tags_removed, "placeholders": relevant})
+            paragraphs_with_placeholders.append({"text": paragraph_with_tags_removed, "placeholders": relevant})
         else:
-            result.append(paragraph_with_tags_removed)
+            paragraphs_with_placeholders.append(paragraph_with_tags_removed)
 
-    return result
+    return paragraphs_with_placeholders
 
 
 # --- Helper Functions for process_element ---

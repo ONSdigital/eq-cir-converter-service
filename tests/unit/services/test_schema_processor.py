@@ -116,3 +116,44 @@ def test_transform_json_schema_bad_types():
 
     assert isinstance(result["items"], list)
     assert result["items"] == [123, None, True, "Test"]
+
+
+def test_transform_json_schema_placeholder_with_multiple_paragraphs_description():
+    """Test transformation of a JSON object with a placeholder and multiple paragraphs."""
+    data = {
+        "question": {
+            "description": [
+                {
+                    "text": "<p>Your first name: {first_name}</p><p>Your last name: {last_name}</p>",
+                    "placeholders": [
+                        {
+                            "placeholder": "first_name",
+                            "value": {"source": "answers", "identifier": "first-name"},
+                        },
+                        {"placeholder": "last_name", "value": {"source": "answers", "identifier": "last-name"}},
+                    ],
+                },
+            ],
+        },
+    }
+    paths = ["question.description[*]"]
+    result = transform_json_schema(data, paths)
+
+    assert result == {
+        "question": {
+            "description": [
+                {
+                    "text": "Your first name: {first_name}",
+                    "placeholders": [
+                        {"placeholder": "first_name", "value": {"source": "answers", "identifier": "first-name"}},
+                    ],
+                },
+                {
+                    "text": "Your last name: {last_name}",
+                    "placeholders": [
+                        {"placeholder": "last_name", "value": {"source": "answers", "identifier": "last-name"}},
+                    ],
+                },
+            ],
+        },
+    }
