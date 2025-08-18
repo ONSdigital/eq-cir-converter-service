@@ -32,8 +32,8 @@ def process_context_list(context: list, index: int) -> None:
 
 
 # --- JSONPath-Based Transformation ---
-def transform_json_schema(schema: Schema, paths: list[str]) -> Schema:
-    """Transforms the JSON schema based on the provided JSONPath expressions.
+def convert_to_version_10_0_0(schema: Schema, paths: list[str]) -> Schema:
+    """Transforms the schema dictionary based on the provided JSONPath expressions.
 
     Parameters:
     - schema: The input schema to transform.
@@ -42,11 +42,11 @@ def transform_json_schema(schema: Schema, paths: list[str]) -> Schema:
     Returns:
     - A new schema with the transformations applied.
     """
-    converted_schema = copy.deepcopy(schema)
+    transformed_schema = copy.deepcopy(schema)
     for path in paths:
         jsonpath_expression = parse(path)
         # Extracting and looping through values using JsonPath
-        for extracted_value in jsonpath_expression.find(converted_schema):
+        for extracted_value in jsonpath_expression.find(transformed_schema):
             # The result of JsonPath.find provides detailed "context" and "path data", making use of both
             context = extracted_value.context.value
             path_data = extracted_value.path
@@ -58,7 +58,7 @@ def transform_json_schema(schema: Schema, paths: list[str]) -> Schema:
             elif isinstance(context, dict):
                 process_context_dict(context)
 
-    return converted_schema
+    return transformed_schema
 
 
 # --- Schema Conversion Service ---
@@ -82,18 +82,18 @@ def convert_schema(current_version: str, target_version: str, schema: Schema) ->
 
     logger.debug("Input schema: %s", input_schema)
 
-    logger.debug("Extractable strings for transformation: %s", PATHS)
+    logger.debug("Extractable strings for conversion to version 10.0.0: %s", PATHS)
 
     if target_version == "10.0.0":
         # If the target version is 10.0.0, we need to transform the schema
-        logger.info("Transforming schema for version 10.0.0")
-        converted_schema = transform_json_schema(input_schema, PATHS)
+        logger.info("Converting schema to version 10.0.0")
+        output_schema = convert_to_version_10_0_0(input_schema, PATHS)
+        logger.info("Schema converted successfully")
     else:
-        # For other versions, we can assume no specific transformation is needed
-        logger.info("No specific transformation for version %s, using input schema as is", target_version)
-        converted_schema = input_schema
+        # For other versions, we can assume no specific conversion is needed
+        logger.info("No conversions needed for target version %s, using input schema as is", target_version)
+        output_schema = input_schema
 
-    logger.debug("Converted schema: %s", converted_schema)
-    logger.info("Schema converted successfully")
+    logger.debug("Output schema: %s", output_schema)
 
-    return converted_schema
+    return output_schema

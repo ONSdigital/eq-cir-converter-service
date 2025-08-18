@@ -6,7 +6,7 @@ from typing import Any, cast
 import pytest
 
 from eq_cir_converter_service.services.schema.schema_processor_service import (
-    transform_json_schema,
+    convert_to_version_10_0_0,
 )
 
 
@@ -67,7 +67,7 @@ from eq_cir_converter_service.services.schema.schema_processor_service import (
 )
 def test_transform_json_schema_basic_cases(data, paths, expected):
     """Test basic JSON transformation cases."""
-    result = transform_json_schema(data, paths)
+    result = convert_to_version_10_0_0(data, paths)
     assert result == expected
 
 
@@ -148,7 +148,7 @@ def test_transform_json_schema_basic_cases(data, paths, expected):
                     "description": [
                         {
                             "text": "<p>Hello {first_name}</p><p>Your last name is {last_name}</p><p>Once again</p>"
-                                    "<p>Your first name is {first_name}</p><p>Your last name is {last_name}</p>",
+                            "<p>Your first name is {first_name}</p><p>Your last name is {last_name}</p>",
                             "placeholders": [
                                 {
                                     "placeholder": "first_name",
@@ -194,10 +194,13 @@ def test_transform_json_schema_basic_cases(data, paths, expected):
     ],
 )
 def test_transform_json_schema_with_text_object_and_placeholders(
-    data: dict, paths: list[str], expected_placeholders_count: list[int], expected_length: int,
+    data: dict,
+    paths: list[str],
+    expected_placeholders_count: list[int],
+    expected_length: int,
 ):
     """Test transformation of a JSON object with text and placeholders."""
-    result = transform_json_schema(data, paths)
+    result = convert_to_version_10_0_0(data, paths)
 
     result = cast(Mapping[str, Any], result)
     desc = result["question"]["description"]
@@ -227,7 +230,7 @@ def test_transform_json_schema_with_mixed_types(placeholder_obj):
         ],
     }
     paths = ["items[*]"]
-    result = transform_json_schema(data, paths)
+    result = convert_to_version_10_0_0(data, paths)
 
     assert isinstance(result["items"], list)
     assert result["items"][0] == "Simple <strong>value</strong>"
@@ -244,7 +247,7 @@ def test_transform_json_schema_bad_types():
     """Test transformation with bad types."""
     data = {"items": [123, None, True, {"text": "<p>Test</p>"}]}
     paths = ["items[*]"]
-    result = transform_json_schema(data, paths)
+    result = convert_to_version_10_0_0(data, paths)
 
     assert isinstance(result["items"], list)
     assert result["items"] == [123, None, True, "Test"]
@@ -269,7 +272,7 @@ def test_transform_json_schema_placeholder_with_multiple_paragraphs_description(
         },
     }
     paths = ["question.description[*]"]
-    result = transform_json_schema(data, paths)
+    result = convert_to_version_10_0_0(data, paths)
 
     assert result == {
         "question": {
