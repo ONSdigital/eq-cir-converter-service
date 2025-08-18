@@ -48,7 +48,7 @@ def split_paragraphs_into_list(paragraphs_string: str) -> list[str]:
     """
     paragraphs = REGEX_PARAGRAPH_SPLIT.findall(paragraphs_string)
     # Remove empty items from the list (empties being side effects of regex)
-    return [p.strip() for p in paragraphs if p.strip()]
+    return [paragraph.strip() for paragraph in paragraphs if paragraph.strip()]
 
 
 # --- Placeholder Extraction ---
@@ -71,11 +71,18 @@ def split_paragraphs_with_placeholders(
     example::
     {
         'placeholders': [
-            'text': '<p>Hello {first_name}</p>'
+            'text': '<p>Hello {first_name}</p><p>{last_name}</p>',
             {
                 'placeholder': 'first_name',
                 'value': {
                     'identifier': 'FIRST_NAME',
+                    'source': 'metadata'
+                }
+            },
+            {
+                'placeholder': 'last_name',
+                'value': {
+                    'identifier': 'LAST_NAME',
                     'source': 'metadata'
                 }
             }
@@ -131,11 +138,7 @@ def process_string(string: str) -> str | list[str]:
     if REGEX_PARAGRAPH_SPLIT.search(string):
         # If the text contains <p> tags, split into paragraphs
         # and clean each paragraph
-        paragraphs = [
-            remove_and_replace_tags(p).strip()
-            for p in split_paragraphs_into_list(string)
-            if remove_and_replace_tags(p).strip()
-        ]
+        paragraphs = [remove_and_replace_tags(paragraph).strip() for paragraph in split_paragraphs_into_list(string)]
         # Return string if only one paragraph
         return paragraphs[0] if len(paragraphs) == 1 else paragraphs
     return remove_and_replace_tags(string).strip()
@@ -167,21 +170,15 @@ def process_list(list_items: Sequence[str | Sequence[Any] | dict]) -> list[str |
 
     for item in list_items:
         if isinstance(item, dict):
-            expandable_key = None
-            for k, v in item.items():
-                if isinstance(v, str) and REGEX_PARAGRAPH_SPLIT.search(v):
-                    # If the value is a string with <p> tags, extract paragraphs
-                    # and clean each paragraph
-                    # and extract placeholders
-                    expandable_key = k
-                    break
-
-            if expandable_key:
+            if expandable_key := next(
+                # If the value is a string with <p> tags, extract paragraphs
+                # and clean each paragraph
+                # and extract placeholders
+                (k for k, v in item.items() if isinstance(v, str) and REGEX_PARAGRAPH_SPLIT.search(v)),
+                None,
+            ):
                 paragraphs = split_paragraphs_into_list(item[expandable_key])
-                cleaned_paragraphs = [
-                    remove_and_replace_tags(p).strip() for p in paragraphs if remove_and_replace_tags(p).strip()
-                ]
-                result.extend({expandable_key: p} for p in cleaned_paragraphs)
+                result.extend({expandable_key: paragraph} for paragraph in paragraphs)
             else:
                 result.append(process_element(item))
         else:
@@ -196,9 +193,9 @@ def process_list(list_items: Sequence[str | Sequence[Any] | dict]) -> list[str |
 
 # --- Recursive Processor ---
 def process_element(element: str | list | object) -> str | list | object:
-    """Recursively processes an element, handling strings, text objects, lists, and dictionaries.
+    """Recursively processes an element, handling strings, placeholders object, lists, and dictionaries.
 
-    :param element: The element to process, which can be a string, list, or dictionary.
+    :param element: The element to process, which can be a string, placeholders object, list, or dictionary.
     :return: The processed element, which may be a cleaned string, a list of paragraphs, or a dictionary.
     """
     if isinstance(element, str):
