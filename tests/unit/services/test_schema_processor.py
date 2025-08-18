@@ -19,6 +19,16 @@ from eq_cir_converter_service.services.schema.schema_processor_service import (
             {"contents": [{"description": ["Block1", "Block2"]}]},
         ),
         (
+            {"contents": [{"description": ["<p>Block1</p>", "<p>Block2</p>"]}]},
+            ["contents[*].description"],
+            {"contents": [{"description": ["Block1", "Block2"]}]},
+        ),
+        (
+            {"contents": [{"description": ["<p>Block1</p></p><p>", "<p>Block2</p>"]}]},
+            ["contents[*].description"],
+            {"contents": [{"description": ["Block1", "Block2"]}]},
+        ),
+        (
             {"contents": [{"description": "<p>Block1</p><p>Block2</p><p>Block3</p><p>"}]},
             ["contents[*].description"],
             {"contents": [{"description": ["Block1", "Block2", "Block3"]}]},
@@ -61,28 +71,150 @@ def test_transform_json_schema_basic_cases(data, paths, expected):
     assert result == expected
 
 
-def test_transform_json_schema_with_text_object_and_placeholders(placeholder_obj):
-    """Test transformation of a JSON object with text and placeholders."""
-    data = {
-        "question": {
-            "description": [
-                {
-                    "text": "<p>Hello {first_name}</p><p>Welcome again {first_name}</p>",
-                    "placeholders": [placeholder_obj],
+@pytest.mark.parametrize(
+    "data, paths, expected_placeholders_count, expected_length",
+    [
+        (
+            {
+                "question": {
+                    "description": [
+                        {
+                            "text": "<p>Hello {first_name}</p><p>Welcome again {first_name}</p>",
+                            "placeholders": [
+                                {
+                                    "placeholder": "first_name",
+                                    "value": {"source": "metadata", "identifier": "FIRST_NAME"},
+                                },
+                            ],
+                        },
+                    ],
                 },
-            ],
-        },
-    }
-    paths = ["question.description[*]"]
+            },
+            ["question.description[*]"],
+            [1, 1],
+            2,
+        ),
+        (
+            {
+                "question": {
+                    "description": [
+                        {
+                            "text": "<p>Hello {first_name} {last_name}</p>",
+                            "placeholders": [
+                                {
+                                    "placeholder": "first_name",
+                                    "value": {"source": "metadata", "identifier": "FIRST_NAME"},
+                                },
+                                {
+                                    "placeholder": "last_name",
+                                    "value": {"source": "metadata", "identifier": "LAST_NAME"},
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            ["question.description[*]"],
+            [2],
+            1,
+        ),
+        (
+            {
+                "question": {
+                    "description": [
+                        {
+                            "text": "<p>Hello {first_name}</p><p>Your last name is {last_name}</p>",
+                            "placeholders": [
+                                {
+                                    "placeholder": "first_name",
+                                    "value": {"source": "metadata", "identifier": "FIRST_NAME"},
+                                },
+                                {
+                                    "placeholder": "last_name",
+                                    "value": {"source": "metadata", "identifier": "LAST_NAME"},
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            ["question.description[*]"],
+            [1, 1],
+            2,
+        ),
+        (
+            {
+                "question": {
+                    "description": [
+                        {
+                            "text": "<p>Hello {first_name}</p><p>Your last name is {last_name}</p><p>Once again</p>"
+                                    "<p>Your first name is {first_name}</p><p>Your last name is {last_name}</p>",
+                            "placeholders": [
+                                {
+                                    "placeholder": "first_name",
+                                    "value": {"source": "metadata", "identifier": "FIRST_NAME"},
+                                },
+                                {
+                                    "placeholder": "last_name",
+                                    "value": {"source": "metadata", "identifier": "LAST_NAME"},
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            ["question.description[*]"],
+            [1, 1, 0, 1, 1],
+            5,
+        ),
+        (
+            {
+                "question": {
+                    "description": [
+                        {
+                            "text": "<p><p>Hello {first_name} {last_name}</p></p></p>",
+                            "placeholders": [
+                                {
+                                    "placeholder": "first_name",
+                                    "value": {"source": "metadata", "identifier": "FIRST_NAME"},
+                                },
+                                {
+                                    "placeholder": "last_name",
+                                    "value": {"source": "metadata", "identifier": "LAST_NAME"},
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            ["question.description[*]"],
+            [2],
+            1,
+        ),
+    ],
+)
+def test_transform_json_schema_with_text_object_and_placeholders(
+    data: dict, paths: list[str], expected_placeholders_count: list[int], expected_length: int,
+):
+    """Test transformation of a JSON object with text and placeholders."""
     result = transform_json_schema(data, paths)
 
     result = cast(Mapping[str, Any], result)
     desc = result["question"]["description"]
-    assert len(desc) == 2
-    assert desc[0]["text"] == "Hello {first_name}"
-    assert desc[1]["text"] == "Welcome again {first_name}"
-    assert len(desc[0]["placeholders"]) == 1
-    assert len(desc[1]["placeholders"]) == 1
+    assert len(desc) == expected_length
+    expected_texts = []
+    for item in desc:
+        if isinstance(item, dict) and "text" in item:
+            expected_texts.append(item["text"])
+        else:
+            expected_texts.append(item)
+
+    for i, expected_text in enumerate(expected_texts):
+        if isinstance(desc[i], str):
+            assert desc[i] == expected_text
+        else:
+            assert desc[i]["text"] == expected_text
+            assert len(desc[i]["placeholders"]) == expected_placeholders_count[i]
 
 
 def test_transform_json_schema_with_mixed_types(placeholder_obj):
