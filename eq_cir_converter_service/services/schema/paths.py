@@ -5,6 +5,15 @@ strings from eq-questionnaire-validator.
 """
 
 PATHS = [
+    "$.title",
+    "$.submission.button",
+    "$.submission.title",
+    "$.sections[*].title",
+    "$..groups[*].title",
+    "$..summary.title",
+    "$..question.title",
+    "$..preview_content.title",
+    "$..secondary_content[*].contents[*].title",
     "$.legal_basis",
     "$.messages.*",
     "$.submission.guidance",
