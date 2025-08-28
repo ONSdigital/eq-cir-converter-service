@@ -136,6 +136,62 @@
                                                 ]
                                             }
                                         ]
+                                    },
+                                    "If you have not taken your next lateral flow test by this date, you will not be able to report any further follow-up lateral flow test results in this questionnaire.",
+                                    {
+                                        "text": "Your testing window started on {window_start_date} and lasts for 14 days.",
+                                        "placeholders": [
+                                            {
+                                                "placeholder": "window_start_date",
+                                                "transforms": [
+                                                    {
+                                                        "transform": "format_date",
+                                                        "arguments": {
+                                                            "date_to_format": {
+                                                                "source": "metadata",
+                                                                "identifier": "WINDOW_START_DATE"
+                                                            },
+                                                            "date_format": "d MMMM yyyy"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "text": "These two dates are very important: {window_start_date} to {window_close_date}.",
+                                        "placeholders": [
+                                            {
+                                                "placeholder": "window_start_date",
+                                                "transforms": [
+                                                    {
+                                                        "transform": "format_date",
+                                                        "arguments": {
+                                                            "date_to_format": {
+                                                                "source": "metadata",
+                                                                "identifier": "WINDOW_START_DATE"
+                                                            },
+                                                            "date_format": "d MMMM yyyy"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "placeholder": "window_close_date",
+                                                "transforms": [
+                                                    {
+                                                        "transform": "format_date",
+                                                        "arguments": {
+                                                            "date_to_format": {
+                                                                "source": "metadata",
+                                                                "identifier": "WINDOW_CLOSE_DATE"
+                                                            },
+                                                            "date_format": "d MMMM yyyy"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
                                     }
                                 ],
                                 "type": "General",
@@ -173,6 +229,10 @@
     "metadata": [
         {
             "name": "WINDOW_CLOSE_DATE",
+            "type": "date"
+        },
+        {
+            "name": "WINDOW_START_DATE",
             "type": "date"
         }
     ],

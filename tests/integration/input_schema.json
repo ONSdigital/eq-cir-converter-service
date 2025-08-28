@@ -120,7 +120,7 @@
                                     "- If you have <strong>not taken your next lateral flow test yet</strong>, please exit the questionnaire using &quot;Save and exit survey&quot; at the top of this page. You will return to this page when you next access the questionnaire to enter your next test result.",
                                     "Only select &quot;Continue to symptoms section&quot; if your <strong>testing window is closing</strong> or you have <strong>run out of lateral flow tests</strong>. Once you move onto the symptoms section, you cannot enter any more follow-up lateral flow test results in this questionnaire.",
                                     {
-                                        "text": "Your testing window closing date for this follow-up questionnaire is {window_close_date}.",
+                                        "text": "<p>Your testing window closing date for this follow-up questionnaire is {window_close_date}.</p><p>If you have not taken your next lateral flow test by this date, you will not be able to report any further follow-up lateral flow test results in this questionnaire.</p><p>Your testing window started on {window_start_date} and lasts for 14 days.</p><p>These two dates are very important: {window_start_date} to {window_close_date}.</p>",
                                         "placeholders": [
                                             {
                                                 "placeholder": "window_close_date",
@@ -136,7 +136,22 @@
                                                         }
                                                     }
                                                 ]
-                                            }
+                                            },
+                                            {
+                                                  "placeholder": "window_start_date",
+                                                  "transforms": [
+                                                      {
+                                                          "transform": "format_date",
+                                                          "arguments": {
+                                                              "date_to_format": {
+                                                                  "source": "metadata",
+                                                                  "identifier": "WINDOW_START_DATE"
+                                                              },
+                                                              "date_format": "d MMMM yyyy"
+                                                          }
+                                                      }
+                                                  ]
+                                              }
                                         ]
                                     }
                                 ],
@@ -175,6 +190,10 @@
     "metadata": [
         {
             "name": "WINDOW_CLOSE_DATE",
+            "type": "date"
+        },
+        {
+            "name": "WINDOW_START_DATE",
             "type": "date"
         }
     ],
