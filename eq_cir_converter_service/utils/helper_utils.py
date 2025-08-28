@@ -93,11 +93,11 @@ def split_paragraphs_with_placeholders(
     placeholder_text = str(placeholders_dict.get("text", ""))
     placeholders_list = placeholders_dict.get("placeholders", "")
     # Divide the string into paragraphs list based on presence of <p> tags
-    paragraphs_list = split_paragraphs_into_list(placeholder_text)
+    paragraphs = split_paragraphs_into_list(placeholder_text)
 
     output_paragraphs: list[str | dict[str, str | list | object]] = []
     # For each separated paragraph attach the relevant placeholder(s) if present or keep the paragraph as is
-    for paragraph in paragraphs_list:
+    for paragraph in paragraphs:
         paragraph_with_tags_removed = remove_and_replace_tags(paragraph).strip()
         placeholder_names_with_count = Counter(extract_placeholder_names_from_text_field(paragraph_with_tags_removed))
         paragraphs_with_matching_placeholders: list[dict] = []
