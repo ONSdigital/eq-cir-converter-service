@@ -5,11 +5,8 @@ from fastapi import APIRouter, HTTPException, status
 from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.exception import exception_messages
 from eq_cir_converter_service.services.schema import schema_processor_service
-from eq_cir_converter_service.services.validators.request_validator import (
-    validate_input_json,
-    validate_version,
-)
 from eq_cir_converter_service.types.custom_types import Schema
+from eq_cir_converter_service.utils.helper_utils import validate_version
 
 router = APIRouter()
 
@@ -62,7 +59,15 @@ async def post_schema(
         )
 
     logger.info("Validating the input JSON schema...")
-    validate_input_json(schema)
+
+    if not schema:
+        logger.error("Input JSON schema is empty")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"status": "error", "message": exception_messages.EXCEPTION_400_EMPTY_INPUT_JSON},
+        )
+
+    logger.debug("Input JSON schema is not empty")
 
     try:
         logger.debug(
