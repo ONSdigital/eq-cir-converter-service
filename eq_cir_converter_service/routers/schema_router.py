@@ -43,18 +43,17 @@ async def post_schema(
     Returns:
     - dict: The converted schema.
     """
-    logger.info("Posting the cir schema...")
+    logger.debug("Posting the cir schema...")
 
     logger.debug("Received current version %s and target version %s", current_version, target_version)
     logger.debug("Received schema: %s", schema)
 
-    logger.info("Validating the current and target version...")
+    logger.debug("Validating the current and target version...")
     validate_version(current_version, "current")
     validate_version(target_version, "target")
 
-    # Check if the current and target versions are the same
     if current_version == target_version:
-        logger.info("The current and target schema versions are the same")
+        logger.debug("The current and target schema versions are the same")
         # Ideally, the caller must not send to the converter service with the same versions.
         # Hence it is the best approach to give an error response.
         raise HTTPException(
@@ -66,13 +65,13 @@ async def post_schema(
     validate_input_json(schema)
 
     try:
-        logger.info(
+        logger.debug(
             "Converting the schema from current version %s to target version %s",
             current_version,
             target_version,
         )
-        # Call the schema processor service to convert the schema
         logger.debug("Converting schema: %s", schema)
+        # Call the schema processor service to convert the schema
         return schema_processor_service.convert_schema(current_version, target_version, schema)
 
     except HTTPException as exc:

@@ -105,16 +105,16 @@ def split_paragraphs_with_placeholders(
             # isinstance() added for type checking purposes
             if isinstance(placeholders_list, list):
                 # List that stores the placeholder definitions for each placeholder name in "text"
-                placeholders_matching_the_name = []
+                paragraphs_with_placeholders = []
                 for placeholder in placeholders_list:
                     # Ensure the correct placeholder is added that matches the placeholder name in "text"
                     if placeholder.get("placeholder", None) == placeholder_name:
-                        placeholders_matching_the_name = [placeholder]
+                        paragraphs_with_placeholders = [placeholder]
 
                 # If any placeholders added to this list, create a deep copy for each placeholder name
-                if placeholders_matching_the_name:
+                if paragraphs_with_placeholders:
                     paragraphs_with_matching_placeholders.extend(
-                        deepcopy(placeholders_matching_the_name[0]) for _ in range(count)
+                        deepcopy(paragraphs_with_placeholders[0]) for _ in range(count)
                     )
         # If there are placeholders in the paragraph, add them to the output in the correct format (with paragraph text)
         if paragraphs_with_matching_placeholders:

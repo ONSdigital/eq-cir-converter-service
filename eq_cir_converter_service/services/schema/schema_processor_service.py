@@ -1,6 +1,6 @@
 """This module converts the schema from the current to the target version."""
 
-import copy
+from copy import deepcopy
 
 from jsonpath_ng.ext import parse
 
@@ -23,16 +23,16 @@ def process_context_dict(context: dict) -> None:
 
 def process_context_list(context: list, index: int) -> None:
     """Processes a list context by updating or expanding the value at the given index."""
-    processed = process_element(context[index])
-    if isinstance(processed, list):
-        # Replacing a slice of a list (context) with the value of "processed" to accommodate placeholder objects
-        context[index : index + 1] = processed
+    processed_element = process_element(context[index])
+    if isinstance(processed_element, list):
+        # Replaces the slice of a list (context) with the value of "processed" to accommodate placeholder objects
+        context[index : index + 1] = processed_element
     else:
-        context[index] = processed
+        context[index] = processed_element
 
 
 # --- JSONPath-Based Transformation ---
-def convert_to_version_10_0_0(schema: Schema, paths: list[str]) -> Schema:
+def convert_to_v10(schema: Schema, paths: list[str]) -> Schema:
     """Transforms the schema dictionary based on the provided JSONPath expressions.
 
     Parameters:
@@ -42,7 +42,7 @@ def convert_to_version_10_0_0(schema: Schema, paths: list[str]) -> Schema:
     Returns:
     - A new schema with the transformations applied.
     """
-    transformed_schema = copy.deepcopy(schema)
+    transformed_schema = deepcopy(schema)
     for path in paths:
         jsonpath_expression = parse(path)
         # Extracting and looping through values using JsonPath
@@ -73,7 +73,7 @@ def convert_schema(current_version: str, target_version: str, schema: Schema) ->
     Returns:
     - dict: The converted schema.
     """
-    logger.info("Converting the schema...")
+    logger.debug("Converting the schema...")
 
     logger.debug("Current version: %s", current_version)
     logger.debug("Target version: %s", target_version)
@@ -84,13 +84,13 @@ def convert_schema(current_version: str, target_version: str, schema: Schema) ->
 
     logger.debug("Extractable strings for conversion to version 10.0.0: %s", PATHS)
 
+    # If the target version is 10 transform the schema
     if target_version == "10.0.0":
-        # If the target version is 10.0.0, we need to transform the schema
-        logger.info("Converting schema to version 10.0.0")
-        output_schema = convert_to_version_10_0_0(input_schema, PATHS)
+        logger.debug("Converting schema to version 10.0.0...")
+        output_schema = convert_to_v10(input_schema, PATHS)
         logger.info("Schema converted successfully")
+    # For other versions do not apply conversion
     else:
-        # For other versions, we can assume no specific conversion is needed
         logger.info("No conversions needed for target version %s, using input schema as is", target_version)
         output_schema = input_schema
 
