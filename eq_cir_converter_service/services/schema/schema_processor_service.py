@@ -5,30 +5,16 @@ from copy import deepcopy
 from jsonpath_ng.ext import parse
 
 from eq_cir_converter_service.config.logging_config import logging
+from eq_cir_converter_service.converters.v10 import (
+    process_context_dict,
+    process_context_list,
+)
 from eq_cir_converter_service.services.schema.paths import (
     PATHS,
 )
 from eq_cir_converter_service.types.custom_types import Schema
-from eq_cir_converter_service.utils.helper_utils import process_element
 
 logger = logging.getLogger(__name__)
-
-
-def process_context_dict(context: dict) -> None:
-    """Processes a dictionary context by updating the value at the given key."""
-    # Key is always the first element, dict has one key-value pair, hence we can use `next(iter(context))`
-    key = next(iter(context))
-    context[key] = process_element(context[key])
-
-
-def process_context_list(context: list, index: int) -> None:
-    """Processes a list context by updating or expanding the value at the given index."""
-    processed_element = process_element(context[index])
-    if isinstance(processed_element, list):
-        # Replaces the slice of a list (context) with the value of "processed" to accommodate placeholder objects
-        context[index : index + 1] = processed_element
-    else:
-        context[index] = processed_element
 
 
 # --- JSONPath-Based Transformation ---

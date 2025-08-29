@@ -2,7 +2,7 @@
 
 import pytest
 
-from eq_cir_converter_service.utils.helper_utils import (
+from eq_cir_converter_service.converters.v10 import (
     extract_placeholder_names_from_text_field,
     get_sanitised_text,
     process_element,
