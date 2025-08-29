@@ -3,8 +3,8 @@
 from copy import deepcopy
 
 from jsonpath_ng.ext import parse
+from structlog import get_logger
 
-from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.converters.v10 import (
     process_context_dict,
     process_context_list,
@@ -14,7 +14,7 @@ from eq_cir_converter_service.services.schema.paths import (
 )
 from eq_cir_converter_service.types.custom_types import Schema
 
-logger = logging.getLogger(__name__)
+logger = get_logger()
 
 
 # --- JSONPath-Based Transformation ---
@@ -61,14 +61,14 @@ def convert_schema(current_version: str, target_version: str, schema: Schema) ->
     """
     logger.debug("Converting the schema...")
 
-    logger.debug("Current version: %s", current_version)
-    logger.debug("Target version: %s", target_version)
+    logger.debug("Current version:", current_version=current_version)
+    logger.debug("Target version:", target_version=current_version)
 
     input_schema = dict(schema)
 
-    logger.debug("Input schema: %s", input_schema)
+    logger.debug("Input schema:", input_schema=input_schema)
 
-    logger.debug("Extractable strings for conversion to version 10.0.0: %s", PATHS)
+    logger.debug("Extractable strings for conversion to version 10.0.0:", paths=PATHS)
 
     # If the target version is 10 transform the schema
     if target_version == "10.0.0":
@@ -77,9 +77,9 @@ def convert_schema(current_version: str, target_version: str, schema: Schema) ->
         logger.info("Schema converted successfully")
     # For other versions do not apply conversion
     else:
-        logger.info("No conversions needed for target version %s, using input schema as is", target_version)
+        logger.info("No conversions needed for target version, using input schema as is", target_version=target_version)
         output_schema = input_schema
 
-    logger.debug("Output schema: %s", output_schema)
+    logger.debug("Output schema:", output_schema=output_schema)
 
     return output_schema

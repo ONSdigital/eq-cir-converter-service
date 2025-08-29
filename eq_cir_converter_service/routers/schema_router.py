@@ -1,8 +1,8 @@
 """This module contains the FastAPI router for the schema conversion endpoint."""
 
 from fastapi import APIRouter, HTTPException, status
+from structlog import get_logger
 
-from eq_cir_converter_service.config.logging_config import logging
 from eq_cir_converter_service.exception import exception_messages
 from eq_cir_converter_service.services.schema import schema_processor_service
 from eq_cir_converter_service.types.custom_types import Schema
@@ -10,7 +10,7 @@ from eq_cir_converter_service.utils.helper_utils import validate_version
 
 router = APIRouter()
 
-logger = logging.getLogger(__name__)
+logger = get_logger()
 
 """The POST endpoint to convert the CIR schema from one version to another."""
 
@@ -42,8 +42,12 @@ async def post_schema(
     """
     logger.debug("Posting the cir schema...")
 
-    logger.debug("Received current version %s and target version %s", current_version, target_version)
-    logger.debug("Received schema: %s", schema)
+    logger.debug(
+        "Received current version and target version",
+        current_version=current_version,
+        target_version=target_version,
+    )
+    logger.debug("Received schema:", schema=schema)
 
     logger.debug("Validating the current and target version...")
     validate_version(current_version, "current")
@@ -71,11 +75,11 @@ async def post_schema(
 
     try:
         logger.debug(
-            "Converting the schema from current version %s to target version %s",
-            current_version,
-            target_version,
+            "Converting the schema from current version to target version ",
+            current_version=current_version,
+            target_version=target_version,
         )
-        logger.debug("Converting schema: %s", schema)
+        logger.debug("Converting schema:", schema=schema)
         # Call the schema processor service to convert the schema
         return schema_processor_service.convert_schema(current_version, target_version, schema)
 
