@@ -6,10 +6,6 @@ from collections.abc import Sequence
 from copy import deepcopy
 from typing import Any
 
-from eq_cir_converter_service.config.logging_config import logging
-
-logger = logging.getLogger(__name__)
-
 # --- Regular Expressions ---
 # Compiled regular expressions for HTML tag processing
 REGEX_B_OPEN = re.compile(r"<\s*b\s*>", flags=re.IGNORECASE)
