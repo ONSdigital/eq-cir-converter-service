@@ -25,7 +25,7 @@ REGEX_PLACEHOLDER = re.compile(r"\{(.*?)\}", flags=re.IGNORECASE)
 
 
 # --- HTML Tag Processing ---
-def remove_and_replace_tags(text: str) -> str:
+def get_sanitised_text(text: str) -> str:
     """Cleans HTML tags from the text, replacing <b> with <strong> and removing <br> and <p> tags.
 
     :param text: The input text containing HTML tags.
@@ -95,39 +95,37 @@ def split_paragraphs_with_placeholders(
     :return: A list of cleaned paragraphs or dictionaries with placeholders.
     """
     placeholder_text = str(placeholders_dict.get("text", ""))
-    placeholders_list = placeholders_dict.get("placeholders", "")
+    placeholders = placeholders_dict.get("placeholders", [])
     # Divide the string into paragraphs list based on presence of <p> tags
     paragraphs = split_paragraphs_into_list(placeholder_text)
 
     output_paragraphs: list[str | dict[str, str | list | object]] = []
     # For each separated paragraph attach the relevant placeholder(s) if present or keep the paragraph as is
     for paragraph in paragraphs:
-        paragraph_with_tags_removed = remove_and_replace_tags(paragraph).strip()
-        placeholder_names_with_count = Counter(extract_placeholder_names_from_text_field(paragraph_with_tags_removed))
+        sanitised_paragraph = get_sanitised_text(paragraph)
+        placeholders_found_in_paragraph = Counter(extract_placeholder_names_from_text_field(sanitised_paragraph))
         paragraphs_with_matching_placeholders: list[dict] = []
-        for placeholder_name, count in placeholder_names_with_count.items():
-            # isinstance() added for type checking purposes
-            if isinstance(placeholders_list, list):
-                # List that stores the placeholder definitions for each placeholder name in "text"
-                paragraphs_with_placeholders = []
-                for placeholder in placeholders_list:
-                    # Ensure the correct placeholder is added that matches the placeholder name in "text"
-                    if placeholder.get("placeholder", None) == placeholder_name:
-                        paragraphs_with_placeholders = [placeholder]
+        for placeholder_name, count in placeholders_found_in_paragraph.items():
+            # List that stores the placeholder definitions for each placeholder name in "text"
+            paragraphs_with_placeholders_definitions = []
+            # placeholders are always a list
+            for placeholder in placeholders:  # type: ignore
+                # Ensure the correct placeholder is added that matches the placeholder name in "text"
+                if placeholder.get("placeholder", None) == placeholder_name:
+                    paragraphs_with_placeholders_definitions = [placeholder]
 
-                # If any placeholders added to this list, create a deep copy for each placeholder name
-                if paragraphs_with_placeholders:
-                    paragraphs_with_matching_placeholders.extend(
-                        deepcopy(paragraphs_with_placeholders[0]) for _ in range(count)
-                    )
+            # If any placeholders added to this list, create a deep copy for each placeholder name
+            if paragraphs_with_placeholders_definitions:
+                paragraphs_with_matching_placeholders.extend(
+                    deepcopy(paragraphs_with_placeholders_definitions[0]) for _ in range(count)
+                )
         # If there are placeholders in the paragraph, add them to the output in the correct format (with paragraph text)
         if paragraphs_with_matching_placeholders:
             output_paragraphs.append(
-                {"text": paragraph_with_tags_removed, "placeholders": paragraphs_with_matching_placeholders},
+                {"text": sanitised_paragraph, "placeholders": paragraphs_with_matching_placeholders},
             )
-        # Else just add the cleaned paragraph
         else:
-            output_paragraphs.append(paragraph_with_tags_removed)
+            output_paragraphs.append(sanitised_paragraph)
 
     return output_paragraphs
 
@@ -142,10 +140,10 @@ def process_string(string: str) -> str | list[str]:
     if REGEX_PARAGRAPH_SPLIT.search(string):
         # If the text contains <p> tags, split into paragraphs
         # and clean each paragraph
-        paragraphs = [remove_and_replace_tags(paragraph).strip() for paragraph in split_paragraphs_into_list(string)]
+        paragraphs = [get_sanitised_text(paragraph).strip() for paragraph in split_paragraphs_into_list(string)]
         # Return string if only one paragraph
         return paragraphs[0] if len(paragraphs) == 1 else paragraphs
-    return remove_and_replace_tags(string).strip()
+    return get_sanitised_text(string).strip()
 
 
 def process_placeholder(
@@ -160,7 +158,7 @@ def process_placeholder(
         # If the text contains <p> tags, split into paragraphs
         # and clean each paragraph, extracting placeholders
         return split_paragraphs_with_placeholders(placeholders_dict)
-    placeholders_dict["text"] = remove_and_replace_tags(str(placeholders_dict["text"])).strip()
+    placeholders_dict["text"] = get_sanitised_text(str(placeholders_dict["text"])).strip()
     return placeholders_dict
 
 

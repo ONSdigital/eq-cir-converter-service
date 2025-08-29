@@ -4,11 +4,11 @@ import pytest
 
 from eq_cir_converter_service.utils.helper_utils import (
     extract_placeholder_names_from_text_field,
+    get_sanitised_text,
     process_element,
     process_list,
     process_placeholder,
     process_string,
-    remove_and_replace_tags,
     split_paragraphs_into_list,
     split_paragraphs_with_placeholders,
 )
@@ -25,7 +25,7 @@ from eq_cir_converter_service.utils.helper_utils import (
 )
 def test_clean_html_tags(input_html, expected):
     """Test the clean_html_tags function."""
-    assert remove_and_replace_tags(input_html) == expected
+    assert get_sanitised_text(input_html) == expected
 
 
 @pytest.mark.parametrize(
@@ -84,6 +84,8 @@ def test_split_text_with_placeholders_multiple(placeholder_obj):
         ("<p>One</p><p>Two</p>", ["One", "Two"]),
         ("<p></p><p>Second</p>", "Second"),
         ("No tags", "No tags"),
+        ("<p>  </p><p>Second</p>", "Second"),
+        ("<p><p>First</p></p>", "First"),
     ],
 )
 def test_process_string(text, expected):
@@ -153,11 +155,10 @@ def test_process_element_list(placeholder_obj):
     result = process_element(data)
 
     assert isinstance(result, list)
-    assert {"description": "Item1"} in result
-    assert {"description": "Item2"} in result
-    assert "Some text" in result
-
-    assert any(isinstance(obj, dict) and obj.get("text") == "With {first_name}" for obj in result)
+    assert result[0] == {"description": "Item1"}
+    assert result[1] == {"description": "Item2"}
+    assert result[2] == "Some text"
+    assert result[3]["text"] == "With {first_name}"
 
 
 def test_process_element_dict():
