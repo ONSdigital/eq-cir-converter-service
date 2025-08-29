@@ -71,55 +71,83 @@ def split_paragraphs_with_placeholders(
 ) -> list[str | dict[str, str | list | object]]:
     """Splits the 'text' field in the text_obj into paragraphs, cleaning HTML tags and extracting placeholders.
 
+    Following steps are performed:
+    1. Split the 'text' field into paragraphs based on <p> tags.
+    2. For each paragraph:
+        - Clean HTML tags from each paragraph.
+        - Check for placeholders in paragraph
+        - Attach relevant placeholder definitions (if any) from the 'placeholders' list.
+    3. Return a list of cleaned paragraphs or dictionaries with placeholders.
+
     :param placeholders_dict: A dictionary containing 'text' and 'placeholders'.
     example::
+    Input:
     {
-        'placeholders': [
-            'text': '<p>Hello {first_name}</p><p>{last_name}</p>',
-            {
-                'placeholder': 'first_name',
-                'value': {
-                    'identifier': 'FIRST_NAME',
-                    'source': 'metadata'
-                }
-            },
-            {
-                'placeholder': 'last_name',
-                'value': {
-                    'identifier': 'LAST_NAME',
-                    'source': 'metadata'
-                }
-            }
-        ],
+      "text": "<p>Hello {first_name}</p><p>{last_name}</p>",
+      "placeholders": [
+        {
+          "placeholder": "first_name",
+          "value": {
+            "identifier": "FIRST_NAME",
+            "source": "metadata"
+          }
+        },
+        {
+          "placeholder": "last_name",
+          "value": {
+            "identifier": "LAST_NAME",
+            "source": "metadata"
+          }
+        }
+      ]
+    }
+    Output:
+    {
+      "text": "Hello {first_name}",
+      "placeholders": [
+        {
+          "placeholder": "first_name",
+          "value": {
+            "identifier": "FIRST_NAME",
+            "source": "metadata"
+          }
+        }
+      ]
+    },
+    {
+      "text": "{last_name}",
+      "placeholders": [
+        {
+          "placeholder": "last_name",
+          "value": {
+            "identifier": "LAST_NAME",
+            "source": "metadata"
+          }
+        }
+      ]
     }
     :return: A list of cleaned paragraphs or dictionaries with placeholders.
     """
     placeholder_text = str(placeholders_dict.get("text", ""))
     placeholders = placeholders_dict.get("placeholders", [])
-    # Divide the string into paragraphs list based on presence of <p> tags
     paragraphs = split_paragraphs_into_list(placeholder_text)
 
     output_paragraphs: list[str | dict[str, str | list | object]] = []
-    # For each separated paragraph attach the relevant placeholder(s) if present or keep the paragraph as is
     for paragraph in paragraphs:
         sanitised_paragraph = get_sanitised_text(paragraph)
         placeholders_found_in_paragraph = Counter(extract_placeholder_names_from_text_field(sanitised_paragraph))
         paragraphs_with_matching_placeholders: list[dict] = []
         for placeholder_name, count in placeholders_found_in_paragraph.items():
-            # List that stores the placeholder definitions for each placeholder name in "text"
             paragraphs_with_placeholders_definitions = []
             # placeholders are always a list
             for placeholder in placeholders:  # type: ignore
-                # Ensure the correct placeholder is added that matches the placeholder name in "text"
                 if placeholder.get("placeholder", None) == placeholder_name:
                     paragraphs_with_placeholders_definitions = [placeholder]
 
-            # If any placeholders added to this list, create a deep copy for each placeholder name
             if paragraphs_with_placeholders_definitions:
                 paragraphs_with_matching_placeholders.extend(
                     deepcopy(paragraphs_with_placeholders_definitions[0]) for _ in range(count)
                 )
-        # If there are placeholders in the paragraph, add them to the output in the correct format (with paragraph text)
         if paragraphs_with_matching_placeholders:
             output_paragraphs.append(
                 {"text": sanitised_paragraph, "placeholders": paragraphs_with_matching_placeholders},
