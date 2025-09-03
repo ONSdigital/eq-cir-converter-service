@@ -192,13 +192,13 @@ def process_list(list_items: Sequence[str | Sequence[Any] | dict]) -> list[str |
 
     for item in list_items:
         if isinstance(item, dict):
-            if expandable_key := next(
-                # If the value is a string with <p> tags, extract paragraphs
-                # and clean each paragraph
-                # and extract placeholders
-                (k for k, v in item.items() if isinstance(v, str) and REGEX_PARAGRAPH_SPLIT.search(v)),
-                None,
-            ):
+            # Find the first key with a string value containing <p> tags
+            expandable_key = None
+            for key, value in item.items():
+                if isinstance(value, str) and REGEX_PARAGRAPH_SPLIT.search(value):
+                    expandable_key = key
+                    break
+            if expandable_key is not None:
                 paragraphs = split_paragraphs_into_list(item[expandable_key])
                 result.extend({expandable_key: paragraph} for paragraph in paragraphs)
             else:
