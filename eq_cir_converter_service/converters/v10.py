@@ -202,9 +202,9 @@ def process_list(list_items: Sequence[str | Sequence[Any] | dict]) -> list[str |
                 paragraphs = split_paragraphs_into_list(item[expandable_key])
                 result.extend({expandable_key: paragraph} for paragraph in paragraphs)
             else:
-                result.append(process_element(item))
+                result.append(process_item(item))
         else:
-            processed = process_element(item)
+            processed = process_item(item)
             if isinstance(processed, list):
                 result.extend(processed)
             else:
@@ -214,35 +214,33 @@ def process_list(list_items: Sequence[str | Sequence[Any] | dict]) -> list[str |
 
 
 # --- Recursive Processor ---
-def process_element(element: str | list | object) -> str | list | object:
-    """Recursively processes an element, handling strings, placeholders object, lists, and dictionaries.
+def process_item(item: str | list | object) -> str | list | object:
+    """Recursively processes an item, handling strings, placeholders object, lists, and dictionaries.
 
-    :param element: The element to process, which can be a string, placeholders object, list, or dictionary.
-    :return: The processed element, which may be a cleaned string, a list of paragraphs, or a dictionary.
+    :param item: The item to process, which can be a string, placeholders object, list, or dictionary.
+    :return: The processed item, which may be a cleaned string, a list of paragraphs, or a dictionary.
     """
-    if isinstance(element, str):
-        return process_string(element)
-    if isinstance(element, dict) and "text" in element:
-        return process_placeholder(element)
-    if isinstance(element, list):
-        return process_list(element)
-    if isinstance(element, dict):
-        return {k: process_element(v) for k, v in element.items()}
-    return element
+    if isinstance(item, str):
+        return process_string(item)
+    if isinstance(item, dict):
+        if "text" in item:
+            return process_placeholder(item)
+        return {key: process_item(value) for key, value in item.items()}
+    return process_list(item) if isinstance(item, list) else item
 
 
 def process_context_dict(context: dict) -> None:
     """Processes a dictionary context by updating the value at the given key."""
-    # Key is always the first element, dict has one key-value pair, hence we can use `next(iter(context))`
+    # Key is always the first item, dict has one key-value pair, hence we can use `next(iter(context))`
     key = next(iter(context))
-    context[key] = process_element(context[key])
+    context[key] = process_item(context[key])
 
 
 def process_context_list(context: list, index: int) -> None:
     """Processes a list context by updating or expanding the value at the given index."""
-    processed_element = process_element(context[index])
-    if isinstance(processed_element, list):
+    processed_item = process_item(context[index])
+    if isinstance(processed_item, list):
         # Replaces the slice of a list (context) with the value of "processed" to accommodate placeholder objects
-        context[index : index + 1] = processed_element
+        context[index : index + 1] = processed_item
     else:
-        context[index] = processed_element
+        context[index] = processed_item

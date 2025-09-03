@@ -5,7 +5,7 @@ import pytest
 from eq_cir_converter_service.converters.v10 import (
     extract_placeholder_names_from_text_field,
     get_sanitised_text,
-    process_element,
+    process_item,
     process_list,
     process_placeholder,
     process_string,
@@ -130,14 +130,14 @@ def test_process_list_with_dict_and_string():
 
 def test_process_element_string():
     """Test processing a simple string."""
-    assert process_element("<p>Test</p>") == "Test"
-    assert process_element("Simple") == "Simple"
+    assert process_item("<p>Test</p>") == "Test"
+    assert process_item("Simple") == "Simple"
 
 
 def test_process_element_text_object(placeholder_obj):
     """Test processing a text object with placeholders."""
     obj = {"text": "<p>Hello {first_name}</p>", "placeholders": [placeholder_obj]}
-    result = process_element(obj)
+    result = process_item(obj)
     assert isinstance(result, list)
     assert len(result) == 1
     assert isinstance(result[0], dict)
@@ -152,7 +152,7 @@ def test_process_element_list(placeholder_obj):
         "Some text",
         {"text": "<p>With {first_name}</p>", "placeholders": [placeholder_obj]},
     ]
-    result = process_element(data)
+    result = process_item(data)
 
     assert isinstance(result, list)
     assert result[0] == {"description": "Item1"}
@@ -164,7 +164,7 @@ def test_process_element_list(placeholder_obj):
 def test_process_element_dict():
     """Test processing a dictionary with mixed content."""
     obj = {"a": "<p>One</p>", "b": "plain"}
-    result = process_element(obj)
+    result = process_item(obj)
     assert result == {"a": "One", "b": "plain"}
 
 
@@ -219,10 +219,10 @@ def test_process_list_single_vs_multiple(input_list, expected):
 )
 def test_process_element_single_vs_multiple(input_data, expected):
     """Test processing an element that may expand to single or multiple paragraphs."""
-    assert process_element(input_data) == expected
+    assert process_item(input_data) == expected
 
 
 def test_process_element_returns_raw_types():
     """Test that process_element returns raw types without modification."""
-    assert process_element(42) == 42
-    assert process_element(None) is None
+    assert process_item(42) == 42
+    assert process_item(None) is None
