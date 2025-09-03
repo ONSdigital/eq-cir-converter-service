@@ -13,7 +13,7 @@ REGEX_B_CLOSE = re.compile(r"<\s*/\s*b\s*>", flags=re.IGNORECASE)
 REGEX_P_TAGS = re.compile(r"</?p>", flags=re.IGNORECASE)
 REGEX_BR_TAGS = re.compile(r"</?br>", flags=re.IGNORECASE)
 REGEX_PARAGRAPH_SPLIT = re.compile(r"<p>(.*?)</p>", flags=re.IGNORECASE | re.DOTALL)
-REGEX_PLACEHOLDER = re.compile(r"\{(.*?)\}", flags=re.IGNORECASE)
+REGEX_PLACEHOLDER = re.compile(r"\{(.*?)}", flags=re.IGNORECASE)
 
 
 # --- HTML Tag Processing ---
