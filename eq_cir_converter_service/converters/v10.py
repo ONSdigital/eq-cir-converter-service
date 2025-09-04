@@ -227,10 +227,8 @@ def process_item(item: str | list | object) -> str | list | object:
     return process_list(item) if isinstance(item, list) else item
 
 
-def process_context_dict(context: dict) -> None:
+def process_context_dict(context: dict, key: str) -> None:
     """Processes a dictionary context by updating the value at the given key."""
-    # Key is always the first item, dict has one key-value pair, hence we can use `next(iter(context))`
-    key = next(iter(context))
     context[key] = process_item(context[key])
 
 

@@ -92,26 +92,28 @@
               "type": "Question",
               "question": {
                 "id": "questionc8313143-4463-42ce-ab98-9e76dd470cd1",
-                "title": {
-                  "text": "<p>Thank you for letting us know about your first follow-up lateral flow test before the {window_close_date}</p>",
-                  "placeholders": [
-                    {
-                      "placeholder": "window_close_date",
-                      "transforms": [
-                        {
-                          "transform": "format_date",
-                          "arguments": {
-                            "date_to_format": {
-                              "source": "metadata",
-                              "identifier": "WINDOW_CLOSE_DATE"
-                            },
-                            "date_format": "d MMMM yyyy"
+                "title": [
+                  {
+                    "text": "Thank you for letting us know about your first follow-up lateral flow test before the {window_close_date}",
+                    "placeholders": [
+                      {
+                        "placeholder": "window_close_date",
+                        "transforms": [
+                          {
+                            "transform": "format_date",
+                            "arguments": {
+                              "date_to_format": {
+                                "source": "metadata",
+                                "identifier": "WINDOW_CLOSE_DATE"
+                              },
+                              "date_format": "d MMMM yyyy"
+                            }
                           }
-                        }
-                      ]
-                    }
-                  ]
-                },
+                        ]
+                      }
+                    ]
+                  }
+                ],
                 "description": [
                   "<strong>Please keep testing until you have two negative test results in a row.</strong>",
                   "- To <strong>report your next follow-up lateral flow test</strong> result, please select &quot;Report next test result&quot;",

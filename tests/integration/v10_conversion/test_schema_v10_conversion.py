@@ -31,4 +31,7 @@ def test_schema_transformation_matches_expected_output(test_client: TestClient):
     assert response.status_code == 200, "Response failed with non-200 status"
     transformed_output = response.json()
 
+    with open("tests/integration/v10_conversion/transformed_schema.json", "w", encoding="utf-8") as f:
+        json.dump(transformed_output, f, ensure_ascii=False, indent=2)
+
     assert transformed_output == expected_output, "Transformed schema did not match expected output"

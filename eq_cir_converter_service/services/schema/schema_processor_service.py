@@ -41,8 +41,8 @@ def convert_to_v10(schema: Schema, paths: list[str]) -> Schema:
             if (index := getattr(path_data, "index", None)) is not None:
                 process_context_list(context, index)
             # Process the context based on its type (dict)
-            elif isinstance(context, dict):
-                process_context_dict(context)
+            elif isinstance(context, dict) and (key := path_data.fields[0] if hasattr(path_data, "fields") else None):
+                process_context_dict(context, key)
 
     return transformed_schema
 
