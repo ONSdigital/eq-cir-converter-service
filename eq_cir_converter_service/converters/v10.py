@@ -193,12 +193,7 @@ def process_list(list_items: Sequence[str | Sequence[Any] | dict]) -> list[str |
     for item in list_items:
         if isinstance(item, dict):
             expandable_key = next(
-                (
-                    key
-                    for key, value in item.items()
-                    if isinstance(value, str)
-                    and REGEX_PARAGRAPH_SPLIT.search(value)
-                ),
+                (key for key, value in item.items() if isinstance(value, str) and REGEX_PARAGRAPH_SPLIT.search(value)),
                 None,
             )
             if expandable_key is not None:
