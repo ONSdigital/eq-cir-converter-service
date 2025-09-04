@@ -21,15 +21,15 @@ This repository is for the CIR Converter service Python FastAPI application
 <!-- markdown-link-check-disable -->
 
 - [Getting Started](#getting-started)
-  - [Pre-requisites](#pre-requisites)
-  - [Installation](#installation)
+    - [Pre-requisites](#pre-requisites)
+    - [Installation](#installation)
 - [Development](#development)
-  - [Run Tests with Coverage](#run-tests-with-coverage)
-  - [Linting and Formatting](#linting-and-formatting)
-  - [Build the docker image](#build-the-docker-image)
-  - [Start the docker container](#start-the-docker-container)
-  - [View the local application](#view-the-local-application)
-  - [Stop the docker container](#stop-the-docker-container)
+    - [Run Tests with Coverage](#run-tests-with-coverage)
+    - [Linting and Formatting](#linting-and-formatting)
+    - [Build the docker image](#build-the-docker-image)
+    - [Start the docker container](#start-the-docker-container)
+    - [View the local application](#view-the-local-application)
+    - [Stop the docker container](#stop-the-docker-container)
 - [Contributing](#contributing)
 - [License](#license)
 <!-- markdown-link-check-enable -->
