@@ -188,29 +188,32 @@ def process_list(list_items: Sequence[str | Sequence[Any] | dict]) -> list[str |
     :param list_items: A sequence of strings, lists, or dictionaries to process.
     :return: A list of processed elements, which may include cleaned strings or lists of paragraphs.
     """
-    result: list[str | list | object] = []
+    transformed_list: list[str | list | object] = []
 
     for item in list_items:
         if isinstance(item, dict):
-            # Find the first key with a string value containing <p> tags
-            expandable_key = None
-            for key, value in item.items():
-                if isinstance(value, str) and REGEX_PARAGRAPH_SPLIT.search(value):
-                    expandable_key = key
-                    break
+            expandable_key = next(
+                (
+                    key
+                    for key, value in item.items()
+                    if isinstance(value, str)
+                    and REGEX_PARAGRAPH_SPLIT.search(value)
+                ),
+                None,
+            )
             if expandable_key is not None:
                 paragraphs = split_paragraphs_into_list(item[expandable_key])
-                result.extend({expandable_key: paragraph} for paragraph in paragraphs)
+                transformed_list.extend({expandable_key: paragraph} for paragraph in paragraphs)
             else:
-                result.append(process_item(item))
+                transformed_list.append(process_item(item))
         else:
             processed = process_item(item)
             if isinstance(processed, list):
-                result.extend(processed)
+                transformed_list.extend(processed)
             else:
-                result.append(processed)
+                transformed_list.append(processed)
 
-    return result
+    return transformed_list
 
 
 # --- Recursive Processor ---
