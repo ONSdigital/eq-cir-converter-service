@@ -1,50 +1,14 @@
 """This module converts the schema from the current to the target version."""
 
-from copy import deepcopy
-
-from jsonpath_ng.ext import parse
 from structlog import get_logger
 
-from eq_cir_converter_service.converters.v10 import (
-    process_context_dict,
-    process_context_list,
-)
+from eq_cir_converter_service.converters.v10 import convert_to_v10
 from eq_cir_converter_service.services.schema.paths import (
     PATHS,
 )
 from eq_cir_converter_service.types.custom_types import Schema
 
 logger = get_logger()
-
-
-# --- JSONPath-Based Transformation ---
-def convert_to_v10(schema: Schema, paths: list[str]) -> Schema:
-    """Transforms the schema dictionary based on the provided JSONPath expressions.
-
-    Parameters:
-    - schema: The input schema to transform.
-    - paths: A list containing JSONPath paths to look for.
-
-    Returns:
-    - A new schema with the transformations applied.
-    """
-    transformed_schema = deepcopy(schema)
-    for path in paths:
-        jsonpath_expression = parse(path)
-        # Extracting and looping through values using JsonPath
-        for extracted_value in jsonpath_expression.find(transformed_schema):
-            # The result of JsonPath.find provides detailed "context" and "path data", making use of both
-            context = extracted_value.context.value
-            path_data = extracted_value.path
-            # Process the context based on its type (list), index only appears if the context is a list, it increases
-            # as we loop through the list
-            if (index := getattr(path_data, "index", None)) is not None:
-                process_context_list(context, index)
-            # Process the context based on its type (dict)
-            elif isinstance(context, dict) and (key := path_data.fields[0] if hasattr(path_data, "fields") else None):
-                process_context_dict(context, key)
-
-    return transformed_schema
 
 
 # --- Schema Conversion Service ---

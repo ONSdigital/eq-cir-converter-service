@@ -63,6 +63,11 @@ from eq_cir_converter_service.services.schema.schema_processor_service import (
             ["meta.notes"],
             {"meta": {"notes": "<strong>Alpha</strong>"}},
         ),
+        (
+            {"meta": {"notes": "<p></p>"}},
+            ["meta.notes"],
+            {"meta": {"notes": []}},
+        ),
     ],
 )
 def test_transform_json_schema_basic_cases(data, paths, expected):
@@ -72,7 +77,7 @@ def test_transform_json_schema_basic_cases(data, paths, expected):
 
 
 @pytest.mark.parametrize(
-    "data, paths, expected_placeholders_count, expected_length",
+    "data, paths, expected_placeholders_count, expected_paragraphs_count",
     [
         (
             {
@@ -197,14 +202,14 @@ def test_transform_json_schema_with_text_object_and_placeholders(
     data: dict,
     paths: list[str],
     expected_placeholders_count: list[int],
-    expected_length: int,
+    expected_paragraphs_count: int,
 ):
     """Test transformation of a JSON object with text and placeholders."""
     result = convert_to_v10(data, paths)
 
     result = cast(Mapping[str, Any], result)
     desc = result["question"]["description"]
-    assert len(desc) == expected_length
+    assert len(desc) == expected_paragraphs_count
     expected_texts = []
     for item in desc:
         if isinstance(item, dict) and "text" in item:

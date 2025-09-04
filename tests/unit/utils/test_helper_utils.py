@@ -8,7 +8,7 @@ from eq_cir_converter_service.utils.helper_utils import validate_version
 
 def test_validate_version_valid():
     """Test validate_version with valid semantic versions."""
-    # Should not raise for valid semantic versions
+    # Should not raise an exception for valid semantic versions
     validate_version("1.0.0", "current")
     validate_version("2.1.3-alpha", "target")
     validate_version("0.0.1", "current")
