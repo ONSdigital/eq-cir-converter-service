@@ -39,11 +39,10 @@ def convert_schema(current_version: str, target_version: str, schema: Schema) ->
         logger.debug("Converting schema to version 10.0.0...")
         output_schema = convert_to_v10(input_schema, PATHS)
         logger.info("Schema converted successfully")
+        return output_schema
     # For other versions do not apply conversion
-    else:
-        logger.info("No conversions needed for target version, using input schema as is", target_version=target_version)
-        output_schema = input_schema
+    logger.info("No conversions needed for target version, using input schema as is", target_version=target_version)
 
-    logger.debug("Output schema:", output_schema=output_schema)
+    logger.debug("Output schema:", output_schema=input_schema)
 
-    return output_schema
+    return input_schema
