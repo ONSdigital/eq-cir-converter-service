@@ -519,3 +519,26 @@ def test_process_element_returns_raw_types():
     """Test that process_element returns raw types without modification."""
     assert process_item(42) == 42
     assert process_item(None) is None
+
+
+def test_process_strings_in_complex_objects():
+    """Test processing a list of strings."""
+    input_data = {
+        "type": "List",
+        "for_list": "additional_units",
+        "title": "What is the name, address, and postcode of the new unit?",
+        "item_anchor_answer_id": "answer27f27859-fc11-4577-b9bb-745407356498",
+        "item_label": "<p>Name of new unit</p>",
+        "add_link_text": "Add item to this list",
+        "empty_list_text": "There are no items",
+    }
+    expected = {
+        "type": "List",
+        "for_list": "additional_units",
+        "title": "What is the name, address, and postcode of the new unit?",
+        "item_anchor_answer_id": "answer27f27859-fc11-4577-b9bb-745407356498",
+        "item_label": "Name of new unit",
+        "add_link_text": "Add item to this list",
+        "empty_list_text": "There are no items",
+    }
+    assert process_item(input_data) == expected
