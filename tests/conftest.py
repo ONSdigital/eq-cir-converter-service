@@ -15,6 +15,6 @@ def test_client() -> Generator[TestClient, None, None]:
 
 
 @pytest.fixture
-def placeholder_obj():
+def placeholder_object():
     """Fixture to provide a sample placeholder object."""
     yield {"placeholder": "first_name", "value": {"source": "metadata", "identifier": "FIRST_NAME"}}

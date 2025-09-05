@@ -233,12 +233,12 @@ def test_transform_json_schema_with_text_object_and_placeholders(
             assert len(desc[i]["placeholders"]) == expected_placeholders_count[i]
 
 
-def test_transform_json_schema_with_mixed_types(placeholder_obj):
+def test_transform_json_schema_with_mixed_types(placeholder_object):
     """Test transformation of a JSON object with mixed types."""
     data = {
         "items": [
             "Simple <b>value</b>",
-            {"text": "<p>Hi {first_name}</p>", "placeholders": [placeholder_obj]},
+            {"text": "<p>Hi {first_name}</p>", "placeholders": [placeholder_object]},
             {"info": "<p>Info1</p><p>Info2</p>"},
         ],
     }
@@ -248,12 +248,12 @@ def test_transform_json_schema_with_mixed_types(placeholder_obj):
     assert isinstance(result["items"], list)
     assert result["items"][0] == "Simple <strong>value</strong>"
 
-    text_objs = [x for x in result["items"] if isinstance(x, dict) and "text" in x]
-    assert any(obj["text"] == "Hi {first_name}" for obj in text_objs)
+    text_objects = [x for x in result["items"] if isinstance(x, dict) and "text" in x]
+    assert any(obj["text"] == "Hi {first_name}" for obj in text_objects)
 
-    info_objs = [x for x in result["items"] if isinstance(x, dict) and "info" in x]
-    assert len(info_objs) == 1
-    assert info_objs[0]["info"] == ["Info1", "Info2"]
+    info_objects = [x for x in result["items"] if isinstance(x, dict) and "info" in x]
+    assert len(info_objects) == 1
+    assert info_objects[0]["info"] == ["Info1", "Info2"]
 
 
 def test_transform_json_schema_bad_types():
@@ -348,27 +348,27 @@ def test_extract_placeholders(text, expected):
     assert extract_placeholder_names_from_text_field(text) == expected
 
 
-def test_split_text_with_placeholders_single(placeholder_obj):
+def test_split_text_with_placeholders_single(placeholder_object):
     """Test splitting text with a single placeholder."""
-    input_obj = {"text": "<p>Hello {first_name}</p>", "placeholders": [placeholder_obj]}
-    result = split_paragraphs_with_placeholders(input_obj)
+    input_object = {"text": "<p>Hello {first_name}</p>", "placeholders": [placeholder_object]}
+    result = split_paragraphs_with_placeholders(input_object)
     assert len(result) == 1
     assert isinstance(result[0], dict)
     assert "text" in result[0]
     assert "placeholders" in result[0]
     assert result[0]["text"] == "Hello {first_name}"
-    assert result[0]["placeholders"] == [placeholder_obj]
+    assert result[0]["placeholders"] == [placeholder_object]
 
 
-def test_split_text_with_placeholders_multiple(placeholder_obj):
+def test_split_text_with_placeholders_multiple(placeholder_object):
     """Test splitting text with multiple paragraphs and placeholders."""
-    input_obj = {"text": "<p>Hi {first_name}</p><p>Again {first_name}</p>", "placeholders": [placeholder_obj]}
-    result = split_paragraphs_with_placeholders(input_obj)
+    input_object = {"text": "<p>Hi {first_name}</p><p>Again {first_name}</p>", "placeholders": [placeholder_object]}
+    result = split_paragraphs_with_placeholders(input_object)
     assert len(result) == 2
     for item in result:
         assert isinstance(item, dict)
         assert "placeholders" in item
-        assert item["placeholders"] == [placeholder_obj]
+        assert item["placeholders"] == [placeholder_object]
 
 
 @pytest.mark.parametrize(
@@ -398,18 +398,21 @@ def test_process_string_single_vs_multiple(input_text, expected):
     assert process_string(input_text) == expected
 
 
-def test_process_text_object_with_paragraphs(placeholder_obj):
+def test_process_text_object_with_paragraphs(placeholder_object):
     """Test processing a text object with paragraphs and placeholders."""
-    obj = {"text": "<p>Welcome {first_name}</p><p>Again {first_name}</p>", "placeholders": [placeholder_obj]}
-    result = process_placeholder(obj)
+    input_object = {
+        "text": "<p>Welcome {first_name}</p><p>Again {first_name}</p>",
+        "placeholders": [placeholder_object],
+    }
+    result = process_placeholder(input_object)
     assert len(result) == 2
     assert all("text" in item for item in result)
 
 
-def test_process_text_object_without_paragraphs(placeholder_obj):
+def test_process_text_object_without_paragraphs(placeholder_object):
     """Test processing a text object without paragraphs."""
-    obj = {"text": "Plain text with <b>bold</b>", "placeholders": [placeholder_obj]}
-    result = process_placeholder(obj)
+    input_object = {"text": "Plain text with <b>bold</b>", "placeholders": [placeholder_object]}
+    result = process_placeholder(input_object)
     assert isinstance(result, dict)
     assert result["text"] == "Plain text with <strong>bold</strong>"
 
@@ -427,10 +430,10 @@ def test_process_element_string():
     assert process_item("Simple") == "Simple"
 
 
-def test_process_element_text_object(placeholder_obj):
+def test_process_element_text_object(placeholder_object):
     """Test processing a text object with placeholders."""
-    obj = {"text": "<p>Hello {first_name}</p>", "placeholders": [placeholder_obj]}
-    result = process_item(obj)
+    input_object = {"text": "<p>Hello {first_name}</p>", "placeholders": [placeholder_object]}
+    result = process_item(input_object)
     assert isinstance(result, list)
     assert len(result) == 1
     assert isinstance(result[0], dict)
@@ -438,12 +441,12 @@ def test_process_element_text_object(placeholder_obj):
     assert result[0]["text"] == "Hello {first_name}"
 
 
-def test_process_element_list(placeholder_obj):
+def test_process_element_list(placeholder_object):
     """Test processing a list with mixed content."""
     data = [
         {"description": "<p>Item1</p><p>Item2</p>"},
         "Some text",
-        {"text": "<p>With {first_name}</p>", "placeholders": [placeholder_obj]},
+        {"text": "<p>With {first_name}</p>", "placeholders": [placeholder_object]},
     ]
     result = process_item(data)
 
@@ -456,22 +459,22 @@ def test_process_element_list(placeholder_obj):
 
 def test_process_element_dict():
     """Test processing a dictionary with mixed content."""
-    obj = {"a": "<p>One</p>", "b": "plain"}
-    result = process_item(obj)
+    input_object = {"a": "<p>One</p>", "b": "plain"}
+    result = process_item(input_object)
     assert result == {"a": "One", "b": "plain"}
 
 
 def test_split_text_with_placeholders_empty_paragraph_skipped():
     """Test that empty paragraphs are skipped in the output."""
-    input_obj = {"text": "<p></p><p>Hello</p>", "placeholders": []}
-    result = split_paragraphs_with_placeholders(input_obj)
+    input_object = {"text": "<p></p><p>Hello</p>", "placeholders": []}
+    result = split_paragraphs_with_placeholders(input_object)
     assert result == ["Hello"]
 
 
 def test_split_text_with_placeholders_no_placeholders():
     """Test splitting text with no placeholders."""
-    input_obj = {"text": "<p>Hello world</p>", "placeholders": []}
-    result = split_paragraphs_with_placeholders(input_obj)
+    input_object = {"text": "<p>Hello world</p>", "placeholders": []}
+    result = split_paragraphs_with_placeholders(input_object)
     assert result == ["Hello world"]
 
 
