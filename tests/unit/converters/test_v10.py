@@ -411,10 +411,10 @@ def test_process_text_object_with_paragraphs(placeholder_object):
 
 def test_process_text_object_without_paragraphs(placeholder_object):
     """Test processing a text object without paragraphs."""
-    input_object = {"text": "Plain text with <b>bold</b>", "placeholders": [placeholder_object]}
+    input_object = {"text": "Hello <b>{first_name}</b>", "placeholders": [placeholder_object]}
     result = process_placeholder(input_object)
     assert isinstance(result, dict)
-    assert result["text"] == "Plain text with <strong>bold</strong>"
+    assert result["text"] == "Hello <strong>{first_name}</strong>"
 
 
 def test_process_list_with_dict_and_string():
