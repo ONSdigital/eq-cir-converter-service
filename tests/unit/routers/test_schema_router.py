@@ -95,7 +95,7 @@ def test_schema_router_post(
 def test_convert_schema_http_exception(test_client: TestClient) -> None:
     """Test the convert schema method with an HTTPException."""
     with patch(
-        "eq_cir_converter_service.services.schema.schema_processor_service.convert_schema",
+        "eq_cir_converter_service.services.schema.schema_processor.process_schema",
         side_effect=HTTPException(status_code=400, detail="Mocked HTTPException"),
     ) as mock_convert_schema:
         response = test_client.post(

@@ -12,18 +12,18 @@ logger = get_logger()
 
 
 # --- Schema Conversion Service ---
-def convert_schema(current_version: str, target_version: str, schema: Schema) -> Schema:
-    """Converts the schema from the current to the target version.
+def process_schema(current_version: str, target_version: str, schema: Schema) -> Schema:
+    """Processes the schema and converts from the current to the target version if required.
 
     Parameters:
     - current_version: The current version of the schema.
     - target_version: The target version of the schema.
-    - schema: The schema to convert.
+    - schema: The schema to process.
 
     Returns:
-    - dict: The converted schema.
+    - dict: The processed schema.
     """
-    logger.debug("Converting the schema...")
+    logger.debug("Processing the schema...")
 
     logger.debug("Current version:", current_version=current_version)
     logger.debug("Target version:", target_version=current_version)
@@ -32,15 +32,16 @@ def convert_schema(current_version: str, target_version: str, schema: Schema) ->
 
     logger.debug("Input schema:", input_schema=input_schema)
 
-    logger.debug("Extractable strings for conversion to version 10.0.0:", paths=PATHS)
-
-    # If the target version is 10 transform the schema
     if target_version == "10.0.0":
         logger.debug("Converting schema to version 10.0.0...")
+        logger.debug("Extractable strings for conversion to version 10.0.0:", paths=PATHS)
+
         output_schema = convert_to_v10(input_schema, PATHS)
+
         logger.info("Schema converted successfully")
+
         return output_schema
-    # For other versions do not apply conversion
+
     logger.info("No conversions needed for target version, using input schema as is", target_version=target_version)
 
     logger.debug("Output schema:", output_schema=input_schema)

@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, status
 from structlog import get_logger
 
 from eq_cir_converter_service.exception import exception_messages
-from eq_cir_converter_service.services.schema import schema_processor_service
+from eq_cir_converter_service.services.schema import schema_processor
 from eq_cir_converter_service.types.custom_types import Schema
 from eq_cir_converter_service.utils.helper_utils import validate_version
 
@@ -81,7 +81,7 @@ async def post_schema(
         )
         logger.debug("Converting schema:", schema=schema)
         # Call the schema processor service to convert the schema
-        return schema_processor_service.convert_schema(current_version, target_version, schema)
+        return schema_processor.process_schema(current_version, target_version, schema)
 
     except HTTPException as exc:
         logger.exception("An exception occurred while processing the schema", exc_info=exc)
