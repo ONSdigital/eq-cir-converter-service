@@ -75,11 +75,11 @@ async def post_schema(
 
     try:
         logger.debug(
-            "Converting the schema from current version to target version ",
+            "Processing the schema using current version and target version ",
             current_version=current_version,
             target_version=target_version,
         )
-        logger.debug("Converting schema:", schema=schema)
+        logger.debug("Processing schema:", schema=schema)
         # Call the schema processor service to convert the schema
         return schema_processor.process_schema(current_version, target_version, schema)
 

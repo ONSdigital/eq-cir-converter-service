@@ -39,11 +39,13 @@ def convert_to_v10(schema: Schema, paths: list[str]) -> Schema:
             # The result of JsonPath.find provides detailed "context" and "path data", making use of both
             context = extracted_value.context.value
             path_data = extracted_value.path
-            # Process the context based on its type (list), index only appears if the context is a list, it increases
-            # as we loop through the list
+            # When jsonpath finds multiple results for a given path, process the list of contexts
+            # Process the context based on its type (list of dicts), index only appears if the context is a list,
+            # it increases as we loop through the list
             if (index := getattr(path_data, "index", None)) is not None:
                 process_context_list(context, index)
-            # Process the context based on its type (dict)
+            # When jsonpath finds single result for a given path (e.g. "$.title", can only have one survey title)
+            # Process the single context found, based on its type (dict)
             elif isinstance(context, dict) and (key := path_data.fields[0] if hasattr(path_data, "fields") else None):
                 process_context_dict(context, key)
 

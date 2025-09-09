@@ -64,7 +64,7 @@
 
                 "description": [
                   "If you are planning to take your test but have not yet done so, please exit the questionnaire and return when you have taken it.",
-                  "If the test result was void, please take another test."
+                  "<p>If the test result was void, please take another test.</p>"
                 ],
                 "type": "General",
                 "answers": [
