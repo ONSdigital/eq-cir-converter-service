@@ -1,7 +1,6 @@
 """paths based on extractable strings from eq-questionnaire-validator.
 
-This module defines a list of paths and their descriptions for extracting
-strings from eq-questionnaire-validator.
+This module defines a list of paths of items to process.
 """
 
 PATHS = [
