@@ -22,6 +22,19 @@ PlaceholdersDict = dict[str, str | list | object]
 def convert_to_v10(schema: Schema, paths: list[str]) -> Schema:
     """Transforms the schema dictionary based on the provided JSONPath expressions.
 
+    Following steps are performed:
+    1. Create a deep copy of the input schema to avoid mutating the original.
+    2. Iterate over each JSONPath expression in the paths list.
+    3. For each path, use the jsonpath-ng library to find all matching elements
+    in the schema.
+    4. For each matched element, retrieve the context (the parent structure) and
+    the path data (information about the matched element).
+    5. Return a single context or list of contexts (e.g. "$.title",
+    can only return one survey title, so a single context returned but "$..question.description[*]"
+    will likely return multiple contexts, depending on schema structure),
+    6. Process the element accordingly using helper functions.
+    7. Finally, return the transformed schema.
+
     Parameters:
     - schema: The input schema to transform.
     - paths: A list containing JSONPath paths to look for.
@@ -32,18 +45,11 @@ def convert_to_v10(schema: Schema, paths: list[str]) -> Schema:
     transformed_schema = deepcopy(schema)
     for path in paths:
         jsonpath_expression = parse(path)
-        # Extracting and looping through values using JsonPath
         for extracted_value in jsonpath_expression.find(transformed_schema):
-            # The result of JsonPath.find provides detailed "context" and "path data", making use of both
             context = extracted_value.context.value
             path_data = extracted_value.path
-            # When jsonpath finds multiple results for a given path, process the list of contexts
-            # Process the context based on its type (list of dicts), index only appears if the context is a list,
-            # it increases as we loop through the list
             if (index := getattr(path_data, "index", None)) is not None:
                 process_context_list(context, index)
-            # When jsonpath finds single result for a given path (e.g. "$.title", can only have one survey title)
-            # Process the single context found, based on its type (dict)
             elif isinstance(context, dict) and (key := path_data.fields[0] if hasattr(path_data, "fields") else None):
                 process_context_dict(context, key)
 
