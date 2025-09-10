@@ -11,7 +11,6 @@ from eq_cir_converter_service.types.custom_types import Schema
 logger = get_logger()
 
 
-# --- Schema Conversion Service ---
 def process_schema(current_version: str, target_version: str, schema: Schema) -> Schema:
     """Processes the schema and converts from the current to the target version if required.
 

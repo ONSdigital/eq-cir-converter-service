@@ -2,15 +2,12 @@
 
 import re
 from collections import Counter
-from collections.abc import Sequence
 from copy import deepcopy
-from typing import Any
 
 from jsonpath_ng.ext import parse
 
 from eq_cir_converter_service.types.custom_types import Schema
 
-# --- Regular Expressions ---
 # Compiled regular expressions for HTML tag processing
 REGEX_B_OPEN = re.compile(r"<\s*b\s*>", flags=re.IGNORECASE)
 REGEX_B_CLOSE = re.compile(r"<\s*/\s*b\s*>", flags=re.IGNORECASE)
@@ -22,7 +19,6 @@ REGEX_PLACEHOLDER = re.compile(r"\{(.*?)}", flags=re.IGNORECASE)
 PlaceholdersDict = dict[str, str | list | object]
 
 
-# --- JSONPath-Based Transformation ---
 def convert_to_v10(schema: Schema, paths: list[str]) -> Schema:
     """Transforms the schema dictionary based on the provided JSONPath expressions.
 
@@ -54,7 +50,6 @@ def convert_to_v10(schema: Schema, paths: list[str]) -> Schema:
     return transformed_schema
 
 
-# --- HTML Tag Processing ---
 def get_sanitised_text(text: str) -> str:
     """Cleans HTML tags from the text, replacing <b> with <strong> and removing <br> and <p> tags.
 
@@ -73,7 +68,6 @@ def get_sanitised_text(text: str) -> str:
     ).strip()
 
 
-# --- Paragraph Extraction ---
 def split_paragraphs_into_list(paragraphs_string: str) -> list[str]:
     """Extracts paragraphs from string, returning a list of cleaned paragraph strings.
 
@@ -85,7 +79,6 @@ def split_paragraphs_into_list(paragraphs_string: str) -> list[str]:
     return [paragraph.strip() for paragraph in paragraphs if paragraph.strip()]
 
 
-# --- Placeholder Extraction ---
 def extract_placeholder_names_from_text_field(text: str) -> list[str]:
     """Extracts placeholders from the text, returning a list of placeholder names.
 
@@ -95,7 +88,6 @@ def extract_placeholder_names_from_text_field(text: str) -> list[str]:
     return REGEX_PLACEHOLDER.findall(text)
 
 
-# --- Handle "text" with "placeholders" ---
 def split_paragraphs_with_placeholders(
     placeholders_dict: PlaceholdersDict,
 ) -> list[str | PlaceholdersDict]:
@@ -188,7 +180,6 @@ def split_paragraphs_with_placeholders(
     return output_paragraphs
 
 
-# --- Helper Functions for process_element ---
 def process_string(string: str) -> str | list[str]:
     """Processes a string, cleaning HTML tags and splitting into paragraphs if necessary.
 
@@ -220,13 +211,13 @@ def process_placeholder(
     return placeholders_dict
 
 
-def process_list(list_items: Sequence[str | Sequence[Any] | dict]) -> list[str | list | object]:
+def process_list(list_items: list[str | list | dict]) -> list[str | list | dict]:
     """Processes a list of elements, cleaning HTML tags and extracting paragraphs from text objects.
 
     :param list_items: A sequence of strings, lists, or dictionaries to process.
     :return: A list of processed elements, which may include cleaned strings or lists of paragraphs.
     """
-    transformed_list: list[str | list | object] = []
+    transformed_list: list[str | list | dict] = []
 
     for item in list_items:
         if isinstance(item, dict):
@@ -249,11 +240,10 @@ def process_list(list_items: Sequence[str | Sequence[Any] | dict]) -> list[str |
     return transformed_list
 
 
-# --- Recursive Processor ---
-def process_item(item: str | list | object) -> str | list | object:
-    """Recursively processes an item, handling strings, placeholders object, lists, and dictionaries.
+def process_item(item: str | list | dict) -> str | list | dict:
+    """Recursively processes an item, handling strings, lists, and dictionaries.
 
-    :param item: The item to process, which can be a string, placeholders object, list, or dictionary.
+    :param item: The item to process, which can be a string, list, or dictionary.
     :return: The processed item, which may be a cleaned string, a list of paragraphs, or a dictionary.
     """
     if isinstance(item, str):
@@ -262,7 +252,7 @@ def process_item(item: str | list | object) -> str | list | object:
         if "text" in item:
             return process_placeholder(item)
         return {key: process_item(value) for key, value in item.items()}
-    return process_list(item) if isinstance(item, list) else item
+    return process_list(item)
 
 
 def process_context_dict(context: dict, key: str) -> None:

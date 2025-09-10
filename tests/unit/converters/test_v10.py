@@ -256,14 +256,18 @@ def test_transform_json_schema_with_mixed_types(placeholder_object):
     assert info_objects[0]["info"] == ["Info1", "Info2"]
 
 
-def test_transform_json_schema_bad_types():
-    """Test transformation with bad types."""
-    data = {"items": [123, None, True, {"text": "<p>Test</p>"}]}
-    paths = ["items[*]"]
-    result = convert_to_v10(data, paths)
-
-    assert isinstance(result["items"], list)
-    assert result["items"] == [123, None, True, "Test"]
+@pytest.mark.parametrize(
+    "input_data",
+    [
+        {"items": [123, {"text": "<p>Test</p>"}]},
+        {"items": [None, {"text": "<p>Test</p>"}]},
+        {"items": [True, {"text": "<p>Test</p>"}]},
+    ],
+)
+def test_transform_json_schema_bad_types(input_data):
+    """Test transformation with bad types and raw types."""
+    with pytest.raises(TypeError):
+        convert_to_v10({"items": input_data}, ["items[*]"])
 
 
 def test_transform_json_schema_placeholder_with_multiple_paragraphs_description():
@@ -516,12 +520,6 @@ def test_process_list_single_vs_multiple(input_list, expected):
 def test_process_element_single_vs_multiple(input_data, expected):
     """Test processing an element that may expand to single or multiple paragraphs."""
     assert process_item(input_data) == expected
-
-
-def test_process_element_returns_raw_types():
-    """Test that process_element returns raw types without modification."""
-    assert process_item(42) == 42
-    assert process_item(None) is None
 
 
 def test_process_strings_in_complex_objects():
