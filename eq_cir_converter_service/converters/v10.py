@@ -19,6 +19,8 @@ REGEX_BR_TAGS = re.compile(r"</?br>", flags=re.IGNORECASE)
 REGEX_PARAGRAPH_SPLIT = re.compile(r"<p>(.*?)</p>", flags=re.IGNORECASE | re.DOTALL)
 REGEX_PLACEHOLDER = re.compile(r"\{(.*?)}", flags=re.IGNORECASE)
 
+PlaceholdersDict = dict[str, str | list | object]
+
 
 # --- JSONPath-Based Transformation ---
 def convert_to_v10(schema: Schema, paths: list[str]) -> Schema:
@@ -95,8 +97,8 @@ def extract_placeholder_names_from_text_field(text: str) -> list[str]:
 
 # --- Handle "text" with "placeholders" ---
 def split_paragraphs_with_placeholders(
-    placeholders_dict: dict[str, str | list | object],
-) -> list[str | dict[str, str | list | object]]:
+    placeholders_dict: PlaceholdersDict,
+) -> list[str | PlaceholdersDict]:
     """Splits the 'text' field in the text_obj into paragraphs, cleaning HTML tags and extracting placeholders.
 
     Following steps are performed:
@@ -273,6 +275,8 @@ def process_context_list(context: list, index: int) -> None:
     processed_item = process_item(context[index])
     if isinstance(processed_item, list):
         # Replaces the slice of a list (context) with the value of "processed" to accommodate placeholder objects
+        # Multi paragraphs single element replaced with the actual multiple elements after processing
+        # from index of the original element onwards
         context[index : index + 1] = processed_item
     else:
         context[index] = processed_item

@@ -15,6 +15,9 @@ def validate_version(version: str, version_type: str) -> None:
     Parameters:
     - version: The version to validate.
     - version_type: The type of version (current or target).
+
+    Raises:
+    - HTTPException: If the version is invalid.
     """
     try:
         VersionInfo.parse(version)
