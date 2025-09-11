@@ -23,17 +23,16 @@ def convert_to_v10(schema: Schema, paths: list[str]) -> Schema:
     """Transforms the schema dictionary based on the provided JSONPath expressions.
 
     Following steps are performed:
-    1. Create a deep copy of the input schema to avoid mutating the original.
-    2. Iterate over each JSONPath expression in the paths list.
-    3. For each path, use the jsonpath-ng library to find all matching elements
+    1. Iterate over each JSONPath expression in the paths list.
+    2. For each path, use the jsonpath-ng library to find all matching elements
     in the schema.
-    4. For each matched element, retrieve the context (the parent structure) and
+    3. For each matched element, retrieve the context (the parent structure) and
     the path data (information about the matched element).
-    5. Return a single context or list of contexts (e.g. "$.title",
+    4. Return a single context or list of contexts (e.g. "$.title",
     can only return one survey title, so a single context returned but "$..question.description[*]"
     will likely return multiple contexts, depending on schema structure),
-    6. Process the element accordingly using helper functions.
-    7. Finally, return the transformed schema.
+    5. Process the element accordingly using helper functions.
+    6. Finally, return the transformed schema.
 
     Parameters:
     - schema: The input schema to transform.
@@ -42,18 +41,17 @@ def convert_to_v10(schema: Schema, paths: list[str]) -> Schema:
     Returns:
     - A new schema with the transformations applied.
     """
-    transformed_schema = deepcopy(schema)
     for path in paths:
         jsonpath_expression = parse(path)
-        for extracted_value in jsonpath_expression.find(transformed_schema):
+        for extracted_value in jsonpath_expression.find(schema):
             context = extracted_value.context.value
             path_data = extracted_value.path
-            if (index := getattr(path_data, "index", None)) is not None:
-                process_context_list(context, index)
-            elif isinstance(context, dict) and (key := path_data.fields[0] if hasattr(path_data, "fields") else None):
-                process_context_dict(context, key)
+            if hasattr(path_data, "index"):
+                process_context_list(context, path_data.index)
+            elif hasattr(path_data, "fields"):
+                process_context_dict(context, path_data.fields[0])
 
-    return transformed_schema
+    return schema
 
 
 def get_sanitised_text(text: str) -> str:
@@ -195,15 +193,15 @@ def process_string(string: str) -> str | list[str]:
     if REGEX_PARAGRAPH_SPLIT.search(string):
         # If the text contains <p> tags, split into paragraphs
         # and clean each paragraph
-        paragraphs = [get_sanitised_text(paragraph).strip() for paragraph in split_paragraphs_into_list(string)]
+        paragraphs = [get_sanitised_text(paragraph) for paragraph in split_paragraphs_into_list(string)]
         # Return string if only one paragraph
         return paragraphs[0] if len(paragraphs) == 1 else paragraphs
-    return get_sanitised_text(string).strip()
+    return get_sanitised_text(string)
 
 
 def process_placeholder(
-    placeholders_dict: dict[str, str | list | object],
-) -> dict[str, str | list | object] | list[str | dict[str, str | list | object]]:
+    placeholders_dict: PlaceholdersDict,
+) -> PlaceholdersDict | list[str | PlaceholdersDict]:
     """Processes a placeholder object, cleaning HTML tags and extracting paragraphs with placeholders.
 
     :param placeholders_dict: A dictionary containing 'text' and possibly 'placeholders'.
