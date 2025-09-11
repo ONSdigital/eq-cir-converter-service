@@ -18,7 +18,7 @@ REGEX_PLACEHOLDER = re.compile(r"\{(.*?)}", flags=re.IGNORECASE)
 PlaceholdersDict = dict[str, str | list | object]
 
 
-def convert_to_v10(schema: Schema, paths: list[str]) -> Schema:
+def convert_to_v10(schema: Schema, jsonpaths: list[str]) -> Schema:
     """Transforms the schema dictionary based on the provided JSONPath expressions.
 
     Following steps are performed:
@@ -28,28 +28,28 @@ def convert_to_v10(schema: Schema, paths: list[str]) -> Schema:
     3. For each matched element, retrieve the context (the parent structure) and
     the path data (information about the matched element).
     4. Return a single context or list of contexts (e.g. "$.title",
-    can only return one survey title, so a single context returned but "$..question.description[*]"
-    will likely return multiple contexts, depending on schema structure),
+    can only return one survey title, so a single context but "$..question.description[*]"
+    will likely return multiple elements, depending on schema structure),
     5. Process the element accordingly using helper functions.
     6. Finally, return the transformed schema.
 
     Parameters:
     - schema: The input schema to transform.
-    - paths: A list containing JSONPath paths to look for.
+    - jsonpaths: A list containing JSONPath paths to look for.
 
     Returns:
     - A new schema with the transformations applied.
     """
-    for path in paths:
-        jsonpath_expression = parse(path)
-        for extracted_value in jsonpath_expression.find(schema):
-            context = extracted_value.context.value
-            path_data = extracted_value.path
-            if hasattr(path_data, "index"):
-                process_context_list(context, path_data.index)
-            elif hasattr(path_data, "fields"):
-                key = path_data.fields[0]
-                context[key] = process_item(context[key])
+    for jsonpath in jsonpaths:
+        jsonpath_expression = parse(jsonpath)
+        for match in jsonpath_expression.find(schema):
+            matched_context = match.context.value
+            matched_path = match.path
+            if hasattr(matched_path, "index"):
+                process_context_list(matched_context, matched_path.index)
+            elif hasattr(matched_path, "fields"):
+                key = matched_path.fields[0]
+                matched_context[key] = process_item(matched_context[key])
 
     return schema
 
@@ -263,7 +263,8 @@ def process_context_list(context: list, index: int) -> None:
     """Processes a list context by updating or expanding the value at the given index.
 
     Replaces the slice of a list (context) with the value of "processed" to accommodate placeholder objects.
-    Multi-paragraphs single element replaced with the actual multiple elements after processing from index of the original element onwards.
+    Multi-paragraphs single element replaced with the actual multiple elements after processing from
+    index of the original element onwards.
     Parameters:
     - context: The list context to process.
     - index: The index of the item in the list to process.
