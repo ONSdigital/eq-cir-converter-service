@@ -2,7 +2,6 @@
 
 import re
 from collections import Counter
-from copy import deepcopy
 
 from jsonpath_ng.ext import parse
 
@@ -172,7 +171,7 @@ def split_paragraphs_with_placeholders(
 
             if paragraphs_with_placeholders_definitions:
                 paragraphs_with_matching_placeholders.extend(
-                    deepcopy(paragraphs_with_placeholders_definitions[0]) for _ in range(count)
+                    paragraphs_with_placeholders_definitions[0] for _ in range(count)
                 )
         if paragraphs_with_matching_placeholders:
             output_paragraphs.append(
@@ -211,7 +210,7 @@ def process_placeholder(
         # If the text contains <p> tags, split into paragraphs
         # and clean each paragraph, extracting placeholders
         return split_paragraphs_with_placeholders(placeholders_dict)
-    placeholders_dict["text"] = get_sanitised_text(str(placeholders_dict["text"])).strip()
+    placeholders_dict["text"] = get_sanitised_text(str(placeholders_dict["text"]))
     return placeholders_dict
 
 
