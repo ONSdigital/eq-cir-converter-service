@@ -48,7 +48,8 @@ def convert_to_v10(schema: Schema, paths: list[str]) -> Schema:
             if hasattr(path_data, "index"):
                 process_context_list(context, path_data.index)
             elif hasattr(path_data, "fields"):
-                process_context_dict(context, path_data.fields[0])
+                key = path_data.fields[0]
+                context[key] = process_item(context[key])
 
     return schema
 
@@ -258,18 +259,17 @@ def process_item(item: str | list | dict) -> str | list | dict:
     return process_list(item)
 
 
-def process_context_dict(context: dict, key: str) -> None:
-    """Processes a dictionary context by updating the value at the given key."""
-    context[key] = process_item(context[key])
-
-
 def process_context_list(context: list, index: int) -> None:
-    """Processes a list context by updating or expanding the value at the given index."""
+    """Processes a list context by updating or expanding the value at the given index.
+
+    Replaces the slice of a list (context) with the value of "processed" to accommodate placeholder objects.
+    Multi-paragraphs single element replaced with the actual multiple elements after processing from index of the original element onwards.
+    Parameters:
+    - context: The list context to process.
+    - index: The index of the item in the list to process.
+    """
     processed_item = process_item(context[index])
     if isinstance(processed_item, list):
-        # Replaces the slice of a list (context) with the value of "processed" to accommodate placeholder objects
-        # Multi paragraphs single element replaced with the actual multiple elements after processing
-        # from index of the original element onwards
         context[index : index + 1] = processed_item
     else:
         context[index] = processed_item
