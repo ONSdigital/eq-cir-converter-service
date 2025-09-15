@@ -109,7 +109,7 @@ def test_convert_schema_http_exception(test_client: TestClient) -> None:
         }
 
         mock_convert_schema.assert_called_with(
-            DEFAULT_CURRENT_VERSION,
-            DEFAULT_TARGET_VERSION,
-            DEFAULT_RESPONSE_JSON,
+            current_version=DEFAULT_CURRENT_VERSION,
+            target_version=DEFAULT_TARGET_VERSION,
+            input_schema=DEFAULT_RESPONSE_JSON,
         )
