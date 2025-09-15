@@ -11,13 +11,13 @@ from eq_cir_converter_service.types.custom_types import Schema
 logger = get_logger()
 
 
-def process_schema(current_version: str, target_version: str, schema: Schema) -> Schema:
+def process_schema(*, current_version: str, target_version: str, input_schema: Schema) -> Schema:
     """Processes the schema and converts from the current to the target version if required.
 
     Parameters:
     - current_version: The current version of the schema.
     - target_version: The target version of the schema.
-    - schema: The schema to process.
+    - input_schema: The schema to process.
 
     Returns:
     - dict: The processed schema.
@@ -26,8 +26,6 @@ def process_schema(current_version: str, target_version: str, schema: Schema) ->
 
     logger.debug("Current version:", current_version=current_version)
     logger.debug("Target version:", target_version=target_version)
-
-    input_schema = dict(schema)
 
     logger.debug("Input schema:", input_schema=input_schema)
 

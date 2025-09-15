@@ -81,7 +81,11 @@ async def post_schema(
         )
         logger.debug("Processing schema:", schema=schema)
         # Call the schema processor service to convert the schema
-        return schema_processor.process_schema(current_version, target_version, schema)
+        return schema_processor.process_schema(
+            current_version=current_version,
+            target_version=target_version,
+            input_schema=schema,
+        )
 
     except HTTPException as exc:
         logger.exception("An exception occurred while processing the schema", exc_info=exc)
