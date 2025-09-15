@@ -25,7 +25,7 @@ def process_schema(current_version: str, target_version: str, schema: Schema) ->
     logger.debug("Processing the schema...")
 
     logger.debug("Current version:", current_version=current_version)
-    logger.debug("Target version:", target_version=current_version)
+    logger.debug("Target version:", target_version=target_version)
 
     input_schema = dict(schema)
 
