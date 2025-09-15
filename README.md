@@ -53,39 +53,39 @@ Ensure you have the following installed:
 
 1. Clone the repository and install the required dependencies.
 
-    ```bash
-    git clone https://github.com/ONSdigital/eq-cir-converter-service.git
-    ```
+   ```bash
+   git clone https://github.com/ONSdigital/eq-cir-converter-service.git
+   ```
 
 2. Install dependencies
 
-    [Poetry](https://python-poetry.org/) is used to manage dependencies in this project. For more information, read
-    the [Poetry documentation](https://python-poetry.org/).
+   [Poetry](https://python-poetry.org/) is used to manage dependencies in this project. For more information, read
+   the [Poetry documentation](https://python-poetry.org/).
 
-    To install all dependencies, including development dependencies, run:
+   To install all dependencies, including development dependencies, run:
 
-    ```bash
-    make install-dev
-    ```
+   ```bash
+   make install-dev
+   ```
 
-    To install only production dependencies, run:
+   To install only production dependencies, run:
 
-    ```bash
-    make install
-    ```
+   ```bash
+   make install
+   ```
 
 3. Set the environment variable LOG_LEVEL.
    It can be set to INFO, DEBUG, WARN, ERROR - if not set, it will be set to INFO by default.
 
-    ```bash
-    make set-env-var
-    ```
+   ```bash
+   make set-env-var
+   ```
 
 4. Run the application
 
-    ```bash
-    make run
-    ```
+   ```bash
+   make run
+   ```
 
 ## Development
 
