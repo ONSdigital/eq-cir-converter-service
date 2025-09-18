@@ -1,0 +1,221 @@
+{
+  "language": "en",
+  "mime_type": "application/json/ons/eq",
+  "schema_version": "0.0.1",
+  "data_version": "0.0.1",
+  "survey_id": "738",
+  "form_type": "0001",
+  "title": "Winter CIS - follow-up questionnaire",
+  "questionnaire_flow": {
+    "type": "Linear",
+    "options": {}
+  },
+  "sections": [
+    {
+      "id": "11179ce0-85b4-4fc7-9df5-ec105c37996e",
+      "title": "Your test results",
+      "summary": {
+        "show_on_completion": false,
+        "collapsible": false
+      },
+      "show_on_hub": false,
+      "groups": [
+        {
+          "id": "group11179ce0-85b4-4fc7-9df5-ec105c37996e",
+          "blocks": [
+            {
+              "type": "Interstitial",
+              "id": "intro",
+              "page_title": "Intro",
+              "content": {
+                "title": "<b>Your test results</b>",
+                "contents": [
+                  {
+                    "description": "<strong>This section will ask about all your follow-up lateral flow test results.</strong><br><br>"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "3842563e-8b42-46d0-a5e2-330f8f91cbe2",
+              "type": "Question",
+              "question": {
+                "id": "question3842563e-8b42-46d0-a5e2-330f8f91cbe2",
+                "title": {
+                  "text": "Have you successfully taken your first follow-up lateral flow test before the {window_close_date}?",
+                  "placeholders": [
+                    {
+                      "placeholder": "window_close_date",
+                      "transforms": [
+                        {
+                          "transform": "format_date",
+                          "arguments": {
+                            "date_to_format": {
+                              "source": "metadata",
+                              "identifier": "WINDOW_CLOSE_DATE"
+                            },
+                            "date_format": "d MMMM yyyy"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+
+                "description": [
+                  "If you are planning to take your test but have not yet done so, please exit the questionnaire and return when you have taken it.",
+                  "<p>If the test result was void, please take another test.</p>"
+                ],
+                "type": "General",
+                "answers": [
+                  {
+                    "id": "answer3842563e-8b42-46d0-a5e2-330f8f91cbe2",
+                    "mandatory": true,
+                    "type": "Radio",
+                    "q_code": "WCIS-FUP-LF1-001",
+                    "options": [
+                      {
+                        "label": "Yes",
+                        "value": "Yes"
+                      },
+                      {
+                        "label": "No - I have run out of useable lateral flow tests",
+                        "value": "No - I have run out of useable lateral flow tests"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "page_title": "First lateral lateral flow test taken - Winter CIS follow-up"
+            },
+            {
+              "id": "c8313143-4463-42ce-ab98-9e76dd470cd1",
+              "type": "Question",
+              "question": {
+                "id": "questionc8313143-4463-42ce-ab98-9e76dd470cd1",
+                "title": {
+                  "text": "<p>Thank you for letting us know about your first follow-up lateral flow test before the {window_close_date}</p>",
+                  "placeholders": [
+                    {
+                      "placeholder": "window_close_date",
+                      "transforms": [
+                        {
+                          "transform": "format_date",
+                          "arguments": {
+                            "date_to_format": {
+                              "source": "metadata",
+                              "identifier": "WINDOW_CLOSE_DATE"
+                            },
+                            "date_format": "d MMMM yyyy"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "description": [
+                  "<strong>Please keep testing until you have two negative test results in a row.</strong>",
+                  "- To <b>report your next follow-up lateral flow test</b> result, please select &quot;Report next test result&quot;",
+                  "- If you have <strong>not taken your next lateral flow test yet</strong>, please exit the questionnaire using &quot;Save and exit survey&quot; at the top of this page. You will return to this page when you next access the questionnaire to enter your next test result.",
+                  "Only select &quot;Continue to symptoms section&quot; if your <strong>testing window is closing</strong> or you have <strong>run out of lateral flow tests</strong>. Once you move onto the symptoms section, you cannot enter any more follow-up lateral flow test results in this questionnaire.",
+                  {
+                    "text": "<p>Your testing window closing date for this follow-up questionnaire is {window_close_date}.</p><p>If you have not taken your next lateral flow test by this date, you will not be able to report any further follow-up lateral flow test results in this questionnaire.</p><p>Your testing window started on {window_start_date} and lasts for 14 days.</p><p>These two dates are very important: {window_start_date} to {window_close_date}.</p>",
+                    "placeholders": [
+                      {
+                        "placeholder": "window_close_date",
+                        "transforms": [
+                          {
+                            "transform": "format_date",
+                            "arguments": {
+                              "date_to_format": {
+                                "source": "metadata",
+                                "identifier": "WINDOW_CLOSE_DATE"
+                              },
+                              "date_format": "d MMMM yyyy"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "placeholder": "window_start_date",
+                        "transforms": [
+                          {
+                            "transform": "format_date",
+                            "arguments": {
+                              "date_to_format": {
+                                "source": "metadata",
+                                "identifier": "WINDOW_START_DATE"
+                              },
+                              "date_format": "d MMMM yyyy"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "type": "General",
+                "answers": [
+                  {
+                    "id": "answerc8313143-4463-42ce-ab98-9e76dd470cd1",
+                    "mandatory": true,
+                    "type": "Radio",
+                    "q_code": "WCIS-FUP-LF1-005",
+                    "options": [
+                      {
+                        "label": "Report next test result",
+                        "value": "Report next test result"
+                      },
+                      {
+                        "label": "Continue to symptoms section",
+                        "value": "Continue to symptoms section",
+                        "description": "if you have run out of tests or your testing window is closing"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "page_title": "First follow-up lateral flow test thank you - Winter CIS follow-up"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "theme": "ukhsa-ons",
+  "navigation": {
+    "visible": false
+  },
+  "metadata": [
+    {
+      "name": "WINDOW_CLOSE_DATE",
+      "type": "date"
+    },
+    {
+      "name": "WINDOW_START_DATE",
+      "type": "date"
+    }
+  ],
+  "post_submission": {
+    "feedback": true,
+    "view_response": false,
+    "guidance": {
+      "contents": [
+        {
+          "description": "<strong>If another household member wants to start their questionnaire using the same device</strong><br>"
+        },
+        {
+          "description": "You will need to click the &quot;leave this page&quot; link below."
+        },
+        {
+          "description": "They will then need to log in using their unique 16 character access code in the email or letter they were sent."
+        }
+      ]
+    }
+  },
+  "submission": {
+    "button": "Submit",
+    "title": "Submit your questionnaire",
+    "warning": "You cannot view your answers after submission"
+  }
+}
