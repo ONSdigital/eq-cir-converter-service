@@ -9,23 +9,23 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12.6"
-fastapi = "^0.116.1"
-uvicorn = "^0.34.2"
+fastapi = "^0.118.0"
+uvicorn = "^0.37.0"
 semver = "^3.0.4"
 jsonpath-ng = "^1.7.0"
-starlette = "^0.47.2"
+starlette = "^0.48.0"
 structlog = "^25.4.0"
 
 [tool.poetry.group.dev.dependencies]
 # :TODO: Remove pylint when ruff supports all pylint rules
 # :TODO: Remove black when ruff supports all black rules
-pylint = "^3.3.7"
-black = "^25.1.0"
-pytest = "^8.3.5"
+pylint = "^3.3.9"
+black = "^25.9.0"
+pytest = "^8.4.2"
 pytest-xdist = "^3.6.1"
-ruff = "^0.11.9"
-pytest-cov = "^6.1.1"
-mypy = "^1.15.0"
+ruff = "^0.13.3"
+pytest-cov = "^7.0.0"
+mypy = "^1.18.2"
 httpx = "^0.28.1"
 
 [tool.black]
