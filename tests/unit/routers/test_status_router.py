@@ -1,7 +1,7 @@
 """This module contains the unit tests for the /status router."""
 
-from fastapi import FastAPI
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from eq_cir_converter_service.routers.status_router import router
@@ -18,11 +18,13 @@ def test_status_endpoint():
     assert response.status_code == 200
     assert response.json() == {"status": "OK"}
 
+
 @pytest.mark.parametrize("method", ["post", "put", "patch", "delete"])
 def test_status_unsupported_method(method):
     """Test that unsupported methods on /status return 405."""
     response = client.request(method, "/status")
     assert response.status_code == 405
+
 
 def test_status_logs(caplog):
     """Test that accessing the /status endpoint logs the correct message."""
