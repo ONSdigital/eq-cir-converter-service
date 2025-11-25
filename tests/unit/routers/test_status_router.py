@@ -14,7 +14,6 @@ client = TestClient(app)
 
 def test_status_endpoint_with_logs(caplog):
     """Test the GET /status endpoint and log output."""
-
     with caplog.at_level("INFO"):
         response = client.get("/status")
 
