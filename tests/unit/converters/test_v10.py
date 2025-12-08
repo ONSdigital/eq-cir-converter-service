@@ -216,7 +216,7 @@ def test_transform_json_schema_with_text_object_and_placeholders(
     result = convert_to_v10(data, paths)
 
     result = cast(Mapping[str, Any], result)
-    desc = result["question"]["description"]
+    desc = cast(Mapping[str, Any], result)["question"]["description"]
     assert len(desc) == expected_paragraphs_count
     expected_texts = []
     for item in desc:
