@@ -2,7 +2,6 @@
 
 import re
 from collections import Counter
-from collections.abc import Sequence
 
 from jsonpath_ng.ext import parse
 
@@ -216,7 +215,7 @@ def process_placeholder(
     return placeholders_dict
 
 
-def process_list(list_items: Sequence[str | list | dict]) -> list[str | list | dict]:
+def process_list(list_items: list) -> list[str | list | dict]:
     """Processes a sequence of elements, cleaning HTML tags and extracting paragraphs from text objects.
 
     :param list_items: A sequence of strings, lists, or dictionaries to process.
