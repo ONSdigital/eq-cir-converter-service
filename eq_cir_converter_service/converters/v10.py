@@ -216,9 +216,9 @@ def process_placeholder(
 
 
 def process_list(list_items: list) -> list[str | list | dict]:
-    """Processes a sequence of elements, cleaning HTML tags and extracting paragraphs from text objects.
+    """Processes a list of elements, cleaning HTML tags and extracting paragraphs from text objects.
 
-    :param list_items: A sequence of strings, lists, or dictionaries to process.
+    :param list_items: A list of strings, lists, or dictionaries to process.
     :return: A list of processed elements, which may include cleaned strings or lists of paragraphs.
     """
     transformed_list: list[str | list | dict] = []
